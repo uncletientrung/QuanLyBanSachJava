@@ -48,7 +48,7 @@ public class TaiKhoanController implements  ActionListener{
                 }
             }
             if(!login){
-                JOptionPane.showMessageDialog(tkview, "Tài khoản và mật khẩu không tồn tài!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(tkview, "Tài khoản và mật khẩu không tồn tạii!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }if(sukien.equals("Reset")){
             tkview.usernameField.setText("");
