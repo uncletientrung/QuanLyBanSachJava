@@ -132,12 +132,14 @@ public class WorkFrame extends JFrame{
     // Phương thức tạo nút menu với kích thước và căn chỉnh phù hợp
    private JButton createMenuButton(String text) {
         JButton button = new JButton(text);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setPreferredSize(new Dimension(200, 50));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa các nút
+        button.setPreferredSize(new Dimension(200, 50)); // Đặt kích thước width và height
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         button.setFont(new Font("Arial", Font.PLAIN, 14));
         button.setBackground(new Color(240, 240, 240));
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Tạo padding
+        button.setFocusPainted(false);// Bỏ viền khi click
+        button.setBorderPainted(false);
 
         // Hover effect
         button.addMouseListener(new java.awt.event.MouseAdapter() {

@@ -8,12 +8,12 @@ public class SachDTO {
     private int matacgia;
     private int matheloai;
     private int soluongton;
-    private int namxuatban;
-    private double dongia;
+    private String namxuatban;
+    private int dongia;
 
     public SachDTO() {}
 
-    public SachDTO(int masach, String tensach, int manxb, int matacgia, int matheloai, int soluongton, int namxuatban, double dongia) {
+    public SachDTO(int masach, String tensach, int manxb, int matacgia, int matheloai, int soluongton, String namxuatban, int dongia) {
         this.masach = masach;
         this.tensach = tensach;
         this.manxb = manxb;
@@ -36,7 +36,7 @@ public class SachDTO {
         return manxb;
     }
 
-    public double getDongia() {
+    public int getDongia() {
         return dongia;
     }
 
@@ -48,7 +48,7 @@ public class SachDTO {
         return matheloai;
     }
 
-    public int getNamxuatban() {
+    public String getNamxuatban() {
         return namxuatban;
     }
 
@@ -56,7 +56,7 @@ public class SachDTO {
         return soluongton;
     }
 
-    public void setDongia(double dongia) {
+    public void setDongia(int dongia) {
         this.dongia = dongia;
     }
 
@@ -76,7 +76,7 @@ public class SachDTO {
         this.matheloai = matheloai;
     }
 
-    public void setNamxuatban(int namxuatban) {
+    public void setNamxuatban(String namxuatban) {
         this.namxuatban = namxuatban;
     }
 
@@ -98,8 +98,8 @@ public class SachDTO {
         result = prime * result + Objects.hashCode(manxb);
         result = prime * result + Objects.hashCode(matheloai);
         result = prime * result + this.soluongton;
-        result = prime * result + this.namxuatban;
-        result = prime * result + Double.hashCode(dongia);
+        result = prime * result + Objects.hashCode(namxuatban);
+        result = prime * result + Objects.hashCode(dongia);
         return result;
     }
 
@@ -118,7 +118,7 @@ public class SachDTO {
                this.matacgia == other.matacgia &&
                this.matheloai == other.matheloai &&
                this.soluongton == other.soluongton &&
-               Double.compare(this.dongia, other.dongia) == 0 &&
+               Integer.compare(this.dongia, other.dongia) == 0 &&
                this.namxuatban == other.namxuatban;
     }
 

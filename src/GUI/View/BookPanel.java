@@ -6,12 +6,22 @@ package GUI.View;
 
 import javax.swing.*;
 import java.awt.*;
-
+import javax.swing.table.*;
+import BUS.SachBUS;
+import DTO.SachDTO;
+import DAO.SachDAO;
+import GUI.WorkFrame;
+import GUI.Controller.BookController;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 /**
  *
  * @author DELL
  */
 public class BookPanel extends JPanel{
+    private WorkFrame workFrame;
+    public ArrayList<SachDTO> listSach=new SachBUS().getSachAll();
     public BookPanel(){
         // Tạo Panel toolBar cho thanh công cụ trên cùng
         JPanel toolBar= new JPanel(new GridLayout(1,2));
@@ -24,7 +34,8 @@ public class BookPanel extends JPanel{
         JButton btnUpdate= createToolBarButton("Sửa", "update1.png");
         JButton btndelete= createToolBarButton("Xóa", "trash.png");
         JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
-        btnAdd.setFont(font);btnUpdate.setFont(font);btndelete.setFont(font);btndetail.setFont(font);
+        JButton btnexport= createToolBarButton("Xuất Excel", "export_excel.png");
+        btnAdd.setFont(font);btnUpdate.setFont(font);btndelete.setFont(font);btndetail.setFont(font);btnexport.setFont(font);
 
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
         String[] List_Combobox={"Tất cả","Giá thấp đến cao ⬆","Giá cao đến thấp ⬇"};
@@ -38,11 +49,49 @@ public class BookPanel extends JPanel{
         JButton btnfind=createToolBarButton("", "find.png");
         btnfind.setPreferredSize(new Dimension(50,50));
         
+        // Tạo JTable cho BookPanel
+        String[] columnBook ={"Mã sách","Tên sách","Nhà xuất bản","Tác Giả","Thể loại","Số lượng","Năm xuất bản","Giá"};
+        DefaultTableModel dataBook =new DefaultTableModel(columnBook,0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa tất cả các ô
+            }
+        };
+        
+        JTable tableBook= new JTable(dataBook);
+        // Thêm dữ liệu từ sách vào Frame
+        for(SachDTO s: listSach){
+            dataBook.addRow(new Object[]{s.getMasach(),s.getTensach(),s.getManxb(),s.getMatacgia(),s.getMatheloai(),
+                                                           s.getSoluongton(),s.getNamxuatban(),s.getDongia()});
+        }
+        
+        // Tạo renderer để căn giữa dữ liệu trong TableBook
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        int[] columnsToCenter = {0 , 3,4,5,6,7}; // Căn giữa tất cả trừ tên sách và tên nbx
+        for (int col : columnsToCenter) {
+            tableBook.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
+        }
+        // Điều chỉnh kích thước width và hieght của các cột tableBook 
+        tableBook.setRowHeight(30);
+        tableBook.getColumnModel().getColumn(0).setPreferredWidth(30);
+        tableBook.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tableBook.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tableBook.getColumnModel().getColumn(3).setPreferredWidth(65);
+        tableBook.getColumnModel().getColumn(4).setPreferredWidth(65);
+        tableBook.getColumnModel().getColumn(5).setPreferredWidth(30);
+        tableBook.getColumnModel().getColumn(6).setPreferredWidth(30);
+        tableBook.getColumnModel().getColumn(7).setPreferredWidth(60);
+        
+
+        // Tạo ScrollPane cho Table để tên cột column hiện
+        JScrollPane SPBook= new JScrollPane(tableBook);
 
         toolBar_Left.add(btnAdd);
         toolBar_Left.add(btnUpdate);
         toolBar_Left.add(btndelete);
         toolBar_Left.add(btndetail);
+        toolBar_Left.add(btnexport);
 
         toolBar_Right.add(cbbox);
         toolBar_Right.add(txfind);
@@ -53,6 +102,11 @@ public class BookPanel extends JPanel{
 
         setLayout(new BorderLayout());
         add(toolBar,BorderLayout.NORTH);
+        add(SPBook,BorderLayout.CENTER);
+        
+        // Thêm sự kiện cho nút
+        ActionListener action= new BookController(this,workFrame);
+        btnAdd.addActionListener(action);
         
     }
 
