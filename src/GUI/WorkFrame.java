@@ -5,8 +5,7 @@
 package GUI;
 
 import GUI.Controller.WorkFrameController;
-import GUI.View.BookPanel;
-import GUI.View.HomePanel;
+import GUI.View.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -81,7 +80,9 @@ public class WorkFrame extends JFrame{
         JButton btnThongKe = createMenuButton("Thống kê");
         JButton btnPhanQuyen = createMenuButton("Phân quyền");
         JButton btnKhuyenMai = createMenuButton("Khuyến mãi");
-
+        JButton btnDangXuat = createMenuButton("Đăng xuất");
+        JButton btnDong = createMenuButton("Đóng");
+                
         // Thêm các nút vào sidebar
         sidebar.add(btnTrangChu);
         sidebar.add(Box.createVerticalStrut(5)); // Khoảng cách giữa các nút
@@ -104,10 +105,15 @@ public class WorkFrame extends JFrame{
         sidebar.add(btnPhanQuyen);
         sidebar.add(Box.createVerticalStrut(5));
         sidebar.add(btnKhuyenMai);
+        sidebar.add(Box.createVerticalStrut(5));
+        sidebar.add(btnDangXuat);
+        sidebar.add(Box.createVerticalStrut(5));
+        sidebar.add(btnDong);
 
         // Thêm các Panel hay các Card vào PanelCard 
         PanelCard.add(new HomePanel(),"Trang chủ");
         PanelCard.add(new BookPanel(),"Sách");
+        PanelCard.add(new NhanVienPanel(),"Nhân viên");
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);
@@ -119,6 +125,8 @@ public class WorkFrame extends JFrame{
         ActionListener action= new WorkFrameController(this);
         btnSach.addActionListener(action);
         btnTrangChu.addActionListener(action);
+        btnNhanVien.addActionListener(action);
+        btnDong.addActionListener(action);
     }
 
     // Phương thức tạo nút menu với kích thước và căn chỉnh phù hợp
