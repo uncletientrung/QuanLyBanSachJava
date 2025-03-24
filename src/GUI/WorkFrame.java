@@ -7,6 +7,7 @@ package GUI;
 import GUI.Controller.WorkFrameController;
 import GUI.View.BookPanel;
 import GUI.View.HomePanel;
+import GUI.View.PhanQuyenPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -108,6 +109,7 @@ public class WorkFrame extends JFrame{
         // Thêm các Panel hay các Card vào PanelCard 
         PanelCard.add(new HomePanel(),"Trang chủ");
         PanelCard.add(new BookPanel(),"Sách");
+        PanelCard.add(new PhanQuyenPanel(),"Phân quyền");
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);
@@ -119,17 +121,29 @@ public class WorkFrame extends JFrame{
         ActionListener action= new WorkFrameController(this);
         btnSach.addActionListener(action);
         btnTrangChu.addActionListener(action);
+        btnPhanQuyen.addActionListener(action);
     }
 
     // Phương thức tạo nút menu với kích thước và căn chỉnh phù hợp
-    private JButton createMenuButton(String text) {
+   private JButton createMenuButton(String text) {
         JButton button = new JButton(text);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa các nút
-        button.setPreferredSize(new Dimension(200, 50)); // Đặt kích thước ưu tiên: rộng 200px, cao 50px
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Đặt chiều cao tối đa là 50px
-        button.setFont(new Font("Arial", Font.PLAIN, 14)); // Đặt font chữ
-        button.setBackground(new Color(240, 240, 240)); // Màu nền nhẹ
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Padding cho nút
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setPreferredSize(new Dimension(200, 50));
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        button.setFont(new Font("Arial", Font.PLAIN, 14));
+        button.setBackground(new Color(240, 240, 240));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        // Hover effect
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(200, 220, 240));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(240, 240, 240));
+            }
+        });
+
         return button;
     }
 }

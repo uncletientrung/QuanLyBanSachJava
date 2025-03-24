@@ -22,6 +22,8 @@ public class WorkFrameController implements  ActionListener{
         wk.cardLayout.show(wk.PanelCard, "Sách");
     }  if (sukien.equals("Trang chủ")) {
         wk.cardLayout.show(wk.PanelCard, "Trang chủ");
+    }  if (sukien.equals("Phân quyền")) {
+        wk.cardLayout.show(wk.PanelCard, "Phân quyền");
     }
 }
 }
