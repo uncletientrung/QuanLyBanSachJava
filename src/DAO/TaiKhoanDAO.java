@@ -4,6 +4,8 @@
  */
 package DAO;
 
+import DAO.DAOInterface;
+import DTO.TaiKhoanDTO;
 import connectDB.JDBCUtil;
 import DTO.TaiKhoanDTO;
 import java.sql.Connection;
@@ -16,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author DELL
  */
-public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO>{
+public class TaiKhoanDAO implements  DAOInterface<TaiKhoanDTO>{
     public static TaiKhoanDAO getInstance(){
         return new TaiKhoanDAO();
     }

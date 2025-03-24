@@ -2,34 +2,44 @@ package connectDB;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class JDBCUtil {
 
-    private static final Logger logger = Logger.getLogger(JDBCUtil.class.getName());
-    
-    public static Connection getConnection() throws ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
+    public static Connection getConnection() {
         Connection result = null;
         try {
-            String url = "jdbc:mysql://localhost:3306/quanlibansach";
+            // Dang ky MySQL Driver voi DriverManager
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            //Cac thong so
+            String url = "jdbc:mySQL://localhost:3306/quanlibansach";
             String userName = "root";
             String password = "";
+            //Tao ket noi 
             result = DriverManager.getConnection(url, userName, password);
-        } catch (SQLException e) {
-            logger.severe("Khong the ket noi den du lieu: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Không thể kết nối đến cơ sở dữ liệu !", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
         return result;
     }
 
     public static void closeConnection(Connection c) {
-        if (c != null) {
-            try {
+        try {
+            if (c != null) {
                 c.close();
-            } catch (SQLException e) {
-                logger.severe("Loi khi dong ket noi: " + e.getMessage());
             }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
     }
+//     public static void main(String[] args) {
+//         Connection conn = getConnection();
+//         if (conn != null) {
+//             System.out.println("Kết nối thành công!");
+//             closeConnection(conn);
+//         } else {
+//             System.err.println("Kết nối thất bại!");
+//         }
+//     }
 }
