@@ -130,14 +130,25 @@ public class WorkFrame extends JFrame{
     }
 
     // Phương thức tạo nút menu với kích thước và căn chỉnh phù hợp
-    private JButton createMenuButton(String text) {
+   private JButton createMenuButton(String text) {
         JButton button = new JButton(text);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa các nút
-        button.setPreferredSize(new Dimension(200, 50)); // Đặt kích thước ưu tiên: rộng 200px, cao 50px
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Đặt chiều cao tối đa là 50px
-        button.setFont(new Font("Arial", Font.PLAIN, 14)); // Đặt font chữ
-        button.setBackground(new Color(240, 240, 240)); // Màu nền nhẹ
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Padding cho nút
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setPreferredSize(new Dimension(200, 50));
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        button.setFont(new Font("Arial", Font.PLAIN, 14));
+        button.setBackground(new Color(240, 240, 240));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        // Hover effect
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(200, 220, 240));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(240, 240, 240));
+            }
+        });
+
         return button;
     }
 }

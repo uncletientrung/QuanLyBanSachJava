@@ -12,10 +12,11 @@ import  GUI.WorkFrame;
  * @author DELL
  */
 public class WorkFrameController implements  ActionListener{
-    private WorkFrame wk;
+    private final WorkFrame wk;
     public WorkFrameController(WorkFrame wk){
         this.wk=wk;
     }
+    @Override
    public void actionPerformed(ActionEvent e) {
     String sukien = e.getActionCommand();
     if (sukien.equals("Sách")) {
@@ -26,6 +27,8 @@ public class WorkFrameController implements  ActionListener{
         wk.cardLayout.show(wk.PanelCard, "Nhân viên");
     }  if (sukien.equals("Đóng")){
         System.exit(0);
+    }  if (sukien.equals("Phân quyền")) {
+        wk.cardLayout.show(wk.PanelCard, "Phân quyền");
     }
-}
+    }
 }
