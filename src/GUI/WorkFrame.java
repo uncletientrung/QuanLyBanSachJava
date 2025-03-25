@@ -114,6 +114,7 @@ public class WorkFrame extends JFrame{
         PanelCard.add(new HomePanel(),"Trang chủ");
         PanelCard.add(new BookPanel(),"Sách");
         PanelCard.add(new NhanVienPanel(),"Nhân viên");
+        PanelCard.add(new PhanQuyenPanel(),"Phân quyền");
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);
@@ -126,6 +127,7 @@ public class WorkFrame extends JFrame{
         btnSach.addActionListener(action);
         btnTrangChu.addActionListener(action);
         btnNhanVien.addActionListener(action);
+        btnPhanQuyen.addActionListener(action);
         btnDong.addActionListener(action);
     }
 

@@ -5,17 +5,28 @@
 package GUI.View;
 
 
+import BUS.PhanQuyenBUS;
+import DAO.PhanQuyenDao;
+import DTO.NhomQuyenDTO;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Hi
  */
 public class PhanQuyenPanel extends JPanel{
+    private JTable table;
+    private DefaultTableModel tableModelPhanQuyen;
+    //goi ham getnhomquyenall ben BUS de lay ra array list
+    public ArrayList<NhomQuyenDTO> listNhomQuyen= new PhanQuyenBUS().getNhomQuyenAll();
     
     public PhanQuyenPanel(){
         JPanel toolBar= new JPanel(new GridLayout(1,2));
+        
         JPanel toolBar_Left=new JPanel(new FlowLayout(FlowLayout.LEFT,10,20));
         JPanel toolBar_Right=new JPanel(new FlowLayout(FlowLayout.RIGHT,10,30));
         Font font=new Font("Arial", Font.BOLD, 16);
@@ -35,11 +46,73 @@ public class PhanQuyenPanel extends JPanel{
         JTextField txfind=new JTextField("Tìm kiếm.....");
         txfind.setPreferredSize(new Dimension(200,35));
         txfind.setForeground(Color.GRAY);
+        // Khi click vào JTextField, xóa nội dung nếu là mặc định
+        txfind.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (txfind.getText().equals("Tìm kiếm.....")) {
+                    txfind.setText("");
+                    txfind.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (txfind.getText().trim().isEmpty()) {
+                    txfind.setText("Tìm kiếm.....");
+                    txfind.setForeground(Color.GRAY);
+                }
+            }
+        });
 
         JButton btnfind=createToolBarButton("", "find.png");
         btnfind.setPreferredSize(new Dimension(50,50));
-        
+        //chuc nang tim kiem khi an nut
+        btnfind.addActionListener(e -> {
+            String keyword = txfind.getText().trim().toLowerCase();
+//           // neu o tim kiem bi rong thi lay tu database len danh sach
+                ArrayList<NhomQuyenDTO> danhsachmoi;
+                if (keyword.isEmpty() || keyword.equals("tìm kiếm.....")) {
+                    danhsachmoi = new PhanQuyenBUS().getNhomQuyenAll();
+                } else {
+                    danhsachmoi = new PhanQuyenBUS().timkiem(keyword);
+                }
 
+                // cap nhat lai du lieu
+                capNhatBang(danhsachmoi);
+        });
+
+        
+        
+        
+        //tạo table ở giữa
+        String[] columnPhanQuyen ={"Mã nhóm quyền","Tên nhóm quyền"};
+        tableModelPhanQuyen = new DefaultTableModel(columnPhanQuyen, 0){
+            public boolean isCellEditable(int row, int column){
+                return false;// chặn chỉnh sửa các ô
+            } }; 
+        table = new JTable(tableModelPhanQuyen);
+        //them du lieu vao bang GUI
+        for(NhomQuyenDTO q: listNhomQuyen){
+            tableModelPhanQuyen.addRow(new Object[]{q.getManhomquyen(),q.getTennhomquyen()});
+        }
+        
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        int[] columnsToCenter = {0, 1}; 
+ 
+        for (int col : columnsToCenter) {
+            table.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
+        }
+        // Điều chỉnh kích thước width và hieght của các cột tableBook 
+        table.setRowHeight(30);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(250);
+        
+           
+        JScrollPane scrollPane = new JScrollPane(table); 
+        
+        setLayout(new BorderLayout());
         toolBar_Left.add(btnAdd);
         toolBar_Left.add(btnUpdate);
         toolBar_Left.add(btndelete);
@@ -54,8 +127,13 @@ public class PhanQuyenPanel extends JPanel{
 
         setLayout(new BorderLayout());
         add(toolBar,BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+        
+        
         
     }
+    
+    
 
     private JButton createToolBarButton(String text,String imageLink) {
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/GUI/Image/" + imageLink));
@@ -69,4 +147,15 @@ public class PhanQuyenPanel extends JPanel{
         return button;
     }
     
+    private void capNhatBang(ArrayList<NhomQuyenDTO> danhsach){
+        //xoa bang cu
+            tableModelPhanQuyen.setRowCount(0);
+            // Thêm dữ liệu mới vào bảng
+            for (NhomQuyenDTO q : danhsach) {
+                tableModelPhanQuyen.addRow(new Object[]{q.getManhomquyen(), q.getTennhomquyen()});
+            }
+        
+    }
+    
+ 
 }
