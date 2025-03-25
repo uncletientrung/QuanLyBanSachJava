@@ -6,6 +6,8 @@ package BUS;
 import DAO.SachDAO;
 import DTO.SachDTO;
 import java.util.ArrayList;
+import java.util.Comparator;
+
 /**
  *
  * @author DELL
@@ -24,7 +26,65 @@ public class SachBUS {
         boolean result=sDAO.insert(sach) !=0;
         if (result){
             listSach.add(sach);
+//            listSach=sDAO.selectAll();
         }
         return result;
     }
+    public SachDTO getSachById(int maSach){ // Update sách trong List
+        SachDTO result=new SachDTO();
+        for(SachDTO sach: listSach){
+            if(sach.getMasach() == maSach){
+                return sach;
+            }
+        }
+        return null;
+    }
+    public Boolean updateSach_DB(SachDTO sach){ //Update sách lên database kết hợp với hàm updateByID_List
+        boolean result=sDAO.update(sach) !=0;
+        return result;
+    }
+    public Boolean deleteById(int masach){ // Xóa trong List lẫn trong Database
+        SachDTO sachXoa=getSachById(masach);
+        Boolean result=sDAO.delete(masach+"") !=0;
+        if(result){
+            for (SachDTO sach: listSach){
+                if(sach.equals(sachXoa)){
+                    listSach.remove(sach);
+                    return result;
+                }
+            }
+        }
+        return result;
+    }
+    public ArrayList<SachDTO> search(String text){
+        text=text.toLowerCase();
+        ArrayList<SachDTO> result=new ArrayList<>();
+        for(SachDTO sach:listSach){
+            if(Integer.toString(sach.getMasach()).toLowerCase().contains(text) || sach.getTensach().toLowerCase().contains(text)){
+                result.add(sach);
+            }
+        }
+        return  result;
+    }
+    public ArrayList<SachDTO> LowToHighofPrice(ArrayList<SachDTO> sach){
+        ArrayList<SachDTO> ListSort=new ArrayList<>(sach); // Sao chép ListSach cu
+        ListSort.sort(Comparator.comparingInt(SachDTO::getDongia));
+        return  ListSort;
+    }
+    public ArrayList<SachDTO> HighToLowofPrice(ArrayList<SachDTO> sach){
+        ArrayList<SachDTO> ListSort=new ArrayList<>(sach); // Sao chép ListSach cu
+        ListSort.sort(Comparator.comparingInt(SachDTO::getDongia).reversed()); // Đảo ngược cao đến thấp
+        return  ListSort;
+    }
+    public ArrayList<SachDTO> LowToHighofNXB(ArrayList<SachDTO> sach){
+        ArrayList<SachDTO> result=new ArrayList<>(listSach);
+        result.sort(Comparator.comparing(SachDTO::getNamxuatban));
+        return  result;
+    }
+    public ArrayList<SachDTO> HighToLowofNXB(ArrayList<SachDTO> sach){
+        ArrayList<SachDTO> result=new ArrayList<>(listSach);
+        result.sort(Comparator.comparing(SachDTO::getNamxuatban).reversed());
+        return result;
+    }
+
 }

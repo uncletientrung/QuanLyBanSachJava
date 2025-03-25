@@ -26,26 +26,37 @@ public class BookDiaLogAdd_Controller implements  ActionListener{
     public void actionPerformed(ActionEvent e){
         String sukien= e.getActionCommand();
         if(sukien.equals("Thêm dữ liệu")){
-            if(BDA.getTxfTensach().getText()!=null || BDA.getTxfManxb().getText()!=null || BDA.getTxfMatacgia().getText()!=null|| BDA.getTxfMatheloai().getText()!=null ||
-                BDA.getTxfSoluong().getText()!=null || BDA.getTxfNamxuatban().getText()!=null || BDA.getTxfDongia().getText()!=null  ){
-                String tenSach=BDA.getTxfTensach().getText();
-                int maNXB=Integer.parseInt(BDA.getTxfManxb().getText());
-                int maTG=Integer.parseInt(BDA.getTxfMatacgia().getText());
-                int maTL=Integer.parseInt(BDA.getTxfMatheloai().getText());
-                int soluong=Integer.parseInt(BDA.getTxfSoluong().getText());
-                String namXuatBan=BDA.getTxfNamxuatban().getText();
-                int donGia=Integer.parseInt(BDA.getTxfDongia().getText());      
-                int maSachAuto=SachDAO.getInstance().getAutoIncrement();  // Gọi hàm lấy giá trị mã Auto
-                SachDTO sachNew=new SachDTO(maSachAuto, tenSach, maNXB, maTG, maTL, soluong, namXuatBan, donGia);
-                boolean result=SBUS.addSach(sachNew);
-            }else{
+           if (BDA.getTxfTensach().getText().isEmpty() || 
+                BDA.getTxfManxb().getText().isEmpty() || 
+                BDA.getTxfMatacgia().getText().isEmpty() || 
+                BDA.getTxfMatheloai().getText().isEmpty() || 
+                BDA.getTxfSoluong().getText().isEmpty() || 
+                BDA.getTxfNamxuatban().getText().isEmpty() || 
+                BDA.getTxfDongia().getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng đầy đủ thông tin Sách", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                // Thực hiện thêm sách khi tất cả các trường đều có dữ liệu
+                String tenSach = BDA.getTxfTensach().getText();
+                int maNXB = Integer.parseInt(BDA.getTxfManxb().getText());
+                int maTG = Integer.parseInt(BDA.getTxfMatacgia().getText());
+                int maTL = Integer.parseInt(BDA.getTxfMatheloai().getText());
+                int soluong = Integer.parseInt(BDA.getTxfSoluong().getText());
+                String namXuatBan = BDA.getTxfNamxuatban().getText();
+                int donGia = Integer.parseInt(BDA.getTxfDongia().getText());      
+                int maSachAuto = SachDAO.getInstance().getAutoIncrement();  // Gọi hàm lấy giá trị mã Auto
+                SachDTO sachNew = new SachDTO(maSachAuto, tenSach, maNXB, maTG, maTL, soluong, namXuatBan, donGia);
+                boolean result = SBUS.addSach(sachNew);
+
+                if (result) {
+                    JOptionPane.showMessageDialog(null, "Thêm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    BDA.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Thêm thất bại", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
         if(sukien.equals("Xóa")){
-            BDA.getTxfTensach().setText("");BDA.getTxfManxb().setText("");BDA.getTxfMatacgia().setText("");
-            BDA.getTxfMatheloai().setText("");BDA.getTxfSoluong().setText("");BDA.getTxfNamxuatban().setText("");
-            BDA.getTxfDongia().setText("");
+            BDA.ClearTextField();
         }
     }
 }

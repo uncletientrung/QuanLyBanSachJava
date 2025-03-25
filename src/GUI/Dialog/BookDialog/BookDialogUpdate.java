@@ -6,6 +6,7 @@ package GUI.Dialog.BookDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 /**
  *
  * @author DELL
@@ -85,12 +86,18 @@ public class BookDialogUpdate extends JDialog{
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         
-        JButton addButton = createButton("Lưu thông tin", new Color(67 ,110 ,238));
-        JButton deleteButton = createButton("Xóa", new Color(244, 67, 54));
+        JButton addButton = createButton("Lưu thông tin", new Color(76, 175, 80));
+        JButton deleteButton = createButton("Đóng", new Color(67 ,110 ,238));
         
         buttonPanel.add(addButton);
         buttonPanel.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa 2 nút
         buttonPanel.add(deleteButton);
+        
+        // Thêm ActionListener vào 2 Button
+        ActionListener action=new BookDialogUpdate_Controller(this);
+        addButton.addActionListener(action);
+        deleteButton.addActionListener(action);
+        
         
         add(buttonPanel, BorderLayout.SOUTH);
         pack(); // Điều chỉnh kích thước tự động dựa trên nội dung
@@ -147,9 +154,8 @@ public class BookDialogUpdate extends JDialog{
         return button;
     }
     public void ShowInfo(String maSach,String TenSach,String NXB,String TG,String TL,String soluong,String NamXB,String dongia){
-        System.err.println(maSach);
         txfMasach.setText(maSach);
-        txfTensach.setText(TenSach);
+        txfTensach.setText(TenSach);  // Tương tác với BookController
         txfManxb.setText(NXB);
         txfMatacgia.setText(TG);
         txfMatheloai.setText(TL);
@@ -157,4 +163,12 @@ public class BookDialogUpdate extends JDialog{
         txfNamxuatban.setText(NamXB);
         txfDongia.setText(dongia);
     }
+    public JTextField getTxfMasach() {return txfMasach;}
+    public JTextField getTxfTensach() {return txfTensach;}
+    public JTextField getTxfManxb() {return txfManxb;}
+    public JTextField getTxfMatacgia() { return txfMatacgia;}
+    public JTextField getTxfMatheloai() {return txfMatheloai;}
+    public JTextField getTxfSoluong() { return txfSoluong;}
+    public JTextField getTxfNamxuatban() { return txfNamxuatban; }
+    public JTextField getTxfDongia() {return txfDongia;}
 }

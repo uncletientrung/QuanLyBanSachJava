@@ -16,6 +16,7 @@ import GUI.Dialog.BookDialog.BookDialogUpdate;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.DocumentListener;
 /**
  *
  * @author DELL
@@ -23,7 +24,11 @@ import java.awt.event.ActionListener;
 public class BookPanel extends JPanel{
     private JTable tableBook;
     private WorkFrame workFrame;
-    public ArrayList<SachDTO> listSach=new SachBUS().getSachAll();
+    private SachBUS sachBUS;
+    private ArrayList<SachDTO> listSach;
+    private DefaultTableModel dataBook;
+    private JTextField txfFind;
+    private  JComboBox<String> cbbox;
     public BookPanel(){
         // Tạo Panel toolBar cho thanh công cụ trên cùng
         JPanel toolBar= new JPanel(new GridLayout(1,2));
@@ -40,20 +45,21 @@ public class BookPanel extends JPanel{
         btnAdd.setFont(font);btnUpdate.setFont(font);btndelete.setFont(font);btndetail.setFont(font);btnexport.setFont(font);
 
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
-        String[] List_Combobox={"Tất cả","Giá thấp đến cao ⬆","Giá cao đến thấp ⬇"};
-        JComboBox<String> cbbox=new JComboBox<String>(List_Combobox);
+        String[] List_Combobox={"Tất cả","Giá thấp đến cao ⬆","Giá cao đến thấp ⬇","NXB thấp đến cao ⬆","NXB cao đến thấp ⬇"};
+        cbbox=new JComboBox<String>(List_Combobox);
         cbbox.setPreferredSize(new Dimension(150,35));
 
-        JTextField txfind=new JTextField("Tìm kiếm.....");
-        txfind.setPreferredSize(new Dimension(200,35));
-        txfind.setForeground(Color.GRAY);
+        txfFind=new JTextField("");
+        txfFind.setPreferredSize(new Dimension(200,35));
+        txfFind.setForeground(Color.GRAY);
 
         JButton btnfind=createToolBarButton("", "find.png");
         btnfind.setPreferredSize(new Dimension(50,50));
         
         // Tạo JTable cho BookPanel
+        listSach=new SachBUS().getSachAll();
         String[] columnBook ={"Mã sách","Tên sách","Nhà xuất bản","Tác Giả","Thể loại","Số lượng","Năm xuất bản","Giá"};
-        DefaultTableModel dataBook =new DefaultTableModel(columnBook,0){
+        dataBook =new DefaultTableModel(columnBook,0){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Chặn chỉnh sửa tất cả các ô
@@ -96,7 +102,7 @@ public class BookPanel extends JPanel{
         toolBar_Left.add(btnexport);
 
         toolBar_Right.add(cbbox);
-        toolBar_Right.add(txfind);
+        toolBar_Right.add(txfFind);
         toolBar_Right.add(btnfind);
 
         toolBar.add(toolBar_Left);
@@ -114,6 +120,10 @@ public class BookPanel extends JPanel{
         btnUpdate.addActionListener(action);
         btndelete.addActionListener(action);
         btndetail.addActionListener(action);
+        cbbox.addActionListener(action);
+        // Thêm sự kiện DocumentListener
+        DocumentListener document=new BookController(this, workFrame);
+        txfFind.getDocument().addDocumentListener(document);
         
     }
 
@@ -131,5 +141,61 @@ public class BookPanel extends JPanel{
     }
     public JTable getTable(){
         return tableBook;
+    }
+    public JTextField getTxfFind(){
+        return txfFind;
+    }
+    public JComboBox<String> getCbbox(){
+        return cbbox;
+    }
+    public ArrayList<SachDTO> getListSach(){
+        return listSach;
+    }
+    public void refreshTableData(){
+        listSach=new SachBUS().getSachAll();
+        dataBook.setRowCount(0);
+        for(SachDTO sach: listSach){
+            dataBook.addRow(new Object[]{
+                sach.getMasach(),
+                sach.getTensach(),
+                sach.getManxb(),
+                sach.getMatacgia(),
+                sach.getMatheloai(),
+                sach.getSoluongton(),
+                sach.getNamxuatban(),
+                sach.getDongia()
+            });
+        }
+    }
+    public void FindTableData(String text){
+        listSach=new SachBUS().search(text);
+        dataBook.setRowCount(0);
+        for(SachDTO sach: listSach){
+            dataBook.addRow(new Object[]{
+                sach.getMasach(),
+                sach.getTensach(),
+                sach.getManxb(),
+                sach.getMatacgia(),
+                sach.getMatheloai(),
+                sach.getSoluongton(),
+                sach.getNamxuatban(),
+                sach.getDongia()
+            });
+        }
+    }
+    public void FilterTableData(ArrayList<SachDTO> list_Sort){
+        dataBook.setRowCount(0);
+        for(SachDTO sach: list_Sort){
+            dataBook.addRow(new Object[]{
+                sach.getMasach(),
+                sach.getTensach(),
+                sach.getManxb(),
+                sach.getMatacgia(),
+                sach.getMatheloai(),
+                sach.getSoluongton(),
+                sach.getNamxuatban(),
+                sach.getDongia()
+            });
+        }
     }
 }

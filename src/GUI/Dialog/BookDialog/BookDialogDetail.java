@@ -6,6 +6,8 @@ package GUI.Dialog.BookDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import javax.swing.event.AncestorListener;
 
 /**
  *
@@ -20,7 +22,7 @@ public class BookDialogDetail extends JDialog{
         panel.setLayout(new BorderLayout(10, 10));
 
         // Tiêu đề
-        JLabel titleLabel = new JLabel("CHỈNH SỬA THÔNG TIN SÁCH", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("THÔNG TIN CHI TIẾT SÁCH", SwingConstants.CENTER);
         Font titleFont = new Font("Arial", Font.BOLD, 25);
         titleLabel.setFont(titleFont);
         titleLabel.setForeground(Color.WHITE);
@@ -92,15 +94,14 @@ public class BookDialogDetail extends JDialog{
         // Panel chứa các nút
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        
-        JButton addButton = createButton("Lưu thông tin", new Color(67 ,110 ,238));
-        JButton deleteButton = createButton("Xóa", new Color(244, 67, 54));
-        
-        buttonPanel.add(addButton);
-        buttonPanel.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa 2 nút
+        JButton deleteButton = createButton("Đóng", new Color(72, 118, 255));
         buttonPanel.add(deleteButton);
         
         add(buttonPanel, BorderLayout.SOUTH);
+        // Thêm ActionListener vào nút
+        ActionListener action=new BookDialogDetail_Controller(this);
+        deleteButton.addActionListener(action);
+        
         pack(); // Điều chỉnh kích thước tự động dựa trên nội dung
         setLocationRelativeTo(parent); // Hiển thị giữa màn hình
         
