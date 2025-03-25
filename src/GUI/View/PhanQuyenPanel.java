@@ -20,6 +20,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PhanQuyenPanel extends JPanel{
     private JTable table;
+    private JTextField txfind;
+    private Boolean checkTimkiem=false;
+
     private DefaultTableModel tableModelPhanQuyen;
     //goi ham getnhomquyenall ben BUS de lay ra array list
     public ArrayList<NhomQuyenDTO> listNhomQuyen= new PhanQuyenBUS().getNhomQuyenAll();
@@ -43,7 +46,7 @@ public class PhanQuyenPanel extends JPanel{
          // Tạo phần tìm kiếm cho JPanel toolBar_Right
        
 
-        JTextField txfind=new JTextField("Tìm kiếm.....");
+        txfind=new JTextField("Tìm kiếm.....");
         txfind.setPreferredSize(new Dimension(200,35));
         txfind.setForeground(Color.GRAY);
         // Khi click vào JTextField, xóa nội dung nếu là mặc định
@@ -67,20 +70,34 @@ public class PhanQuyenPanel extends JPanel{
 
         JButton btnfind=createToolBarButton("", "find.png");
         btnfind.setPreferredSize(new Dimension(50,50));
-        //chuc nang tim kiem khi an nut
-        btnfind.addActionListener(e -> {
-            String keyword = txfind.getText().trim().toLowerCase();
-//           // neu o tim kiem bi rong thi lay tu database len danh sach
-                ArrayList<NhomQuyenDTO> danhsachmoi;
-                if (keyword.isEmpty() || keyword.equals("tìm kiếm.....")) {
-                    danhsachmoi = new PhanQuyenBUS().getNhomQuyenAll();
-                } else {
-                    danhsachmoi = new PhanQuyenBUS().timkiem(keyword);
-                }
+        
 
-                // cap nhat lai du lieu
-                capNhatBang(danhsachmoi);
+        //tìm kiem khi dang go hoac an nut
+        txfind.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                timKiemKhiDangGo();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                timKiemKhiDangGo();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                timKiemKhiDangGo();
+            }
+
+           
         });
+        btnfind.addActionListener(e -> {
+            checkTimkiem=true;
+            timKiemKhiDangGo();
+            
+        });
+        
+
 
         
         
@@ -88,9 +105,11 @@ public class PhanQuyenPanel extends JPanel{
         //tạo table ở giữa
         String[] columnPhanQuyen ={"Mã nhóm quyền","Tên nhóm quyền"};
         tableModelPhanQuyen = new DefaultTableModel(columnPhanQuyen, 0){
-            public boolean isCellEditable(int row, int column){
-                return false;// chặn chỉnh sửa các ô
-            } }; 
+        public boolean isCellEditable(int row, int column){
+             return false;// chặn chỉnh sửa các ô
+        
+        
+        }}; 
         table = new JTable(tableModelPhanQuyen);
         //them du lieu vao bang GUI
         for(NhomQuyenDTO q: listNhomQuyen){
@@ -132,6 +151,22 @@ public class PhanQuyenPanel extends JPanel{
         
         
     }
+    private void timKiemKhiDangGo() {
+        String keyword = txfind.getText().trim().toLowerCase();
+
+        ArrayList<NhomQuyenDTO> danhsachmoi;
+        if (keyword.isEmpty() || keyword.equals("tìm kiếm.....")) {
+                    danhsachmoi = new PhanQuyenBUS().getNhomQuyenAll();
+        } else {
+                    danhsachmoi = new PhanQuyenBUS().timkiem(keyword);
+        }
+
+        capNhatBang(danhsachmoi);
+        //khi ấn tìm mới kiểm tra tìm thấy, tìm không thấy mới thông báo
+        if (checkTimkiem && danhsachmoi.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Không tìm thấy kết quả!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);}
+        checkTimkiem = false;
+ }
     
     
 
@@ -150,12 +185,18 @@ public class PhanQuyenPanel extends JPanel{
     private void capNhatBang(ArrayList<NhomQuyenDTO> danhsach){
         //xoa bang cu
             tableModelPhanQuyen.setRowCount(0);
+            
+            if(danhsach.isEmpty()){
+                return;
+            }
             // Thêm dữ liệu mới vào bảng
             for (NhomQuyenDTO q : danhsach) {
                 tableModelPhanQuyen.addRow(new Object[]{q.getManhomquyen(), q.getTennhomquyen()});
             }
         
     }
+    
+    
     
  
 }
