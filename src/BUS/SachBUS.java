@@ -11,11 +11,20 @@ import java.util.ArrayList;
  * @author DELL
  */
 public class SachBUS {
-    private  final ArrayList<SachDTO> listSach;
+    public final SachDAO sDAO=new SachDAO();
+    private  ArrayList<SachDTO> listSach;
+    
     public SachBUS(){
-        listSach= SachDAO.getInstance().selectAll();
+        listSach= sDAO.selectAll();
     }
     public ArrayList<SachDTO> getSachAll(){
         return listSach;
+    }
+    public Boolean addSach(SachDTO sach ){
+        boolean result=sDAO.insert(sach) !=0;
+        if (result){
+            listSach.add(sach);
+        }
+        return result;
     }
 }

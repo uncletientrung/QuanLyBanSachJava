@@ -10,8 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 /**
  *
  * @author DELL
@@ -37,8 +35,8 @@ public class Taikhoan extends JFrame{
         // Tạo các label và textfield
         JLabel lbdangnhap = new JLabel("Username:",JLabel.CENTER);
         JLabel lbmatkhau = new JLabel("Password:",JLabel.CENTER);
-        usernameField = new JTextField(15);
-        passwordField = new JPasswordField(15);
+        usernameField = new JTextField("admin",15);
+        passwordField = new JPasswordField("12345",15);
 
         // Tạo các nút
         JButton btsubmit = new JButton("Submit");
@@ -66,43 +64,8 @@ public class Taikhoan extends JFrame{
         btsubmit.addActionListener(action);
         btreset.addActionListener(action);
         
-    // Kích hoạt phím Enter
-    KeyListener enterListener = new java.awt.event.KeyAdapter() {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                btsubmit.doClick();
     }
-        }
-    };
    
-    // Kích hoạt phím Tab cho username
-    KeyListener tabListenerUsername = new java.awt.event.KeyAdapter() {
-        @Override
-        public void keyPressed(KeyEvent e){
-            if (e.getKeyCode() == KeyEvent.VK_TAB){
-                passwordField.requestFocus();
-            }
-        }
-    };
-        
-    //Kích hoạt phím Tab cho password
-    KeyListener tabListenerPassword = new java.awt.event.KeyAdapter() {
-        @Override
-        public void keyPressed(KeyEvent e){
-            if (e.getKeyCode() == KeyEvent.VK_TAB){
-                usernameField.requestFocus();
-}
-        }
-    };
-
-    // Add KeyListener to the text fields
-    usernameField.addKeyListener(tabListenerUsername);
-    usernameField.addKeyListener(enterListener);
-    passwordField.addKeyListener(tabListenerPassword);
-    passwordField.addKeyListener(enterListener);
-}
-
         
 }
 

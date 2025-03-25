@@ -12,6 +12,7 @@ import DTO.SachDTO;
 import DAO.SachDAO;
 import GUI.WorkFrame;
 import GUI.Controller.BookController;
+import GUI.Dialog.BookDialog.BookDialogUpdate;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ import java.awt.event.ActionListener;
  * @author DELL
  */
 public class BookPanel extends JPanel{
+    private JTable tableBook;
     private WorkFrame workFrame;
     public ArrayList<SachDTO> listSach=new SachBUS().getSachAll();
     public BookPanel(){
@@ -58,7 +60,7 @@ public class BookPanel extends JPanel{
             }
         };
         
-        JTable tableBook= new JTable(dataBook);
+        tableBook= new JTable(dataBook);
         // Thêm dữ liệu từ sách vào Frame
         for(SachDTO s: listSach){
             dataBook.addRow(new Object[]{s.getMasach(),s.getTensach(),s.getManxb(),s.getMatacgia(),s.getMatheloai(),
@@ -104,9 +106,14 @@ public class BookPanel extends JPanel{
         add(toolBar,BorderLayout.NORTH);
         add(SPBook,BorderLayout.CENTER);
         
+        // Gắn sự kiện vào Table để khi ấn vào hiện lên bản chính sửa
+        tableBook.getSelectionModel().addListSelectionListener(new BookController(this,workFrame));
         // Thêm sự kiện cho nút
         ActionListener action= new BookController(this,workFrame);
         btnAdd.addActionListener(action);
+        btnUpdate.addActionListener(action);
+        btndelete.addActionListener(action);
+        btndetail.addActionListener(action);
         
     }
 
@@ -121,5 +128,8 @@ public class BookPanel extends JPanel{
         // button.setContentAreaFilled(false); // Ẩn nền nút
         button.setBackground(new Color(240, 240, 240)); // Màu nền nhẹ
         return button;
+    }
+    public JTable getTable(){
+        return tableBook;
     }
 }
