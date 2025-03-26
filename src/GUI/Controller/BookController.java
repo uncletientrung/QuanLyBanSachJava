@@ -11,7 +11,7 @@ import java.awt.*;
 import javax.swing.JFrame;
 import GUI.View.BookPanel;
 import GUI.WorkFrame;
-import  GUI.Dialog.BookDialog.BookDialogAdd;
+import  GUI.Dialog.BookDialog.BookDiaLogAdd;
 import GUI.Dialog.BookDialog.BookDialogUpdate;
 import GUI.Dialog.BookDialog.BookDialogDetail;
 import GUI.Dialog.BookDialog.BookDialogDelete;
@@ -43,7 +43,7 @@ public void actionPerformed(ActionEvent e){
     String sukien = e.getActionCommand();  // Lắng nghe sự kiện của Button
     String sukienCombobox=(String) bf.getCbbox().getSelectedItem(); // Lắng nghe sự kiện khi chọn Combobox
     if (sukien.equals("Thêm")) {
-        new BookDialogAdd(wk);
+        new BookDiaLogAdd(wk);
         bf.refreshTableData();
     } 
     if (sukien.equals("Sửa")) {

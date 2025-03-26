@@ -12,9 +12,9 @@ import java.awt.event.ActionListener;
  * 
 
  */
-public class BookDialogAdd extends JDialog {
+public class BookDiaLogAdd extends JDialog {
     private TextField txfTensach,txfManxb,txfMatacgia,txfMatheloai,txfSoluong,txfNamxuatban,txfDongia;
-    public BookDialogAdd(JFrame parent) {
+    public BookDiaLogAdd(JFrame parent) {
         super(parent, "Danh mục thêm sách", true);
 
         JPanel panel = new JPanel();
@@ -204,5 +204,16 @@ public class BookDialogAdd extends JDialog {
     public void setTxfDongia(TextField txfDongia) {
         this.txfDongia = txfDongia;
     }
+    
+    public void ClearTextField(){
+        txfTensach.setText("");
+        txfManxb.setText("");
+        txfMatacgia.setText("");
+        txfMatheloai.setText("");
+        txfSoluong.setText("");
+        txfNamxuatban.setText("");
+        txfDongia.setText(""); 
+    }
+
 
 }

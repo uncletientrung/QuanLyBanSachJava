@@ -4,7 +4,7 @@
  */
 package GUI.Dialog.BookDialog;
 
-import GUI.Dialog.BookDialog.BookDialogAdd;
+import GUI.Dialog.BookDialog.BookDiaLogAdd;
 import DTO.SachDTO;
 import DAO.SachDAO;
 import BUS.SachBUS;
@@ -18,9 +18,9 @@ import javax.swing.JOptionPane;
  * @author DELL
  */
 public class BookDiaLogAdd_Controller implements  ActionListener{
-    private BookDialogAdd BDA;
+    private BookDiaLogAdd BDA;
     private  SachBUS SBUS=new SachBUS();
-    public BookDiaLogAdd_Controller(BookDialogAdd BDA){
+    public BookDiaLogAdd_Controller(BookDiaLogAdd BDA){
         this.BDA=BDA;
     }
     public void actionPerformed(ActionEvent e){

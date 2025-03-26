@@ -1,48 +1,87 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package BUS;
 
-import DAO.PhanQuyenDao;
+import DAO.PhanQuyenDAO;
 import DTO.NhomQuyenDTO;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- *
- * @author Hi
- */
 public class PhanQuyenBUS {
     private final ArrayList<NhomQuyenDTO> listNhomQuyen;
-    // goi ham selct ben DAO de lay du lieu tu data base truyen vo arraylust
+    private final PhanQuyenDAO pqDAO;
+
     public PhanQuyenBUS(){
-        listNhomQuyen=PhanQuyenDao.getInstance().selectAll();
+        pqDAO = PhanQuyenDAO.getInstance();
+        listNhomQuyen = pqDAO.selectAll();
     }
-    // ham lay danh sach ra
+
     public ArrayList<NhomQuyenDTO> getNhomQuyenAll(){
-        return  listNhomQuyen;
+//        return listNhomQuyen;
+          return PhanQuyenDAO.getInstance().selectAll();
     }
-     //viet ham tim kiem
+
     public ArrayList<NhomQuyenDTO> timkiem(String keywords) {
-    ArrayList<NhomQuyenDTO> ketqua = new ArrayList<>();
-
-    for (NhomQuyenDTO q : getNhomQuyenAll()) {
-        boolean timtheoma = false;
-
-        // ktra neu ngta nhap so
-        try {
-            int manhomquyen = Integer.parseInt(keywords);
-            timtheoma = (manhomquyen == q.getManhomquyen());
-        } catch (NumberFormatException e) {
-            //khong lam gi neu nhap chu
+        ArrayList<NhomQuyenDTO> ketqua = new ArrayList<>();
+        for (NhomQuyenDTO q : getNhomQuyenAll()) {
+            boolean timtheoma = false;
+            try {
+                int manhomquyen = Integer.parseInt(keywords);
+                timtheoma = (manhomquyen == q.getManhomquyen());
+            } catch (NumberFormatException e) {
+                // Nếu không phải số, bỏ qua
+            }
+            if (timtheoma || q.getTennhomquyen().toLowerCase().contains(keywords.toLowerCase())) {
+                ketqua.add(q);
+            }
         }
+        return ketqua;
+    }
 
-        //kiem tra theo ma va ten
-        if (timtheoma || q.getTennhomquyen().toLowerCase().contains(keywords.toLowerCase())) {
-            ketqua.add(q);
+//    public boolean themNhomQuyen(String tenNhom) {
+//        if (pqDAO.isTenNhomQuyenExists(tenNhom)) {
+//            return false; // Nhóm quyền đã tồn tại
+//        }
+//        int newID = pqDAO.getAutoIncrement();
+//        boolean success = pqDAO.insert(new NhomQuyenDTO(newID, tenNhom)) > 0;
+//        if (success) {
+//            listNhomQuyen.clear();
+//            listNhomQuyen.addAll(pqDAO.selectAll()); // Load lại danh sách từ database
+//        }
+//        return success;
+//    }
+    
+//    public boolean themNhomQuyen(String tenNhomQuyen) {
+//    List<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
+//    System.out.println("Danh sách nhóm quyền hiện có:");
+//    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
+//        System.out.println(quyen.getTennhomquyen());
+//    }
+//    
+//    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
+//        if (quyen.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
+//            return false; // Nhóm quyền đã tồn tại
+//        }
+//    }
+//    return PhanQuyenDAO.getInstance().insert(tenNhomQuyen);
+//}
+    
+        public boolean themNhomQuyen(String tenNhomQuyen) {
+    ArrayList<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
+    
+    // Debug danh sách trước khi thêm
+    System.out.println("Danh sách nhóm quyền hiện có:");
+    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
+        System.out.println(quyen.getTennhomquyen());
+    }
+
+    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
+        if (quyen.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
+            System.out.println("Nhóm quyền đã tồn tại! Không thêm.");
+            return false; // Ngăn chặn thêm trùng
         }
     }
-    return ketqua;
+
+    return PhanQuyenDAO.getInstance().insert(new NhomQuyenDTO(0, tenNhomQuyen)) > 0;
 }
+
 
 }

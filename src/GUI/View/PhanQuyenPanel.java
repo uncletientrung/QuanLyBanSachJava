@@ -6,8 +6,11 @@ package GUI.View;
 
 
 import BUS.PhanQuyenBUS;
-import DAO.PhanQuyenDao;
+import DAO.PhanQuyenDAO;
 import DTO.NhomQuyenDTO;
+import GUI.Controller.PhanQuyenController;
+import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd;
+import GUI.WorkFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ public class PhanQuyenPanel extends JPanel{
     private JTable table;
     private JTextField txfind;
     private Boolean checkTimkiem=false;
-
+    private WorkFrame workFrame;
     private DefaultTableModel tableModelPhanQuyen;
     //goi ham getnhomquyenall ben BUS de lay ra array list
     public ArrayList<NhomQuyenDTO> listNhomQuyen= new PhanQuyenBUS().getNhomQuyenAll();
@@ -40,6 +43,12 @@ public class PhanQuyenPanel extends JPanel{
         JButton btndelete= createToolBarButton("Xóa", "trash.png");
         JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
         btnAdd.setFont(font);
+        //goi ham de thuc thi viec them
+        PhanQuyenController controller = new PhanQuyenController(this, workFrame);
+        btnAdd.addActionListener(controller);
+
+
+
         btnUpdate.setFont(font);
         btndelete.setFont(font);
         btndetail.setFont(font);
@@ -182,19 +191,21 @@ public class PhanQuyenPanel extends JPanel{
         return button;
     }
     
-    private void capNhatBang(ArrayList<NhomQuyenDTO> danhsach){
-        //xoa bang cu
-            tableModelPhanQuyen.setRowCount(0);
-            
-            if(danhsach.isEmpty()){
-                return;
-            }
-            // Thêm dữ liệu mới vào bảng
-            for (NhomQuyenDTO q : danhsach) {
-                tableModelPhanQuyen.addRow(new Object[]{q.getManhomquyen(), q.getTennhomquyen()});
-            }
-        
+   public void capNhatBang(ArrayList<NhomQuyenDTO> danhSach) {
+    tableModelPhanQuyen.setRowCount(0); // Xóa bảng cũ
+    
+    for (NhomQuyenDTO q : danhSach) {
+        tableModelPhanQuyen.addRow(new Object[]{q.getManhomquyen(), q.getTennhomquyen()});
     }
+}
+
+//load lai du lieu khi moi them vo
+    public void loadData() {
+    listNhomQuyen = new PhanQuyenBUS().getNhomQuyenAll(); // Lấy danh sách mới
+    capNhatBang(listNhomQuyen); // Cập nhật lại bảng
+}
+
+    
     
     
     
