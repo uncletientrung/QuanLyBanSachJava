@@ -1,22 +1,22 @@
 package BUS;
 
-import DAO.PhanQuyenDAO;
+import DAO.PhanQuyenDAOo;
 import DTO.NhomQuyenDTO;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhanQuyenBUS {
     private final ArrayList<NhomQuyenDTO> listNhomQuyen;
-    private final PhanQuyenDAO pqDAO;
+    private final PhanQuyenDAOo pqDAO;
 
     public PhanQuyenBUS(){
-        pqDAO = PhanQuyenDAO.getInstance();
+        pqDAO = PhanQuyenDAOo.getInstance();
         listNhomQuyen = pqDAO.selectAll();
     }
 
     public ArrayList<NhomQuyenDTO> getNhomQuyenAll(){
 //        return listNhomQuyen;
-          return PhanQuyenDAO.getInstance().selectAll();
+          return PhanQuyenDAOo.getInstance().selectAll();
     }
 
     public ArrayList<NhomQuyenDTO> timkiem(String keywords) {
@@ -80,7 +80,7 @@ public class PhanQuyenBUS {
         }
     }
 
-    return PhanQuyenDAO.getInstance().insert(new NhomQuyenDTO(0, tenNhomQuyen)) > 0;
+    return PhanQuyenDAOo.getInstance().insert(new NhomQuyenDTO(0, tenNhomQuyen)) > 0;
 }
 
 

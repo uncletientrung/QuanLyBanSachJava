@@ -6,7 +6,7 @@ package GUI.View;
 
 
 import BUS.PhanQuyenBUS;
-import DAO.PhanQuyenDAO;
+import DAO.PhanQuyenDAOo;
 import DTO.NhomQuyenDTO;
 import GUI.Controller.PhanQuyenController;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd;
