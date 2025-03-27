@@ -90,7 +90,7 @@ public class PhanQuyenDialogUpdate extends JDialog{
 
         // ======= Panel nút bấm =======
         JPanel pn_button = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        btnXacNhan = createButton("Cập nhật dữ liệu", new Color(46, 204, 113)); // Xanh lá
+        btnXacNhan = createButton("Lưu thông tin", new Color(46, 204, 113)); // Xanh lá
         btnHuy = createButton("Hủy", new Color(231, 76, 60)); // Đỏ
 
         pn_button.add(btnXacNhan);

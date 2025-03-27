@@ -33,7 +33,7 @@ public class PhanQuyenDialogUpdate_Controller implements  ActionListener{
             
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Cập nhật dữ liệu")) {
+        if (e.getActionCommand().equals("Lưu thông tin")) {
         String tenNhomQuyenMoi = PQDU.getTenNhomQuyen();
         
         if (tenNhomQuyenMoi.isEmpty()) {

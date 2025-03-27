@@ -56,7 +56,7 @@ public void actionPerformed(ActionEvent e) {
         
         NhomQuyenDTO nhomQuyenDTO = pqp.getSelectedNhomQuyen(); // Lấy đối tượng đã chọn
         if (nhomQuyenDTO == null) {
-            JOptionPane.showMessageDialog(pqp, "Vui lòng chọn nhóm quyền cần sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhóm quyền cần sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -68,7 +68,7 @@ public void actionPerformed(ActionEvent e) {
     if ("Xóa".equals(e.getActionCommand())) {
         NhomQuyenDTO nhomQuyenCanXoa = pqp.getSelectedNhomQuyen();
         if (nhomQuyenCanXoa == null) {
-            JOptionPane.showMessageDialog(pqp, "Vui lòng chọn nhóm quyền để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhóm quyền để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
