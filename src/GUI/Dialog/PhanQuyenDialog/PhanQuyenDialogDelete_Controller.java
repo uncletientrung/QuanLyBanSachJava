@@ -30,6 +30,7 @@ public class PhanQuyenDialogDelete_Controller implements ActionListener {
             boolean result = PQBUS.xoaNhomQuyen(id);
 
             if (result) {
+                
                 JOptionPane.showMessageDialog(PQDD, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 pqPanel.loadData();  // Load lại danh sách nhóm quyền trên giao diện
                 PQDD.dispose(); // Đóng dialog sau khi xóa

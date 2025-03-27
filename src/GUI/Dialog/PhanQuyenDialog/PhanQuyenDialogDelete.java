@@ -11,57 +11,7 @@ public class PhanQuyenDialogDelete extends JDialog {
     private NhomQuyenDTO nhomQuyenHienTai; // Thêm biến này để lưu nhóm quyền
 
     public PhanQuyenDialogDelete(Frame parent, NhomQuyenDTO nhomQuyen) {
-//        super(parent, "Xác nhận xóa", true);
-//        this.nhomQuyenHienTai = nhomQuyen; // Lưu nhóm quyền cần xóa
-//        setLayout(new BorderLayout());
-//        setSize(400, 200);
-//        setLocationRelativeTo(parent);
-//        
-//        // ======= Panel chứa nội dung =======
-//        JPanel panelContent = new JPanel();
-//        panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.Y_AXIS));
-//        panelContent.setBackground(Color.WHITE);
-//
-//       
-//
-//        // ======= Tiêu đề =======
-//        JLabel lblMessage = new JLabel("Bạn có chắc chắn muốn xóa nhóm quyền?");
-//        lblMessage.setFont(new Font("Arial", Font.BOLD, 16));
-//        lblMessage.setForeground(new Color(192, 57, 43)); // Màu đỏ đậm
-//        lblMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
-//
-//        // ======= Tên nhóm quyền =======
-//        JLabel lblTenNhom = new JLabel("==> " + nhomQuyen.getTennhomquyen());
-//        lblTenNhom.setFont(new Font("Arial", Font.BOLD, 20));
-//        lblTenNhom.setForeground(Color.DARK_GRAY);
-//        lblTenNhom.setAlignmentX(Component.CENTER_ALIGNMENT);
-//
-//        // Thêm padding
-//        
-//        panelContent.add(Box.createVerticalStrut(5));
-//        panelContent.add(lblMessage);
-//        panelContent.add(Box.createVerticalStrut(5));
-//        panelContent.add(lblTenNhom);
-//        panelContent.add(Box.createVerticalStrut(15));
-//        
-//        add(panelContent, BorderLayout.CENTER);
-//
-//        // ======= Panel chứa button =======
-//        JPanel panelButton = new JPanel();
-//        panelButton.setBackground(Color.WHITE);
-//        btnXoa = createButton("Xóa", new Color(231, 76, 60)); // Đỏ
-//        btnHuy = createButton("Hủy", new Color(52, 152, 219)); // Xanh dương
-//
-//        btnXoa.addActionListener(e -> {
-//            xacNhan = true;
-//            dispose();
-//        });
-//
-//        btnHuy.addActionListener(e -> dispose());
-//
-//        panelButton.add(btnXoa);
-//        panelButton.add(btnHuy);
-//        add(panelButton, BorderLayout.SOUTH);
+
         super(parent, "Xóa nhóm quyền", true);
         this.nhomQuyenHienTai = nhomQuyen;
         setSize(500, 250);

@@ -80,10 +80,10 @@ public void actionPerformed(ActionEvent e) {
         if (dialog.isXacNhan()) {
             boolean result = phanQuyenBus.xoaNhomQuyen(nhomQuyenCanXoa.getManhomquyen());
             if (result) {
-                JOptionPane.showMessageDialog(pqp, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 pqp.capNhatBang(phanQuyenBus.getNhomQuyenAll());
             } else {
-                JOptionPane.showMessageDialog(pqp, "Xóa thất bại! Nhóm quyền có thể đang được sử dụng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Xóa thất bại! Nhóm quyền có thể đang được sử dụng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
