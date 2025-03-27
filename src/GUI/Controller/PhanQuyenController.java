@@ -5,12 +5,18 @@
 package GUI.Controller;
 
 import BUS.PhanQuyenBUS;
+import DTO.NhomQuyenDTO;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd_Controller;
+import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogDelete;
+import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogUpdate;
+import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogUpdate_Controller;
 import GUI.View.PhanQuyenPanel;
 import GUI.WorkFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -45,6 +51,43 @@ public void actionPerformed(ActionEvent e) {
         dialog.setController(controller);
         dialog.setVisible(true);
     }
+    
+    if("Sửa".equals(action)){
+        
+        NhomQuyenDTO nhomQuyenDTO = pqp.getSelectedNhomQuyen(); // Lấy đối tượng đã chọn
+        if (nhomQuyenDTO == null) {
+            JOptionPane.showMessageDialog(pqp, "Vui lòng chọn nhóm quyền cần sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        PhanQuyenDialogUpdate dialog = new PhanQuyenDialogUpdate(wk, pqp,nhomQuyenDTO);        
+        PhanQuyenDialogUpdate_Controller controller = new PhanQuyenDialogUpdate_Controller(dialog, pqp);
+        dialog.setController(controller);
+        dialog.setVisible(true);
+    }
+    if ("Xóa".equals(e.getActionCommand())) {
+        NhomQuyenDTO nhomQuyenCanXoa = pqp.getSelectedNhomQuyen();
+        if (nhomQuyenCanXoa == null) {
+            JOptionPane.showMessageDialog(pqp, "Vui lòng chọn nhóm quyền để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Mở dialog xác nhận xóa
+        PhanQuyenDialogDelete dialog = new PhanQuyenDialogDelete(wk, nhomQuyenCanXoa);
+        dialog.setVisible(true);
+
+        // Nếu người dùng xác nhận xóa thì thực hiện xóa
+        if (dialog.isXacNhan()) {
+            boolean result = phanQuyenBus.xoaNhomQuyen(nhomQuyenCanXoa.getManhomquyen());
+            if (result) {
+                JOptionPane.showMessageDialog(pqp, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                pqp.capNhatBang(phanQuyenBus.getNhomQuyenAll());
+            } else {
+                JOptionPane.showMessageDialog(pqp, "Xóa thất bại! Nhóm quyền có thể đang được sử dụng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
 }
 
 

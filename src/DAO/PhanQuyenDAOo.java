@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import BUS.PhanQuyenBUS;
+import com.mysql.cj.conf.PropertyKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,12 +64,24 @@ public class PhanQuyenDAOo implements DAOInterface<NhomQuyenDTO>{
 
     @Override
     public int update(NhomQuyenDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int delete(String t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result=0;
+        try{
+            Connection con = JDBCUtil.getConnection();
+            String sql="UPDATE nhomquyen "+
+                    "set tennhomquyen=? WHERE manhomquyen =?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, t.getTennhomquyen());
+            pst.setInt(2, t.getManhomquyen());
+            result= pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        }catch(SQLException e){
+            Logger.getLogger(PhanQuyenDAOo.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return result;
+        
+       
     }
 
     @Override
@@ -126,7 +139,34 @@ public class PhanQuyenDAOo implements DAOInterface<NhomQuyenDTO>{
         }
         return  result;
     }
-   
+
+public int delete(int maNhomQuyen) {
+    String query = "DELETE FROM nhomquyen WHERE manhomquyen = ?";
+    try (Connection conn = JDBCUtil.getConnection();
+         PreparedStatement pst = conn.prepareStatement(query)) {
+         pst.setInt(1, maNhomQuyen);
+        return pst.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
+
+
+
+    @Override
+public int delete(String t) {
+    try {
+        int maNhomQuyen = Integer.parseInt(t);  // Chuyển String → int
+        return delete(maNhomQuyen);  // Gọi hàm delete(int)
+    } catch (NumberFormatException e) {
+        System.out.println("Lỗi chuyển đổi ID từ String sang int");
+        return 0;
+    }
+}
+
+
+  
     
     
 }

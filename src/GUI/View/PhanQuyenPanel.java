@@ -41,17 +41,19 @@ public class PhanQuyenPanel extends JPanel{
         JButton btnAdd= createToolBarButton("Thêm", "insert1.png");
         JButton btnUpdate= createToolBarButton("Sửa", "update1.png");
         JButton btndelete= createToolBarButton("Xóa", "trash.png");
-        JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
+//        JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
         btnAdd.setFont(font);
         //goi ham de thuc thi viec them
         PhanQuyenController controller = new PhanQuyenController(this, workFrame);
         btnAdd.addActionListener(controller);
+        btnUpdate.addActionListener(controller);
+        btndelete.addActionListener(controller);
 
 
 
         btnUpdate.setFont(font);
         btndelete.setFont(font);
-        btndetail.setFont(font);
+//        btndetail.setFont(font);
          // Tạo phần tìm kiếm cho JPanel toolBar_Right
        
 
@@ -144,7 +146,7 @@ public class PhanQuyenPanel extends JPanel{
         toolBar_Left.add(btnAdd);
         toolBar_Left.add(btnUpdate);
         toolBar_Left.add(btndelete);
-        toolBar_Left.add(btndetail);
+//        toolBar_Left.add(btndetail);
 
         
         toolBar_Right.add(txfind);
@@ -204,6 +206,28 @@ public class PhanQuyenPanel extends JPanel{
     listNhomQuyen = new PhanQuyenBUS().getNhomQuyenAll(); // Lấy danh sách mới
     capNhatBang(listNhomQuyen); // Cập nhật lại bảng
 }
+    
+    //hàm kiểm tra coi dòng trong bảng có được click chọn hay không để sửa
+    public int getSelectedRow() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhóm quyền để sửa!");
+        }
+        return selectedRow;
+    }
+    
+    
+    //lấy đối tượng nhóm quyền đang được click để hàm update biết
+    public NhomQuyenDTO getSelectedNhomQuyen() {
+        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
+        if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
+
+        int maNhomQuyen = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhóm quyền
+        String tenNhomQuyen = (String) table.getValueAt(selectedRow, 1); // Lấy tên nhóm quyền
+
+        return new NhomQuyenDTO(maNhomQuyen, tenNhomQuyen); // Tạo đối tượng NhomQuyenDTO
+}
+
 
     
     

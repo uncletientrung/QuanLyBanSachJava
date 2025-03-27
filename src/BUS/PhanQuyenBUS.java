@@ -36,52 +36,49 @@ public class PhanQuyenBUS {
         return ketqua;
     }
 
-//    public boolean themNhomQuyen(String tenNhom) {
-//        if (pqDAO.isTenNhomQuyenExists(tenNhom)) {
-//            return false; // Nhóm quyền đã tồn tại
-//        }
-//        int newID = pqDAO.getAutoIncrement();
-//        boolean success = pqDAO.insert(new NhomQuyenDTO(newID, tenNhom)) > 0;
-//        if (success) {
-//            listNhomQuyen.clear();
-//            listNhomQuyen.addAll(pqDAO.selectAll()); // Load lại danh sách từ database
-//        }
-//        return success;
-//    }
-    
-//    public boolean themNhomQuyen(String tenNhomQuyen) {
-//    List<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
-//    System.out.println("Danh sách nhóm quyền hiện có:");
-//    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
-//        System.out.println(quyen.getTennhomquyen());
-//    }
-//    
-//    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
-//        if (quyen.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
-//            return false; // Nhóm quyền đã tồn tại
-//        }
-//    }
-//    return PhanQuyenDAO.getInstance().insert(tenNhomQuyen);
-//}
-    
-        public boolean themNhomQuyen(String tenNhomQuyen) {
-    ArrayList<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
-    
-    // Debug danh sách trước khi thêm
-    System.out.println("Danh sách nhóm quyền hiện có:");
-    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
-        System.out.println(quyen.getTennhomquyen());
-    }
 
-    for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
-        if (quyen.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
-            System.out.println("Nhóm quyền đã tồn tại! Không thêm.");
-            return false; // Ngăn chặn thêm trùng
+    
+    public boolean themNhomQuyen(String tenNhomQuyen) {
+        ArrayList<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
+
+        for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
+            if (quyen.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
+                System.out.println("Nhóm quyền đã tồn tại! Không thêm.");
+                return false; // Ngăn chặn thêm trùng
+            }
+        }
+
+            return PhanQuyenDAOo.getInstance().insert(new NhomQuyenDTO(0, tenNhomQuyen)) > 0;
+}
+    //hàm update
+    public boolean updateNhomQuyen(NhomQuyenDTO nhomQuyen){
+        int result = PhanQuyenDAOo.getInstance().update(nhomQuyen);
+        if(result > 0){
+            listNhomQuyen.clear();
+            listNhomQuyen.addAll(getNhomQuyenAll()); // Cập nhật danh sách mới nhất từ DB
+            return true;
+        }
+        return false;
+        
+    }
+    //hàm kiểm tra coi khi sửa có lỡ sửa cùng tên hay không
+    public boolean isTenNhomQuyenTrung(String tenNhomQuyen, int maNhomQuyen) {
+        ArrayList<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
+    for (NhomQuyenDTO nq : danhSachNhomQuyen) {
+        if (nq.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen) && nq.getManhomquyen() != maNhomQuyen) {
+            return true; // Đã tồn tại nhóm quyền khác có cùng tên
         }
     }
-
-    return PhanQuyenDAOo.getInstance().insert(new NhomQuyenDTO(0, tenNhomQuyen)) > 0;
+    return false;
 }
+    
+    
+    public boolean xoaNhomQuyen(int maNhomQuyen) {
+        return pqDAO.delete(maNhomQuyen) > 0;
+}
+
+ 
+
 
 
 }
