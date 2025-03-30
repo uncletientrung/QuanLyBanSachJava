@@ -23,65 +23,6 @@ import javax.swing.border.Border;
  *
  * @author Hi
  */
-//class CustomButton extends JButton{
-//
-//    private JPanel textPanel; // Để truy cập textPanel trong hover
-//    private Color originalTextBgColor = new Color(230, 230, 230); // Màu gốc của textPanel
-//
-//    public CustomButton(String text, String iconPath, Color iconBgColor) {
-//        setLayout(new BorderLayout());
-//        setPreferredSize(new Dimension(180, 60)); // Kích thước button
-//        setBorderPainted(false);
-//        setFocusPainted(false);
-//        setContentAreaFilled(false);
-//        setOpaque(true); // Bật opaque để vẽ nền bo tròn
-//
-//        // Panel chứa icon
-//        JPanel iconPanel = new JPanel(new GridBagLayout());
-//        iconPanel.setBackground(iconBgColor);
-//        iconPanel.setPreferredSize(new Dimension(140, 60)); // Giảm chiều cao để khớp với button
-//
-//        // Label chứa icon
-//        JLabel iconLabel = new JLabel();
-//        ImageIcon icon = new ImageIcon(getClass().getResource("/GUI/Image/" + iconPath));
-//        Image img = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-//        iconLabel.setIcon(new ImageIcon(img));
-//        iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-//        iconLabel.setVerticalAlignment(SwingConstants.CENTER);
-//
-//        GridBagConstraints gbc = new GridBagConstraints();
-//        gbc.gridx = 0;
-//        gbc.gridy = 0;
-//        gbc.anchor = GridBagConstraints.CENTER;
-//        iconPanel.add(iconLabel, gbc);
-//
-//        // Panel chứa chữ
-//        textPanel = new JPanel(new BorderLayout());
-//        textPanel.setBackground(originalTextBgColor);
-//        JLabel textLabel = new JLabel(text, JLabel.CENTER);
-//        textLabel.setFont(new Font("Arial", Font.BOLD, 20));
-//        textPanel.add(textLabel, BorderLayout.CENTER);
-//
-//        // Thêm vào JButton
-//        add(iconPanel, BorderLayout.WEST);
-//        add(textPanel, BorderLayout.CENTER);
-//
-//        // Thêm hiệu ứng hover (chỉ làm sáng textPanel)
-//        addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseEntered(MouseEvent e) {
-//                textPanel.setBackground(originalTextBgColor.brighter()); // Chỉ làm sáng textPanel
-//            }
-//
-//            @Override
-//            public void mouseExited(MouseEvent e) {
-//                textPanel.setBackground(originalTextBgColor); // Trả lại màu gốc
-//            }
-//        });
-//    
-//}
-//    
-//}
 
 class CustomButton extends JButton {
     private JPanel textPanel;
