@@ -12,9 +12,9 @@ import java.awt.event.ActionListener;
  * 
 
  */
-public class BookDiaLogAdd extends JDialog {
-    private TextField txfTensach,txfManxb,txfMatacgia,txfMatheloai,txfSoluong,txfNamxuatban,txfDongia;
-    public BookDiaLogAdd(JFrame parent) {
+public class BookDialogAdd extends JDialog {
+    private JTextField txfTensach,txfManxb,txfMatacgia,txfMatheloai,txfSoluong,txfNamxuatban,txfDongia;
+    public BookDialogAdd(JFrame parent) {
         super(parent, "Danh mục thêm sách", true);
 
         JPanel panel = new JPanel();
@@ -55,13 +55,13 @@ public class BookDiaLogAdd extends JDialog {
         JLabel lbNamxuatban = new JLabel("Năm xuất bản:"); lbNamxuatban.setFont(labelFont);
         JLabel lbDongia = new JLabel("Đơn giá:");          lbDongia.setFont(labelFont);
 
-        JTextField txfTensach = createTextField(fieldFont);
-        JTextField txfManxb = createTextField(fieldFont);
-        JTextField txfMatacgia = createTextField(fieldFont);
-        JTextField txfMatheloai = createTextField(fieldFont);
-        JTextField txfSoluong = createTextField(fieldFont);
-        JTextField txfNamxuatban = createTextField(fieldFont);
-        JTextField txfDongia = createTextField(fieldFont);
+        txfTensach = createTextField(fieldFont);
+        txfManxb = createTextField(fieldFont);
+        txfMatacgia = createTextField(fieldFont);
+        txfMatheloai = createTextField(fieldFont);
+        txfSoluong = createTextField(fieldFont);
+        txfNamxuatban = createTextField(fieldFont);
+        txfDongia = createTextField(fieldFont);
 
         // Cột 1 - Labels
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
@@ -149,61 +149,13 @@ public class BookDiaLogAdd extends JDialog {
 
         return button;
     }
-    public TextField getTxfTensach() {
-        return txfTensach;
-    }
-
-    public void setTxfTensach(TextField txfTensach) {
-        this.txfTensach = txfTensach;
-    }
-
-    public TextField getTxfManxb() {
-        return txfManxb;
-    }
-
-    public void setTxfManxb(TextField txfManxb) {
-        this.txfManxb = txfManxb;
-    }
-
-    public TextField getTxfMatacgia() {
-        return txfMatacgia;
-    }
-
-    public void setTxfMatacgia(TextField txfMatacgia) {
-        this.txfMatacgia = txfMatacgia;
-    }
-
-    public TextField getTxfMatheloai() {
-        return txfMatheloai;
-    }
-
-    public void setTxfMatheloai(TextField txfMatheloai) {
-        this.txfMatheloai = txfMatheloai;
-    }
-
-    public TextField getTxfSoluong() {
-        return txfSoluong;
-    }
-
-    public void setTxfSoluong(TextField txfSoluong) {
-        this.txfSoluong = txfSoluong;
-    }
-
-    public TextField getTxfNamxuatban() {
-        return txfNamxuatban;
-    }
-
-    public void setTxfNamxuatban(TextField txfNamxuatban) {
-        this.txfNamxuatban = txfNamxuatban;
-    }
-
-    public TextField getTxfDongia() {
-        return txfDongia;
-    }
-
-    public void setTxfDongia(TextField txfDongia) {
-        this.txfDongia = txfDongia;
-    }
+    public JTextField getTxfTensach() {return txfTensach;}
+    public JTextField getTxfManxb() {return txfManxb;}
+    public JTextField getTxfMatacgia() { return txfMatacgia;}
+    public JTextField getTxfMatheloai() {return txfMatheloai;}
+    public JTextField getTxfSoluong() { return txfSoluong;}
+    public JTextField getTxfNamxuatban() { return txfNamxuatban; }
+    public JTextField getTxfDongia() {return txfDongia;}
     
     public void ClearTextField(){
         txfTensach.setText("");

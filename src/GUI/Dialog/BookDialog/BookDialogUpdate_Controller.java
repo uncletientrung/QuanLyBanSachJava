@@ -4,7 +4,7 @@
  */
 package GUI.Dialog.BookDialog;
 
-import GUI.Dialog.BookDialog.BookDiaLogAdd;
+import GUI.Dialog.BookDialog.BookDialogAdd;
 import DTO.SachDTO;
 import DAO.SachDAO;
 import BUS.SachBUS;
