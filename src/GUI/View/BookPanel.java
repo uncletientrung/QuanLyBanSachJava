@@ -67,6 +67,8 @@ public class BookPanel extends JPanel{
         };
         
         tableBook= new JTable(dataBook);
+        tableBook.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tableBook.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
         // Thêm dữ liệu từ sách vào Frame
         for(SachDTO s: listSach){
             dataBook.addRow(new Object[]{s.getMasach(),s.getTensach(),s.getManxb(),s.getMatacgia(),s.getMatheloai(),

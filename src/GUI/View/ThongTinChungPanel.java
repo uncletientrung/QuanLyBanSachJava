@@ -4,6 +4,10 @@
  */
 package GUI.View;
 
+import GUI.Dialog.ThongTinChungDialog.NhaCungCapDialog;
+import GUI.Dialog.ThongTinChungDialog.NhaXuatBanDialog;
+import GUI.Dialog.ThongTinChungDialog.TacGiaDialog;
+import GUI.Dialog.ThongTinChungDialog.TheLoaiDialog;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,7 +24,9 @@ import javax.swing.*;
  * @author Hi
  */
 public class ThongTinChungPanel extends JPanel{
-    public ThongTinChungPanel() {
+    private JFrame parent;
+    public ThongTinChungPanel(JFrame parent) {
+//        this.parent=parent;
         // Tiêu đề
         JPanel pn_tieuDe = new JPanel(new BorderLayout());
         pn_tieuDe.setBackground(Color.decode("#B4CDCD"));
@@ -44,6 +50,25 @@ public class ThongTinChungPanel extends JPanel{
         menu.add(btn_nhaXuatBan);
         menu.add(btn_tacGia);
         menu.add(btn_theLoai);
+        btn_nhaCungCap.addActionListener(e -> {
+            NhaCungCapDialog dialog = new NhaCungCapDialog(parent);
+            dialog.setVisible(true);
+        });
+        
+        btn_nhaXuatBan.addActionListener(e -> {
+            NhaXuatBanDialog dialog = new NhaXuatBanDialog(parent);
+            dialog.setVisible(true);
+        });
+        
+        btn_tacGia.addActionListener(e -> {
+            TacGiaDialog dialog = new TacGiaDialog(parent);
+            dialog.setVisible(true);
+        });
+        
+        btn_theLoai.addActionListener(e ->{
+            TheLoaiDialog dialog= new TheLoaiDialog(parent);
+            dialog.setVisible(true);
+        });
 
         //  Layout chính
         setLayout(new BorderLayout());

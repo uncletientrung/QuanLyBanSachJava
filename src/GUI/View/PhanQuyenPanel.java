@@ -26,6 +26,9 @@ public class PhanQuyenPanel extends JPanel{
     private JTextField txfind;
     private Boolean checkTimkiem=false;
     private WorkFrame workFrame;
+    
+    
+    
     private DefaultTableModel tableModelPhanQuyen;
     //goi ham getnhomquyenall ben BUS de lay ra array list
     public ArrayList<NhomQuyenDTO> listNhomQuyen= new PhanQuyenBUS().getNhomQuyenAll();
@@ -116,12 +119,15 @@ public class PhanQuyenPanel extends JPanel{
         //tạo table ở giữa
         String[] columnPhanQuyen ={"Mã nhóm quyền","Tên nhóm quyền"};
         tableModelPhanQuyen = new DefaultTableModel(columnPhanQuyen, 0){
+        @Override
         public boolean isCellEditable(int row, int column){
              return false;// chặn chỉnh sửa các ô
         
         
         }}; 
         table = new JTable(tableModelPhanQuyen);
+        table.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
         //them du lieu vao bang GUI
         for(NhomQuyenDTO q: listNhomQuyen){
             tableModelPhanQuyen.addRow(new Object[]{q.getManhomquyen(),q.getTennhomquyen()});
