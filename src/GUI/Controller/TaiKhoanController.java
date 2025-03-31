@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -22,13 +24,18 @@ public class TaiKhoanController implements  ActionListener{
     private TaiKhoanBUS tkBus=new TaiKhoanBUS();
     public TaiKhoanController(Taikhoan tkview){
         this.tkview=tkview;
+        //Gắn keyListener cho username và password
+        tkview.usernameField.addKeyListener(keyListener);
+        tkview.passwordField.addKeyListener(keyListener);
     }
+    
     public void actionPerformed(ActionEvent e){
         listTaiKhoan= tkBus.getTaiKhoanAll();
         String sukien=e.getActionCommand();
         String username= tkview.usernameField.getText();
         String password=new String(tkview.passwordField.getPassword());
-        boolean login=false;
+        boolean  login=false;
+
         if(sukien.equals("Submit")){
             if(tkview.usernameField.getText().isEmpty()){
                 JOptionPane.showMessageDialog(tkview, "Vui lòng nhập tên tài khoản!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -55,6 +62,53 @@ public class TaiKhoanController implements  ActionListener{
             tkview.passwordField.setText("");
         }
     }
+    
+        //Thêm hàm submit để làm KeyListener
+    public void submit(){
+        listTaiKhoan= tkBus.getTaiKhoanAll();
+        String username= tkview.usernameField.getText();
+        String password=new String(tkview.passwordField.getPassword());
+        boolean login = false;
+        if(tkview.usernameField.getText().isEmpty()){
+                JOptionPane.showMessageDialog(tkview, "Vui lòng nhập tên tài khoản!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            else if (new String(tkview.passwordField.getPassword()).isEmpty()) {
+                JOptionPane.showMessageDialog(tkview, "Vui lòng nhập mật khẩu!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            else{
+                for(TaiKhoanDTO tk: listTaiKhoan){
+                    if (username.equals(tk.getUsername()) && password.equals(tk.getMatkhau()) && tk.getTrangthai()==1 ){
+                        login=true;
+                        tkview.dispose();
+                        new WorkFrame();
+                    }
+                }
+            }
+            if(!login){
+                JOptionPane.showMessageDialog(tkview, "Tài khoản và mật khẩu không tồn tài!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+    }
+    
+    //Thêm Keylistener
+    KeyListener keyListener = new KeyListener() {
+        @Override
+        public void keyTyped(KeyEvent e) {
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                submit();
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+        }
+    };
+    
 }
 ///*
 // * Click nbfs://SystemFileSystem/Templates/Licenses/license-default.txt to change this license
