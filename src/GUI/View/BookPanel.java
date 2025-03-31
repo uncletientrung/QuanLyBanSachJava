@@ -14,9 +14,15 @@ import GUI.WorkFrame;
 import GUI.Controller.BookController;
 import GUI.Dialog.BookDialog.BookDialogUpdate;
 import java.util.ArrayList;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.event.DocumentListener;
+import BUS.NhaXuatBanBUS;
+import DAO.NhaXuatBanDAO;
+import DTO.NhaXuatBanDTO;
+import DTO.TacGiaDTO;
+import BUS.TacGiaBUS;
+import DTO.TheLoaiDTO;
+import BUS.TheLoaiBUS;
 /**
  *
  * @author DELL
@@ -28,7 +34,12 @@ public class BookPanel extends JPanel{
     private ArrayList<SachDTO> listSach;
     private DefaultTableModel dataBook;
     private JTextField txfFind;
-    private  JComboBox<String> cbbox;
+    private JComboBox<String> cbbox;
+    private NhaXuatBanBUS NxbBUS=new NhaXuatBanBUS();
+    private TacGiaBUS TgBUS=new TacGiaBUS();
+    private TheLoaiBUS TlBUS=new TheLoaiBUS();
+           
+    
     public BookPanel(){
         // Tạo Panel toolBar cho thanh công cụ trên cùng
         JPanel toolBar= new JPanel(new GridLayout(1,2));
@@ -69,16 +80,32 @@ public class BookPanel extends JPanel{
         tableBook= new JTable(dataBook);
         tableBook.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tableBook.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
+        
         // Thêm dữ liệu từ sách vào Frame
         for(SachDTO s: listSach){
-            dataBook.addRow(new Object[]{s.getMasach(),s.getTensach(),s.getManxb(),s.getMatacgia(),s.getMatheloai(),
+            // Tìm tên nhà xuất 
+            String tenNxb="";
+             NhaXuatBanDTO NxbFind=NxbBUS.getNXBById(s.getManxb());
+             tenNxb=NxbFind.getTennxb();
+             // Tìm tên tác giả
+             String tenTg="";
+             TacGiaDTO TgFind=TgBUS.getTGById(s.getMatacgia());
+             tenTg =TgFind.getHotentacgia();
+             // Tìm tên thể loại
+             String tenTl="";
+             TheLoaiDTO TLFind=TlBUS.getTlbyId(s.getMatheloai());
+             tenTl=TLFind.getTentheloai();
+             
+            
+            
+            dataBook.addRow(new Object[]{s.getMasach(),s.getTensach(),tenNxb,tenTg,tenTl,
                                                            s.getSoluongton(),s.getNamxuatban(),s.getDongia()});
         }
         
         // Tạo renderer để căn giữa dữ liệu trong TableBook
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter = {0 , 3,4,5,6,7}; // Căn giữa tất cả trừ tên sách và tên nbx
+        int[] columnsToCenter = {0 , 1,2,3,4,5,6,7}; // Căn giữa tất cả trừ tên sách và tên nbx
         for (int col : columnsToCenter) {
             tableBook.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
@@ -86,9 +113,9 @@ public class BookPanel extends JPanel{
         tableBook.setRowHeight(30);
         tableBook.getColumnModel().getColumn(0).setPreferredWidth(30);
         tableBook.getColumnModel().getColumn(1).setPreferredWidth(200);
-        tableBook.getColumnModel().getColumn(2).setPreferredWidth(200);
-        tableBook.getColumnModel().getColumn(3).setPreferredWidth(65);
-        tableBook.getColumnModel().getColumn(4).setPreferredWidth(65);
+        tableBook.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tableBook.getColumnModel().getColumn(3).setPreferredWidth(115);
+        tableBook.getColumnModel().getColumn(4).setPreferredWidth(115);
         tableBook.getColumnModel().getColumn(5).setPreferredWidth(30);
         tableBook.getColumnModel().getColumn(6).setPreferredWidth(30);
         tableBook.getColumnModel().getColumn(7).setPreferredWidth(60);
@@ -157,12 +184,24 @@ public class BookPanel extends JPanel{
         listSach=new SachBUS().getSachAll();
         dataBook.setRowCount(0);
         for(SachDTO sach: listSach){
-            dataBook.addRow(new Object[]{
+            // Tìm tên nhà xuất 
+            String tenNxb="";
+             NhaXuatBanDTO NxbFind=NxbBUS.getNXBById(sach.getManxb());
+             tenNxb=NxbFind.getTennxb();
+             // Tìm tên tác giả
+             String tenTg="";
+             TacGiaDTO TgFind=TgBUS.getTGById(sach.getMatacgia());
+             tenTg =TgFind.getHotentacgia();
+             // Tìm tên thể loại
+             String tenTl="";
+             TheLoaiDTO TLFind=TlBUS.getTlbyId(sach.getMatheloai());
+             tenTl=TLFind.getTentheloai();
+             dataBook.addRow(new Object[]{
                 sach.getMasach(),
                 sach.getTensach(),
-                sach.getManxb(),
-                sach.getMatacgia(),
-                sach.getMatheloai(),
+                tenNxb,
+                tenTg,
+                tenTl,
                 sach.getSoluongton(),
                 sach.getNamxuatban(),
                 sach.getDongia()
@@ -173,12 +212,24 @@ public class BookPanel extends JPanel{
         listSach=new SachBUS().search(text);
         dataBook.setRowCount(0);
         for(SachDTO sach: listSach){
-            dataBook.addRow(new Object[]{
+            // Tìm tên nhà xuất 
+            String tenNxb="";
+             NhaXuatBanDTO NxbFind=NxbBUS.getNXBById(sach.getManxb());
+             tenNxb=NxbFind.getTennxb();
+             // Tìm tên tác giả
+             String tenTg="";
+             TacGiaDTO TgFind=TgBUS.getTGById(sach.getMatacgia());
+             tenTg =TgFind.getHotentacgia();
+             // Tìm tên thể loại
+             String tenTl="";
+             TheLoaiDTO TLFind=TlBUS.getTlbyId(sach.getMatheloai());
+             tenTl=TLFind.getTentheloai();
+             dataBook.addRow(new Object[]{
                 sach.getMasach(),
                 sach.getTensach(),
-                sach.getManxb(),
-                sach.getMatacgia(),
-                sach.getMatheloai(),
+                tenNxb,
+                tenTg,
+                tenTl,
                 sach.getSoluongton(),
                 sach.getNamxuatban(),
                 sach.getDongia()
@@ -188,12 +239,24 @@ public class BookPanel extends JPanel{
     public void FilterTableData(ArrayList<SachDTO> list_Sort){
         dataBook.setRowCount(0);
         for(SachDTO sach: list_Sort){
-            dataBook.addRow(new Object[]{
+            // Tìm tên nhà xuất 
+            String tenNxb="";
+             NhaXuatBanDTO NxbFind=NxbBUS.getNXBById(sach.getManxb());
+             tenNxb=NxbFind.getTennxb();
+             // Tìm tên tác giả
+             String tenTg="";
+             TacGiaDTO TgFind=TgBUS.getTGById(sach.getMatacgia());
+             tenTg =TgFind.getHotentacgia();
+             // Tìm tên thể loại
+             String tenTl="";
+             TheLoaiDTO TLFind=TlBUS.getTlbyId(sach.getMatheloai());
+             tenTl=TLFind.getTentheloai();
+             dataBook.addRow(new Object[]{
                 sach.getMasach(),
                 sach.getTensach(),
-                sach.getManxb(),
-                sach.getMatacgia(),
-                sach.getMatheloai(),
+                tenNxb,
+                tenTg,
+                tenTl,
                 sach.getSoluongton(),
                 sach.getNamxuatban(),
                 sach.getDongia()

@@ -6,6 +6,7 @@ package BUS;
 
 import DAO.TheLoaiDAO;
 import DTO.TheLoaiDTO;
+import com.sun.source.doctree.ReturnTree;
 import java.util.ArrayList;
 
 /**
@@ -40,5 +41,15 @@ public class TheLoaiBUS {
             }
         }
         return ketqua;
+    }
+    public TheLoaiDTO getTlbyId(int matheloai){
+        TheLoaiDTO result=new TheLoaiDTO();
+        for (TheLoaiDTO theloai: listTheLoai){
+            if (theloai.getMatheloai() == matheloai){
+                result=theloai;
+                break;
+            }
+        }
+        return result;
     }
 }

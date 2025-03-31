@@ -5,6 +5,7 @@
 package BUS;
 
 import DAO.TacGiaDAO;
+import DTO.NhaXuatBanDTO;
 import DTO.TacGiaDTO;
 import java.util.ArrayList;
 
@@ -41,5 +42,16 @@ public class TacGiaBUS {
         }
         return ketqua;
     }
+    public TacGiaDTO getTGById(int manxb){
+        TacGiaDTO result=new TacGiaDTO();
+        for(TacGiaDTO tg: listTacGia){
+            if (tg.getMatacgia()== manxb){
+                result=tg;
+                break;
+            }
+        }
+        return result;
+    }
+      
     
 }

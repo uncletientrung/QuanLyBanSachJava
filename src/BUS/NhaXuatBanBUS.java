@@ -44,5 +44,15 @@ public class NhaXuatBanBUS {
         }
         return ketqua;
     }
+    public NhaXuatBanDTO getNXBById(int manxb){
+        NhaXuatBanDTO result=new NhaXuatBanDTO();
+        for(NhaXuatBanDTO nxb: listNhaXuatBan){
+            if (nxb.getManxb() == manxb){
+                result=nxb;
+                break;
+            }
+        }
+        return result;
+    }
     
 }
