@@ -1,18 +1,16 @@
 package DTO;
+
 import java.sql.Timestamp;
 
 public class PhieuNhapDTO extends PhieuDTO {
     private int mancc;
 
-    public PhieuNhapDTO(int mancc) {
-        this.mancc = mancc;
-    }
-
-    public PhieuNhapDTO(int mancc, int maphieu, int manv, Timestamp thoigiantao, long tongTien, int trangthai) {
+    public PhieuNhapDTO(int maphieu, int manv, int mancc, Timestamp thoigiantao, long tongTien, int trangthai) {
         super(maphieu, manv, thoigiantao, tongTien, trangthai);
         this.mancc = mancc;
     }
 
+    
     public int getMancc() {
         return mancc;
     }
@@ -42,6 +40,13 @@ public class PhieuNhapDTO extends PhieuDTO {
 
     @Override
     public String toString() {
-        return "PhieuNhapDTO{" + "mancc=" + mancc + '}' + super.toString();
+        return "PhieuNhapDTO{" +
+                "maphieu=" + getMaphieu() +
+                ", manv=" + getManv() +
+                ", mancc=" + mancc +
+                ", thoigiantao=" + getThoigiantao() +
+                ", tongTien=" + getTongTien() +
+                ", trangthai=" + getTrangthai() +
+                '}';
     }
 }
