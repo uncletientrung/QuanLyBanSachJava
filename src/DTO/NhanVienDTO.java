@@ -6,14 +6,14 @@ public class NhanVienDTO {
     private int manv;
     private String honv;
     private String tennv;
-    private String gioitinh;
+    private int gioitinh;
     private String sdt;
     private int trangthai;
     private Date ngaysinh;
 
     public NhanVienDTO() {}
 
-    public NhanVienDTO(int manv, String honv, String tennv, String gioitinh, String sdt, int trangthai, Date ngaysinh) {
+    public NhanVienDTO(int manv, String honv, String tennv, int gioitinh, String sdt, int trangthai, Date ngaysinh) {
         this.manv = manv;
         this.honv = honv;
         this.tennv = tennv;
@@ -47,11 +47,11 @@ public class NhanVienDTO {
         this.tennv = tennv;
     }
 
-    public String getGioitinh() {
+    public int getGioitinh() {
         return gioitinh;
     }
 
-    public void setGioitinh(String gioitinh) {
+    public void setGioitinh(int gioitinh) {
         this.gioitinh = gioitinh;
     }
 
