@@ -54,5 +54,15 @@ public class NhaXuatBanBUS {
         }
         return result;
     }
+    public NhaXuatBanDTO getNXBByNameNXB(String tenNxb){
+        NhaXuatBanDTO result=new NhaXuatBanDTO();
+        for(NhaXuatBanDTO nxb: listNhaXuatBan){
+            if(nxb.getTennxb().equals(tenNxb) ){
+                result=nxb;
+                break;
+            }
+        }
+        return result;
+    }
     
 }

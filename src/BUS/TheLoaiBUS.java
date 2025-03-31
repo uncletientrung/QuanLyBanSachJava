@@ -52,4 +52,14 @@ public class TheLoaiBUS {
         }
         return result;
     }
+    public TheLoaiDTO getTlByNameTL(String tenTL){
+        TheLoaiDTO result=new TheLoaiDTO();
+        for(TheLoaiDTO theloai: listTheLoai){
+            if(theloai.getTentheloai().equals(tenTL)){
+                result=theloai;
+                break;
+            }
+        }
+        return result;
+    }
 }

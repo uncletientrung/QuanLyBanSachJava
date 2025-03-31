@@ -52,6 +52,16 @@ public class TacGiaBUS {
         }
         return result;
     }
+    public TacGiaDTO getTgByNameTG(String tentacgia){
+        TacGiaDTO result= new TacGiaDTO();
+        for(TacGiaDTO tg:listTacGia){
+            if(tg.getHotentacgia().equals(tentacgia)){
+                result=tg;
+                break;
+            }
+        }
+        return result;
+    }
       
     
 }

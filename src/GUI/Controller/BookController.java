@@ -22,6 +22,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import BUS.NhaXuatBanBUS;
+import DTO.NhaXuatBanDTO;
+import DTO.TacGiaDTO;
+import BUS.TacGiaBUS;
+import DTO.TheLoaiDTO;
+import BUS.TheLoaiBUS;
+
 /**
  *
  * @author DELL
@@ -33,6 +40,9 @@ public class BookController implements ActionListener,ListSelectionListener,Docu
     private BookDialogDetail bdd;
     private BookDialogDelete bddelete;
     private SachBUS sachBUS;
+    private NhaXuatBanBUS NxbBUS=new NhaXuatBanBUS();
+    private TacGiaBUS TgBUS=new TacGiaBUS();
+    private TheLoaiBUS TlBUS=new TheLoaiBUS();
     public BookController(BookPanel bf,WorkFrame wk){
         this.bf=bf;
         this.wk=wk;
@@ -102,7 +112,18 @@ public void actionPerformed(ActionEvent e){
             String soluongton = tableB.getValueAt(selectRow, 5).toString();
             String namxuatban = tableB.getValueAt(selectRow, 6).toString();
             String dongia = tableB.getValueAt(selectRow, 7).toString();
-
+            
+            // Tìm mã nhà xuất bản từ tên nhà xuất bản để in lên chi tiết
+            NhaXuatBanDTO NxbFind= NxbBUS.getNXBByNameNXB(maNxb);
+            maNxb=String.valueOf(NxbFind.getManxb());
+            
+            // Tìm mã tác giả từ tên tác giả để in lên chi tiết
+            TacGiaDTO TgFind=TgBUS.getTgByNameTG(maTacgia);
+            maTacgia=String.valueOf(TgFind.getMatacgia());
+            // Tìm mã thể loại từ tên thể loại để in lên chi tiết
+            TheLoaiDTO TlFind=TlBUS.getTlByNameTL(matheloai);
+            matheloai=String.valueOf(TlFind.getMatheloai());
+            
             // Mở hộp thoại sửa và hiển thị thông tin
             bdd = new BookDialogDetail(wk);
             bdd.ShowInfo(maSach, tenSach, maNxb, maTacgia, matheloai, soluongton, namxuatban, dongia); // Cập nhật dữ liệu trước
