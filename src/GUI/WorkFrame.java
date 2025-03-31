@@ -117,6 +117,7 @@ public class WorkFrame extends JFrame{
         PanelCard.add(new PhanQuyenPanel(),"Phân quyền");
         PanelCard.add(new ThongTinChungPanel(this),"Thông tin chung");
         PanelCard.add(new PhieuXuatPanel(),"Phiếu xuất");
+        PanelCard.add(new TaiKhoanPanel(),"Tài khoản");
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);
@@ -133,6 +134,7 @@ public class WorkFrame extends JFrame{
         btnDong.addActionListener(action);
         btnThongTinChung.addActionListener(action);
         btnPhieuXuat.addActionListener(action);
+        btnTaiKhoan.addActionListener(action);
     }
 
     // Phương thức tạo nút menu với kích thước và căn chỉnh phù hợp

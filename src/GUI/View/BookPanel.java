@@ -153,6 +153,7 @@ public class BookPanel extends JPanel{
         // Thêm sự kiện DocumentListener
         DocumentListener document=new BookController(this, workFrame);
         txfFind.getDocument().addDocumentListener(document);
+       
         
     }
 

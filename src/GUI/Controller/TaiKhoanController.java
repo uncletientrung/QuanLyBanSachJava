@@ -56,3 +56,59 @@ public class TaiKhoanController implements  ActionListener{
         }
     }
 }
+///*
+// * Click nbfs://SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+// * Click nbfs://SystemFileSystem/Templates/Classes/Class.java to edit this template
+// */
+//package GUI.Controller;
+//
+//import GUI.WorkFrame;
+//import GUI.View.Taikhoan;
+//import BUS.TaiKhoanBUS;
+//import DTO.TaiKhoanDTO;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//import javax.swing.JOptionPane;
+//
+///**
+// *
+// * @author DELL
+// */
+//public class TaiKhoanController implements ActionListener {
+//    private Taikhoan tkview;
+//    private TaiKhoanBUS tkBus;
+//
+//    public TaiKhoanController(Taikhoan tkview) {
+//        this.tkview = tkview;
+//        this.tkBus = new TaiKhoanBUS();
+//    }
+//
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        String sukien = e.getActionCommand();
+//        String username = tkview.usernameField.getText();
+//        String password = new String(tkview.passwordField.getPassword());
+//
+//        if (sukien.equals("Submit")) {
+//            if (username.isEmpty()) {
+//                JOptionPane.showMessageDialog(tkview, "Vui lòng nhập tên tài khoản!", "Error", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            } else if (password.isEmpty()) {
+//                JOptionPane.showMessageDialog(tkview, "Vui lòng nhập mật khẩu!", "Error", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            } else {
+//                TaiKhoanDTO taiKhoan = tkBus.dangNhap(username, password);
+//                if (taiKhoan != null) { // Đăng nhập thành công
+//                    JOptionPane.showMessageDialog(tkview, "Đăng nhập thành công!");
+//                    tkview.dispose();
+//                    new WorkFrame(taiKhoan); // Truyền TaiKhoanDTO sang WorkFrame
+//                } else {
+//                    JOptionPane.showMessageDialog(tkview, "Tài khoản hoặc mật khẩu sai, hoặc tài khoản bị khóa!", "Error", JOptionPane.ERROR_MESSAGE);
+//                }
+//            }
+//        } else if (sukien.equals("Reset")) {
+//            tkview.usernameField.setText("");
+//            tkview.passwordField.setText("");
+//        }
+//    }
+//}

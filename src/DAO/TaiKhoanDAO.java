@@ -83,7 +83,7 @@ public class TaiKhoanDAO implements  DAOInterface<TaiKhoanDTO>{
         ArrayList<TaiKhoanDTO> result= new ArrayList<>();
         try{
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql=" Select * From taikhoan Where trangthai=1";
+            String sql=" Select * From taikhoan";
             PreparedStatement pst= (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs= (ResultSet) pst.executeQuery();
             while(rs.next()){
@@ -145,5 +145,31 @@ public class TaiKhoanDAO implements  DAOInterface<TaiKhoanDTO>{
         }
         return  result;
         // Thừa
+        
+        
+    }
+    
+    public TaiKhoanDTO kiemTraDangNhap(String tendangnhap, String matkhau) {
+        TaiKhoanDTO tk = null;
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM taikhoan WHERE tendangnhap = ? AND matkhau = ? AND trangthai = 1";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            pst.setString(1, tendangnhap);
+            pst.setString(2, matkhau);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            if (rs.next()) {
+                int manv = rs.getInt("manv");
+                String username = rs.getString("tendangnhap");
+                String pass = rs.getString("matkhau");
+                int manhomquyen = rs.getInt("manhomquyen");
+                int trangthai = rs.getInt("trangthai");
+                tk = new TaiKhoanDTO(manv, username, pass, manhomquyen, trangthai);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return tk;
     }
 }
