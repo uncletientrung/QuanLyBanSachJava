@@ -89,5 +89,23 @@ public class KhachHangBUS {
 //        result.sort(Comparator.comparing(SachDTO::getNamxuatban).reversed());
 //        return result;
 //    }
+    
+    public KhachHangDTO getKHBySDT(String sdt){
+        KhachHangDTO result= new KhachHangDTO();
+        for (KhachHangDTO kh: listkh){
+            if(kh.getSdt().equals(sdt)){
+                result=kh;
+                break;
+            }
+        }
+        return result;
+    }
+    public ArrayList<String> getAllSDT(){
+        ArrayList<String> result=new ArrayList<>();
+        for (KhachHangDTO kh: listkh){
+            result.add(kh.getSdt());
+        }
+        return  result;
+    }
 
 }

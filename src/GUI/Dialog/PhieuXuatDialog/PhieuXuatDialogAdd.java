@@ -7,12 +7,18 @@ import BUS.SachBUS;
 import BUS.TacGiaBUS;
 import DTO.SachDTO;
 import DTO.TacGiaDTO;
+import DTO.KhachHangDTO;
+import BUS.KhachHangBUS;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JList;
+import javax.swing.event.DocumentListener;
+
 
 /**
  *
@@ -67,8 +73,12 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
     // End of variables declaration              
     private DefaultTableModel dataBook;
     private ArrayList<SachDTO> listSach;
-    private TacGiaBUS tacgiaBUS;
-    private ArrayList<TacGiaDTO> listTacGia;
+    private TacGiaBUS tacgiaBUS =new TacGiaBUS();
+    private DefaultListModel<String> dataSDT;
+    private JList<String> listSDT;
+    private JPopupMenu popupMenuSDT;
+    private ArrayList<KhachHangDTO> listkh;
+    private HashMap<String, String> hashMapKh;
 
     /**
      * Creates new form test1
@@ -137,7 +147,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
         lbNgayTao.setText("Ngày tạo:");
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
+        // Tìm khách theo số điện thoại
         lbTimKhach.setText("Tìm khách:");
 
         txfTimKhach.addActionListener(new java.awt.event.ActionListener() {
@@ -145,20 +155,35 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
                 txfTimKhachActionPerformed(evt);
             }
         });
+        dataSDT=new DefaultListModel<>();
+        listSDT=new JList<>(dataSDT);
+        popupMenuSDT=new JPopupMenu();
+        ArrayList<String> dsSDT=new KhachHangBUS().getAllSDT();
+        for(String sdt: dsSDT){
+            dataSDT.addElement(sdt);
+        }
+        //-----------------------------------------------------------------------------------------------------
 
         lbNhanVien.setText("Nhân viên:");
 
         txfNhanVien.setEditable(false);
         txfNhanVien.setToolTipText("");
+        txfNhanVien.setText("Nguyễn Tiến Trung");
         txfNhanVien.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txfNhanVienActionPerformed(evt);
             }
         });
-
+        //-----------------------------------------------------------------------------------------------------
+        
         lbKhachHang.setText("Khách hàng:");
-
         txfKhachHang.setEditable(false);
+        listkh= new KhachHangBUS().getKhachHangAll();
+        hashMapKh=new HashMap<String,String>();
+        for (KhachHangDTO kh: listkh){
+            hashMapKh.put(kh.getSdt(), kh.getHokh()+" "+kh.getTenkh());
+        }
+
 
         lbTimSach.setText("Tìm sách:");
 
@@ -174,7 +199,6 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
         };
         listSach=new SachBUS().getSachAll(); // Truyền list  sách vào
         tacgiaBUS=new TacGiaBUS();           // Tạo biến TacGiaBUS
-        listTacGia=tacgiaBUS.getTacGiaAll(); // Truyền list tác giả vào
         tableChonSach=new JTable(dataBook);
         tableChonSach.getTableHeader().setReorderingAllowed(false); // Ngăn di chuyển giữa các cột
         tableChonSach.getTableHeader().setBackground(Color.LIGHT_GRAY);
@@ -483,9 +507,14 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
                             .addComponent(BtnXoaAllV2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        DocumentListener document=new PhieuXuatDialogAdd_Controller(this);
+        txfTimKhach.getDocument().addDocumentListener(document);
+        txfTimSach.getDocument().addDocumentListener(document);
 
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
+        
     }// </editor-fold>                        
 
     private void txfSoLuongActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -515,48 +544,63 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
     private void txfSDTActionPerformed(java.awt.event.ActionEvent evt) {                                       
         // TODO add your handling code here:
     }                                      
-//
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(test1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(test1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(test1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(test1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the dialog */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                test1 dialog = new test1(new javax.swing.JFrame(), true);
-//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-//                    @Override
-//                    public void windowClosing(java.awt.event.WindowEvent e) {
-//                        System.exit(0);
-//                    }
-//                });
-//                dialog.setVisible(true);
-//            }
-//        });
-//    }
+    
+    public void ShowSDT(){
+        popupMenuSDT.setVisible(false); // Ẩn popup trước khi cập nhật
+        popupMenuSDT.removeAll();
+        String input = txfTimKhach.getText();
+        if (input.isEmpty()) return; // Không hiển thị nếu không có input
+        boolean find = false;
+       for (int i = 0; i < dataSDT.getSize(); i++) { // Duyệt qua DefaultListModel
+            String phone = dataSDT.getElementAt(i);
+            if(phone.startsWith(input)){
+                JMenuItem item=new JMenuItem(phone);
+                item.addActionListener(e -> {
+                    txfTimKhach.setText(phone); // Chọn số vào text field
+                    popupMenuSDT.setVisible(false);
+                });
+                popupMenuSDT.add(item);
+                find = true;
+            }
+        
+        }
+       if(find){
+           popupMenuSDT.show(txfTimKhach, 0, txfTimKhach.getHeight());
+           // Giữ focus trên textField để nhập tiếp mà không bị mất focus
+           // Kiểm tra xem txfTimKhach có đang được focus không
+            if (txfTimKhach.isFocusOwner()) {
+                SwingUtilities.invokeLater(() -> txfTimKhach.requestFocusInWindow());
+        }
+
+       }
+    }   
+    public void showNameKhandSDT(){
+        String sdt=txfTimKhach.getText().trim();
+        if(hashMapKh.containsKey(sdt)){
+            txfKhachHang.setText(hashMapKh.get(sdt));
+            txfSDT.setText(sdt);
+        }
+    }
+    public String getTxfTimSachText(){
+        return txfTimSach.getText();
+    }
+    public JTextField getTxfTimKhach(){
+        return txfTimKhach;
+    }
+    public JTextField getTxfTimSach(){
+        return txfTimSach;
+    }
+    public void FindBook(String text){
+        listSach=new SachBUS().search(text);
+        dataBook.setRowCount(0);
+        for(SachDTO s: listSach){
+            // Tìm tác giả
+            String tentg="";
+            TacGiaDTO tg=tacgiaBUS.getTGById(s.getMatacgia());
+            tentg=tg.getHotentacgia();
+            dataBook.addRow(new Object[]{s.getMasach(),s.getTensach(),tentg,s.getSoluongton()});
+        }
+    }
 
     
 }

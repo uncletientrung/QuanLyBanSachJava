@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -52,11 +52,11 @@ public class NhanVienDialogAdd_Controller implements ActionListener{
                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                    String dateString = NVDA.getTxfMa().getText();
                    Date ngaysinh = null;
-               try {
-                   ngaysinh = dateFormat.parse(dateString);
-               } catch (ParseException ex) {
-                   Logger.getLogger(NhanVienDialogAdd_Controller.class.getName()).log(Level.SEVERE, null, ex);
-               }
+//               try {
+//                   ngaysinh = dateFormat.parse(dateString);
+//               } catch (ParseException ex) {
+//                   Logger.getLogger(NhanVienDialogAdd_Controller.class.getName()).log(Level.SEVERE, null, ex);
+//               }
                    int maAuto = NhanVienDAO.getInstance().getAutoIncrement();
                    
                    // Gọi hàm lấy giá trị mã Auto
