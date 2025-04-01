@@ -8,6 +8,9 @@ import java.awt.*;
 import javax.swing.*;
 import BUS.PhieuXuatBUS;
 import DTO.PhieuXuatDTO;
+import GUI.Controller.PhieuXuatController;
+import GUI.WorkFrame;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +25,7 @@ public class PhieuXuatPanel extends  JPanel{
     private  JComboBox<String> cbbox;
     private DefaultTableModel dataPhieuXuat;
     private JTable tablePhieuXuat;
+    private WorkFrame Wf;
 
     public PhieuXuatPanel(){
         // Tạo Panel toolBar cho thanh công cụ trên cùng
@@ -101,6 +105,9 @@ public class PhieuXuatPanel extends  JPanel{
         setLayout(new BorderLayout());
         add(toolBar,BorderLayout.NORTH);
         add(SPPhieuXuat,BorderLayout.CENTER);
+        
+        ActionListener action=new PhieuXuatController(this, Wf);
+        btnAdd.addActionListener(action);
     }
     
     
