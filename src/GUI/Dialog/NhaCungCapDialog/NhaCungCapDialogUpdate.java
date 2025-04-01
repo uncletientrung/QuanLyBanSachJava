@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package GUI.Dialog.PhanQuyenDialog;
+package GUI.Dialog.NhaCungCapDialog;
 
-import DTO.NhomQuyenDTO;
-import GUI.View.PhanQuyenPanel;
+import DTO.NhaCungCapDTO;
+import GUI.Dialog.ThongTinChungDialog.NhaCungCapDialog;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,23 +29,23 @@ import javax.swing.SwingConstants;
  *
  * @author Hi
  */
-public class PhanQuyenDialogUpdate extends JDialog{
-    private JTextField txTenNhomQuyen,txMaNhomQuyen;
-    private PhanQuyenPanel pqPanel;
+public class NhaCungCapDialogUpdate extends JDialog{
+    private JTextField txTenNhaCungCap,txMaNhaCungCap,txDiaChi,txSDT,txEmail;
+    private NhaCungCapDialog  nccPanel;
     private JButton btnXacNhan, btnHuy;
-    private NhomQuyenDTO nhomQuyenHienTai; // tao bien de lay doi tuong hien tai dang chon
+    private NhaCungCapDTO nhacungcaphientai; // tao bien de lay doi tuong hien tai dang chon
     
-    public PhanQuyenDialogUpdate(JFrame parent, PhanQuyenPanel pqPanel,NhomQuyenDTO nhomQuyen){
-        super(parent, "Sửa nhóm quyền", true);
-        this.pqPanel = pqPanel;
-        this.nhomQuyenHienTai = nhomQuyen; // Lưu lại đối tượng nhóm quyền hiện tại
-        setSize(500, 300);
+    public NhaCungCapDialogUpdate(JFrame parent, NhaCungCapDialog  nccPanel,NhaCungCapDTO nhacungcap){
+        super(parent, "Sửa Nhà cung cấp", true);
+        this.nccPanel = nccPanel;
+        this.nhacungcaphientai = nhacungcap; // Lưu lại đối tượng nhà cung cấp hiện tại
+        setSize(500, 400);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
         // ======= Tiêu đề =======
-        JLabel titleLabel = new JLabel("SỬA NHÓM QUYỀN", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("SỬA NHÀ CUNG CẤP", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
 
@@ -61,33 +61,62 @@ public class PhanQuyenDialogUpdate extends JDialog{
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
         // Label Mã nhóm quyền
-        JLabel lb_ma = new JLabel("Mã nhóm quyền:");
+        JLabel lb_ma = new JLabel("Mã nhà cung cấp");
+        JLabel lb_ten = new JLabel("Tên nhà cung cấp:");
+        JLabel lb_sdt = new JLabel("Số điện thoại:");
+        JLabel lb_diachi = new JLabel("Địa chỉ:");
+        JLabel lb_email = new JLabel("Email:");
         lb_ma.setFont(new Font("Arial", Font.BOLD, 14));
-        txMaNhomQuyen = new JTextField(20);
-        txMaNhomQuyen.setPreferredSize(new Dimension(200, 30));
-        txMaNhomQuyen.setEditable(false); // Không cho sửa
-        txMaNhomQuyen.setBackground(Color.LIGHT_GRAY);
-
-        // Label Tên nhóm quyền
-        JLabel lb_ten = new JLabel("Tên nhóm quyền:");
         lb_ten.setFont(new Font("Arial", Font.BOLD, 14));
-        txTenNhomQuyen = new JTextField(20);
-        txTenNhomQuyen.setPreferredSize(new Dimension(200, 30));
-        
-        // Hiển thị dữ liệu từ nhomQuyen
-        txMaNhomQuyen.setText(String.valueOf(nhomQuyen.getManhomquyen()));
-        txTenNhomQuyen.setText(nhomQuyen.getTennhomquyen());
+        lb_sdt.setFont(new Font("Arial", Font.BOLD, 14));
+        lb_diachi.setFont(new Font("Arial", Font.BOLD, 14));
+        lb_email.setFont(new Font("Arial", Font.BOLD, 14));
 
-        // Thêm vào panel
+        txMaNhaCungCap= new JTextField(20);
+        txTenNhaCungCap = new JTextField(20);
+        txDiaChi= new JTextField(20);
+        txSDT = new JTextField(20);
+        txEmail = new JTextField(20);
+        txMaNhaCungCap.setPreferredSize(new Dimension(200, 30));
+        txMaNhaCungCap.setEditable(false);
+        txMaNhaCungCap.setBackground(Color.lightGray);
+        txTenNhaCungCap.setPreferredSize(new Dimension(200, 30));
+        txDiaChi.setPreferredSize(new Dimension(200, 30));
+        txSDT.setPreferredSize(new Dimension(200, 30));
+        txEmail.setPreferredSize(new Dimension(200, 30));
+        
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
         pn_input.add(lb_ma, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
-        pn_input.add(txMaNhomQuyen, gbc);
-        
+        pn_input.add(txMaNhaCungCap, gbc);
+
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.3;
         pn_input.add(lb_ten, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
-        pn_input.add(txTenNhomQuyen, gbc);
+        pn_input.add(txTenNhaCungCap, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.3;
+        pn_input.add(lb_diachi, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.7;
+        pn_input.add(txDiaChi, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.3;
+        pn_input.add(lb_sdt, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.7;
+        pn_input.add(txSDT, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 4; gbc.weightx = 0.3;
+        pn_input.add(lb_email, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.7;
+        pn_input.add(txEmail, gbc);
+        
+        //hiển thị dữ liệu lên form
+        txMaNhaCungCap.setText(String.valueOf(nhacungcap.getMancc()));
+        txTenNhaCungCap.setText(nhacungcap.getTenncc());
+        txDiaChi.setText(nhacungcap.getDiachincc());
+        txSDT.setText(nhacungcap.getSdt());
+        txEmail.setText(nhacungcap.getEmail());
+
 
         // ======= Panel nút bấm =======
         JPanel pn_button = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -107,23 +136,28 @@ public class PhanQuyenDialogUpdate extends JDialog{
         
     }
     
-    public String getTenNhomQuyen() {
-        return txTenNhomQuyen.getText().trim();
+    public String getTenNhaCungCap() {
+        return txTenNhaCungCap.getText().trim();
+    }
+    public String getDiaChi() {
+        return txDiaChi.getText().trim();
+    }
+    public String getSDT() {
+        return txSDT.getText().trim();
+    }
+    public String getEmail() {
+        return txEmail.getText().trim();
     }
 
-    public void setController(PhanQuyenDialogUpdate_Controller controller) {
+    public void setController(NhaCungCapDialogUpdate_Controller controller) {
         btnXacNhan.addActionListener(controller);
     }
-    public PhanQuyenPanel getPqPanel() {
-        return pqPanel;
+    public NhaCungCapDialog getNccPanel() {
+        return nccPanel;
     }
     
-    public void setNhomQuyen(NhomQuyenDTO nq) {
-        this.nhomQuyenHienTai = nq;
-        txTenNhomQuyen.setText(nq.getTennhomquyen()); // Đổ tên nhóm quyền vào ô nhập
-}
-    public NhomQuyenDTO getNhomQuyen() {
-        return nhomQuyenHienTai; // Trả về đối tượng nhóm quyền hiện tại
+    public NhaCungCapDTO getNhaCungCap() {
+        return nhacungcaphientai; // Trả về đối tượng nhóm quyền hiện tại
 }
 
       

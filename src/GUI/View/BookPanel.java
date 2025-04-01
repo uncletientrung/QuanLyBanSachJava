@@ -78,6 +78,8 @@ public class BookPanel extends JPanel{
         };
         
         tableBook= new JTable(dataBook);
+        tableBook.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
+        tableBook.getTableHeader().setResizingAllowed(false);
         tableBook.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tableBook.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
         

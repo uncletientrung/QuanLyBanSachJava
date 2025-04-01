@@ -1,26 +1,48 @@
-package GUI.Dialog.PhanQuyenDialog;
+/*
+ * Click nbfs://SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package GUI.Dialog.NhaXuatBanDialog;
 
-import DTO.NhomQuyenDTO;
-import java.awt.*;
-import javax.swing.*;
+import DTO.NhaXuatBanDTO;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
-public class PhanQuyenDialogDelete extends JDialog {
+/**
+ *
+ * @author Hi
+ */
+public class NhaXuatBanDialogDelete extends JDialog {
     private JButton btnXoa, btnHuy;
     private boolean xacNhan = false;
-    private String maNhomQuyen;
-    private NhomQuyenDTO nhomQuyenHienTai; // Thêm biến này để lưu nhóm quyền
+    private String tenNhaXuatBan;
+    private NhaXuatBanDTO nhaXuatBanHienTai; // Thêm biến này để lưu nhà xuất bản
 
-    public PhanQuyenDialogDelete(Frame parent, NhomQuyenDTO nhomQuyen) {
-
-        super(parent, "Xóa nhóm quyền", true);
-        this.nhomQuyenHienTai = nhomQuyen;
+    public NhaXuatBanDialogDelete(Frame parent, NhaXuatBanDTO nhaXuatBan) {
+        super(parent, "Xóa nhà xuất bản", true);
+        this.nhaXuatBanHienTai = nhaXuatBan;
         setSize(500, 250);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
         // ======= Tiêu đề =======
-        JLabel titleLabel = new JLabel("XÓA NHÓM QUYỀN", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("XÓA NHÀ XUẤT BẢN", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
 
@@ -34,19 +56,19 @@ public class PhanQuyenDialogDelete extends JDialog {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
 
-        JLabel lblMessage = new JLabel("Bạn có chắc chắn muốn xóa nhóm quyền này?", SwingConstants.CENTER);
+        JLabel lblMessage = new JLabel("Bạn có chắc chắn muốn xóa nhà xuất bản này?", SwingConstants.CENTER);
         lblMessage.setFont(new Font("Arial", Font.BOLD, 16));
         lblMessage.setForeground(Color.DARK_GRAY);
 
-        JLabel lblTenNhom = new JLabel(nhomQuyen.getTennhomquyen(), SwingConstants.CENTER);
-        lblTenNhom.setFont(new Font("Arial", Font.BOLD, 18));
-        lblTenNhom.setForeground(Color.RED);
+        JLabel lblTenNhaXuatBan = new JLabel(nhaXuatBan.getTennxb(), SwingConstants.CENTER);
+        lblTenNhaXuatBan.setFont(new Font("Arial", Font.BOLD, 18));
+        lblTenNhaXuatBan.setForeground(Color.RED);
 
         gbc.gridx = 0; gbc.gridy = 0;
         pn_content.add(lblMessage, gbc);
 
         gbc.gridy = 1;
-        pn_content.add(lblTenNhom, gbc);
+        pn_content.add(lblTenNhaXuatBan, gbc);
 
         // ======= Panel nút bấm =======
         JPanel pn_button = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -73,20 +95,20 @@ public class PhanQuyenDialogDelete extends JDialog {
         return xacNhan;
     }
     
-    public void setNhomQuyen(NhomQuyenDTO nq) {
-        this.nhomQuyenHienTai = nq;
-        maNhomQuyen=(nq.getTennhomquyen()); // Đổ tên nhóm quyền vào ô nhập
+    public void setNhaXuatBan(NhaXuatBanDTO nxb) {
+        this.nhaXuatBanHienTai = nxb;
+        tenNhaXuatBan = nxb.getTennxb(); // Đổ tên nhà xuất bản vào ô nhập
     }
     
-    public NhomQuyenDTO getNhomQuyen() {
-        return nhomQuyenHienTai; // Trả về đối tượng nhóm quyền hiện tại
+    public NhaXuatBanDTO getNhaXuatBan() {
+        return nhaXuatBanHienTai; // Trả về đối tượng nhà xuất bản hiện tại
     }
 
-    public void setController(PhanQuyenDialogDelete_Controller controller) {
+    public void setController(NhaXuatBanDialogDelete_Controller controller) {
         btnXoa.addActionListener(controller);
     }
 
-     // ======= Tạo button đồng bộ với phong cách UI =======
+    // ======= Tạo button đồng bộ với phong cách UI =======
     private JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text) {
             @Override

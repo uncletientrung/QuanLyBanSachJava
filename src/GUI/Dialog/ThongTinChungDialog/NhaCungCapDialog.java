@@ -6,6 +6,8 @@ package GUI.Dialog.ThongTinChungDialog;
 
 import BUS.NhaCungCapBUS;
 import DTO.NhaCungCapDTO;
+import GUI.Controller.NhaCungCapController;
+import GUI.WorkFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -38,6 +40,7 @@ import javax.swing.table.DefaultTableModel;
 public class NhaCungCapDialog extends JDialog{
     private JTable table;
     private DefaultTableModel tableNhaCungCap;
+    private WorkFrame workFrame;
     private JTextField txtTimKiem;
     private Boolean checkTimkiem=false;
     private ImageIcon icon;
@@ -47,6 +50,7 @@ public class NhaCungCapDialog extends JDialog{
     public NhaCungCapDialog(JFrame parent) {
         super(parent, "Quản lý Nhà Cung Cấp", true);
         setSize(1300, 700);
+        setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
 
@@ -134,6 +138,8 @@ public class NhaCungCapDialog extends JDialog{
         }}; 
         
         table = new JTable(tableNhaCungCap);
+        table.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
+
         //lam tieu de no dam hơn 
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
@@ -182,6 +188,12 @@ public class NhaCungCapDialog extends JDialog{
         btnSua.setFont(new Font("Arial", Font.BOLD, 16));
         btnXoa.setFont(new Font("Arial", Font.BOLD, 16));
         
+        NhaCungCapController controller= new NhaCungCapController(this, workFrame);
+        btnThem.addActionListener(controller);
+        btnSua.addActionListener(controller);
+        btnXoa.addActionListener(controller);
+        
+        
 
        
         buttonPanel.add(btnThem);
@@ -223,6 +235,37 @@ public class NhaCungCapDialog extends JDialog{
                 tableNhaCungCap.addRow(new Object[]{ncc.getMancc(), ncc.getTenncc(),ncc.getDiachincc(),ncc.getSdt(),ncc.getEmail()});
             }
         }
+        
+        //load lai du lieu khi moi them vo
+    public void loadData() {
+        listNhaCungCap = new NhaCungCapBUS().getNhaCungCapAll(); // Lấy danh sách mới
+        capNhatBang(listNhaCungCap); // Cập nhật lại bảng
+    }
+        
+        
+        public int getSelectedRow() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhà cung cấp để sửa!");
+        }
+        return selectedRow;
+    }
+    
+    
+    //lấy đối tượng nhóm quyền đang được click để hàm update biết
+    public NhaCungCapDTO getSelectedNhaCungCap() {
+        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
+        if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
+
+        int maNhaCungCap = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhóm quyền
+        String tenncc = (String) table.getValueAt(selectedRow, 1);
+        String diachi = (String) table.getValueAt(selectedRow, 2);
+        String sdt = (String) table.getValueAt(selectedRow, 3);
+        String email = (String) table.getValueAt(selectedRow, 4);
+
+
+        return new NhaCungCapDTO(maNhaCungCap, tenncc, diachi, sdt, email);
+}
         
     // ======= Tạo button đồng bộ với phong cách UI =======
     private JButton createButton(String text, Color bgColor) {

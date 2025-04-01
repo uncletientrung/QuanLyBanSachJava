@@ -4,7 +4,6 @@
  */
 package DAO;
 
-
 import DTO.NhaXuatBanDTO;
 import connectDB.JDBCUtil;
 import java.sql.Connection;
@@ -19,56 +18,116 @@ import java.util.logging.Logger;
  *
  * @author Hi
  */
-public class NhaXuatBanDAO implements DAOInterface<NhaXuatBanDTO>{
-    public static NhaXuatBanDAO getInstance(){
+public class NhaXuatBanDAO implements DAOInterface<NhaXuatBanDTO> {
+    
+    public static NhaXuatBanDAO getInstance() {
         return new NhaXuatBanDAO();
-        
     }
 
     @Override
     public int insert(NhaXuatBanDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+
+            // Kiểm tra xem nhà xuất bản đã tồn tại chưa
+            String checkSql = "SELECT COUNT(*) FROM nhaxuatban WHERE tennxb = ?";
+            PreparedStatement checkStmt = con.prepareStatement(checkSql);
+            checkStmt.setString(1, t.getTennxb());
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            int count = rs.getInt(1);
+            
+            if (count > 0) {
+                return 0; // Trả về 0 nếu nhà xuất bản đã tồn tại
+            }
+
+            // Nếu không có trong database, tiến hành thêm mới
+            String sql = "INSERT INTO nhaxuatban (tennxb, diachinxb, sdt, email, trangthai) VALUES (?,?,?,?,1)";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, t.getTennxb());
+            pst.setString(2, t.getDiachinxb());
+            pst.setString(3, t.getSdt());
+            pst.setString(4, t.getEmail());
+            
+            result = pst.executeUpdate(); // Thực thi câu lệnh INSERT
+
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(NhaXuatBanDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return result; // Trả về số dòng bị ảnh hưởng (1 nếu thành công)
     }
 
     @Override
     public int update(NhaXuatBanDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result = 0;
+        
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "UPDATE nhaxuatban SET tennxb=?, diachinxb=?, sdt=?, email=? WHERE manxb=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, t.getTennxb());
+            pst.setString(2, t.getDiachinxb());
+            pst.setString(3, t.getSdt());
+            pst.setString(4, t.getEmail());
+            pst.setInt(5, t.getManxb());
+            
+            result = pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public int delete(String t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            int maNhaXuatBan = Integer.parseInt(t);  // Chuyển String → int
+            return delete(maNhaXuatBan);  // Gọi hàm delete(int)
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+    
+    public int delete(int maNhaXuatBan) {
+        String query = "DELETE FROM nhaxuatban WHERE manxb = ?";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, maNhaXuatBan);
+            return pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
     public ArrayList<NhaXuatBanDTO> selectAll() {
-        ArrayList<NhaXuatBanDTO> nhaXuatBan= new ArrayList<NhaXuatBanDTO>();
-        try{
+        ArrayList<NhaXuatBanDTO> nhaXuatBan = new ArrayList<NhaXuatBanDTO>();
+        try {
             Connection con = JDBCUtil.getConnection();
-            String sql ="SELECT * FROM nhaxuatban";
+            String sql = "SELECT * FROM nhaxuatban";
             PreparedStatement pst = con.prepareStatement(sql);
             
-            
-            //thiet lap result set
-            ResultSet rs= pst.executeQuery(sql);
-            //xu ly rs
-            while(rs.next()){
-                int maNhaXuatBan=rs.getInt("manxb");
-                String tenNhaXuatBan= rs.getString("tennxb");
-                String diachiNhaXuatBan = rs.getString("diachinxb");
+            // Thiết lập result set
+            ResultSet rs = pst.executeQuery(sql);
+            // Xử lý rs
+            while (rs.next()) {
+                int maNhaXuatBan = rs.getInt("manxb");
+                String tenNhaXuatBan = rs.getString("tennxb");
+                String diaChiNhaXuatBan = rs.getString("diachinxb");
                 String sdtNXB = rs.getString("sdt");
                 String email = rs.getString("email");
-                //tao 1 doi tuong nhom quyen de nhan du lieu da doc tu database
-                NhaXuatBanDTO doituong_nhacungcap= new NhaXuatBanDTO(maNhaXuatBan, tenNhaXuatBan, diachiNhaXuatBan, sdtNXB, email);
-                //them doi tuong vo arraylist
-                nhaXuatBan.add(doituong_nhacungcap);
-                
+                // Tạo 1 đối tượng nhà xuất bản để nhận dữ liệu đã đọc từ database
+                NhaXuatBanDTO doituong_nhaxuatban = new NhaXuatBanDTO(maNhaXuatBan, tenNhaXuatBan, diaChiNhaXuatBan, sdtNXB, email);
+                // Thêm đối tượng vào arraylist
+                nhaXuatBan.add(doituong_nhaxuatban);
             }
             JDBCUtil.closeConnection(con);
-               
-               
-        }catch(SQLException e){
-            Logger.getLogger(NhaXuatBanDAO.class.getName()).log(Level.SEVERE,null,e);
+        } catch (SQLException e) {
+            Logger.getLogger(NhaXuatBanDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return nhaXuatBan;
     }
@@ -82,6 +141,4 @@ public class NhaXuatBanDAO implements DAOInterface<NhaXuatBanDTO>{
     public int getAutoIncrement() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
-    
 }

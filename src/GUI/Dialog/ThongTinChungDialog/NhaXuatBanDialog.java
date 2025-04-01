@@ -8,6 +8,9 @@ import BUS.NhaCungCapBUS;
 import BUS.NhaXuatBanBUS;
 import DTO.NhaCungCapDTO;
 import DTO.NhaXuatBanDTO;
+import GUI.Controller.NhaCungCapController;
+import GUI.Controller.NhaXuatBanController;
+import GUI.WorkFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,6 +43,7 @@ public class NhaXuatBanDialog extends JDialog{
     private JTable table;
     private DefaultTableModel tableNhaXuatBan;
     private JTextField txtTimKiem;
+    private WorkFrame workFrame;
     private Boolean checkTimkiem=false;
     private ImageIcon icon;
     private JButton btnThem, btnSua, btnXoa;
@@ -182,6 +186,10 @@ public class NhaXuatBanDialog extends JDialog{
         btnThem.setFont(new Font("Arial", Font.BOLD, 16));
         btnSua.setFont(new Font("Arial", Font.BOLD, 16));
         btnXoa.setFont(new Font("Arial", Font.BOLD, 16));
+        NhaXuatBanController controller= new NhaXuatBanController(this, workFrame);
+        btnThem.addActionListener(controller);
+        btnSua.addActionListener(controller);
+        btnXoa.addActionListener(controller);
         
 
        
@@ -223,6 +231,37 @@ public class NhaXuatBanDialog extends JDialog{
             for (NhaXuatBanDTO nxb : danhSach) {
                 tableNhaXuatBan.addRow(new Object[]{nxb.getManxb(), nxb.getTennxb(),nxb.getDiachinxb(),nxb.getSdt(),nxb.getEmail()});            }
         }
+        
+        
+        
+        
+            // Load lại dữ liệu khi mới thêm vào
+    public void loadData() {
+        listNhaXuatBan = new NhaXuatBanBUS().getNhaXuatBanAll(); // Lấy danh sách mới
+        capNhatBang(listNhaXuatBan); // Cập nhật lại bảng
+    }
+        
+    public int getSelectedRow() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhà xuất bản để sửa!");
+        }
+        return selectedRow;
+    }
+    
+    // Lấy đối tượng nhà xuất bản đang được click để hàm update biết
+    public NhaXuatBanDTO getSelectedNhaXuatBan() {
+        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
+        if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
+
+        int maNhaXuatBan = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhà xuất bản
+        String tennxb = (String) table.getValueAt(selectedRow, 1);
+        String diachi = (String) table.getValueAt(selectedRow, 2);
+        String sdt = (String) table.getValueAt(selectedRow, 3);
+        String email = (String) table.getValueAt(selectedRow, 4);
+
+        return new NhaXuatBanDTO(maNhaXuatBan, tennxb, diachi, sdt, email);
+    }
         
     // ======= Tạo button đồng bộ với phong cách UI =======
     private JButton createButton(String text, Color bgColor) {

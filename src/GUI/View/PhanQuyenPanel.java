@@ -126,6 +126,7 @@ public class PhanQuyenPanel extends JPanel{
         
         }}; 
         table = new JTable(tableModelPhanQuyen);
+        table.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
         //them du lieu vao bang GUI
