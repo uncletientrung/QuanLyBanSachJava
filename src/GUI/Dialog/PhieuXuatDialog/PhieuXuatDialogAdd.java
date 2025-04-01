@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JList;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionListener;
 
 
 /**
@@ -79,6 +80,8 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
     private JPopupMenu popupMenuSDT;
     private ArrayList<KhachHangDTO> listkh;
     private HashMap<String, String> hashMapKh;
+    private DefaultTableModel dataBan;
+    
 
     /**
      * Creates new form test1
@@ -184,11 +187,11 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
             hashMapKh.put(kh.getSdt(), kh.getHokh()+" "+kh.getTenkh());
         }
 
-
+        //-----------------------------------------------------------------------------------------------------
         lbTimSach.setText("Tìm sách:");
 
         lbChonSach.setText("Chọn sách");
-        
+        //-----------------------------------------------------------------------------------------------------
         // Table của phần chọn sách
         String[] columnBook={"Mã sách","Tên sách","Tên tác giả","Số lượng tồn"};
         dataBook =new DefaultTableModel(columnBook,0){
@@ -216,45 +219,59 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
             tableChonSach.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
         tableChonSach.setRowHeight(30);
-        tableChonSach.getColumnModel().getColumn(0).setPreferredWidth(20);
-        tableChonSach.getColumnModel().getColumn(1).setPreferredWidth(180);
-        tableChonSach.getColumnModel().getColumn(2).setPreferredWidth(180);
+        tableChonSach.getColumnModel().getColumn(0).setPreferredWidth(35);
+        tableChonSach.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tableChonSach.getColumnModel().getColumn(2).setPreferredWidth(150);
         tableChonSach.getColumnModel().getColumn(3).setPreferredWidth(70);
         jScrollPane1.setViewportView(tableChonSach);
-
+        
+        //-----------------------------------------------------------------------------------------------------
         lbSoLuong.setText("Số lượng:");
 
-        txfSoLuong.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfSoLuongActionPerformed(evt);
-            }
-        });
+//        txfSoLuong.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                txfSoLuongActionPerformed(evt);
+//            }
+//        });
 
         lbGiaBan.setText("Giá bán:");
 
         txfGiaBan.setEditable(false);
-        txfGiaBan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfGiaBanActionPerformed(evt);
-            }
-        });
+//        txfGiaBan.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                txfGiaBanActionPerformed(evt);
+//            }
+//        });
 
         btnThemChiTiet.setText("Thêm");
 
         lbListBan.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         lbListBan.setText("Danh sách bán");
-
-        tableListBan.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        
+        //-----------------------------------------------------------------------------------------------------
+        
+        String[] columnListBan={"Tên sách","Số lượng","Đơn giá","Tổng"};
+        dataBan=new DefaultTableModel(columnListBan,0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa tất cả các ô
             }
-        ));
+        };
+        tableListBan=new JTable(dataBan);
+        tableListBan.setRowHeight(30);
+        tableListBan.getColumnModel().getColumn(0).setPreferredWidth(200);
+        tableListBan.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tableListBan.getColumnModel().getColumn(2).setPreferredWidth(90);
+        tableListBan.getColumnModel().getColumn(3).setPreferredWidth(130);
+        DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        int[] columnsToCenter1 = {0 , 1,2,3}; // Căn giữa tất cả trừ tên sách và tên nbx
+        for (int col : columnsToCenter) {
+            tableListBan.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
+        }
+        tableListBan.getTableHeader().setReorderingAllowed(false); // Ngăn di chuyển giữa các cột
+        tableListBan.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tableListBan.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
         jScrollPane2.setViewportView(tableListBan);
 
         lbTongTien.setText("Tổng tiền:");
@@ -274,20 +291,21 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
             }
         });
 
-        btnSua.setText("Chỉnh ");
+        btnSua.setText("Sửa");
 
         lbTenSachV2.setText("Tên sách:");
 
         txfTenSachV2.setEditable(false);
 
         lbSoLuongV2.setText("Số lượng");
+        
 
         txfSoLuongV2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txfSoLuongV2ActionPerformed(evt);
             }
         });
-
+        
         lbDonGiaV2.setText("Đơn giá:");
 
         txfDonGiaV2.setEditable(false);
@@ -510,20 +528,34 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
         DocumentListener document=new PhieuXuatDialogAdd_Controller(this);
         txfTimKhach.getDocument().addDocumentListener(document);
         txfTimSach.getDocument().addDocumentListener(document);
+        txfGiamGia.getDocument().addDocumentListener(document);
+        
+        ListSelectionListener selection=new PhieuXuatDialogAdd_Controller(this);
+        tableChonSach.getSelectionModel().addListSelectionListener(selection);
+        tableChonSach.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Đảm bảo mỗi lần chỉ chọn đc 1 row
+        tableListBan.getSelectionModel().addListSelectionListener(selection);
+        tableListBan.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Đảm bảo mỗi lần chỉ chọn đc 1 row
 
-        pack();
+        ActionListener action=new PhieuXuatDialogAdd_Controller(this);
+        btnThemChiTiet.addActionListener(action);
+        btnSua.addActionListener(action);
+        btnXoaV2.addActionListener(action);
+        BtnXoaAllV2.addActionListener(action);
+        
+//        pack();
+        setSize(1200,550);
         setLocationRelativeTo(null);
         setVisible(true);
         
     }// </editor-fold>                        
 
-    private void txfSoLuongActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // TODO add your handling code here:
-    }                                          
-
-    private void txfGiaBanActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
-    }                                         
+//    private void txfSoLuongActionPerformed(java.awt.event.ActionEvent evt) {                                           
+//        // TODO add your handling code here:
+//    }                                          
+//
+//    private void txfGiaBanActionPerformed(java.awt.event.ActionEvent evt) {                                          
+//        // TODO add your handling code here:
+//    }                                         
 
     private void btnThemPhieuActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
@@ -543,8 +575,61 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
 
     private void txfSDTActionPerformed(java.awt.event.ActionEvent evt) {                                       
         // TODO add your handling code here:
-    }                                      
+    }  
+    public String getTxfTimSachText(){
+        return txfTimSach.getText();
+    }
+    public JTextField getTxfTimKhach(){
+        return txfTimKhach;
+    }
+    public JTextField getTxfTimSach(){
+        return txfTimSach;
+    }
+    public void setTxfDonGia(String giaban){
+        this.txfGiaBan.setText(giaban);
+    }
+    public JTable getTableChonSach(){
+        return tableChonSach;
+    }
+    public JTextField getTxfKhachHang(){
+        return txfKhachHang;
+    }
+    public JTextField getTxtSoLuong(){
+        return txfSoLuong;
+    }
+    public JTextField gettTxfDonGia(){
+        return txfGiaBan;
+    }
+    public DefaultTableModel getDataBan(){
+        return dataBan;
+    }
+    public JTable getTableListBan(){
+        return tableListBan;
+    }
+    public JTextField getTxfTenSachV2() {
+        return txfTenSachV2;
+    }
+    public JTextField getTxfSoLuongV2() {
+        return txfSoLuongV2;
+    }
+    public JTextField getTxfDonGiaV2() {
+        return txfDonGiaV2;
+    }
+    public JTextField getTxfThanhTienV2() {
+        return txfThanhTienV2;
+    }
+    public JTextField getTxfTongTien() {
+        return txfTongTien;
+    }
+    public JTextField getTxfGiamGia() {
+        return txfGiamGia;
+    }
+    public JTextField getTxfThanhToan() {
+        return txfThanhToan;
+    }
     
+    
+    // Show các số điện thoại
     public void ShowSDT(){
         popupMenuSDT.setVisible(false); // Ẩn popup trước khi cập nhật
         popupMenuSDT.removeAll();
@@ -573,7 +658,8 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
         }
 
        }
-    }   
+    } 
+    // Nhập SDT xong nó hiện thông tin
     public void showNameKhandSDT(){
         String sdt=txfTimKhach.getText().trim();
         if(hashMapKh.containsKey(sdt)){
@@ -581,15 +667,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
             txfSDT.setText(sdt);
         }
     }
-    public String getTxfTimSachText(){
-        return txfTimSach.getText();
-    }
-    public JTextField getTxfTimKhach(){
-        return txfTimKhach;
-    }
-    public JTextField getTxfTimSach(){
-        return txfTimSach;
-    }
+    // Tìm sách bằng Document
     public void FindBook(String text){
         listSach=new SachBUS().search(text);
         dataBook.setRowCount(0);
@@ -601,6 +679,31 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
             dataBook.addRow(new Object[]{s.getMasach(),s.getTensach(),tentg,s.getSoluongton()});
         }
     }
+    // Update tiền cần thanh toán
+    public void CalcBill(){
+        int tongtien=0;
+        int giamgia;
+        int thanhtoan=0;
+        int columnTong=3;
+        for (int i=0;i<tableListBan.getRowCount();i++){
+            tongtien+= Integer.parseInt(tableListBan.getValueAt(i, columnTong).toString());
+        }
+        txfTongTien.setText(String.valueOf(tongtien));
+        if(txfGiamGia.getText().isEmpty()){
+            giamgia=0;
+        }else{ giamgia=Integer.parseInt(txfGiamGia.getText().toString());}
+        thanhtoan=tongtien-giamgia;
+        txfThanhToan.setText(thanhtoan+"");
+    }
+    // Hàm kiêm tra nếu Table bên Danh sách bán =0 thì set các txf chỉnh sửa về rỗng
+    public boolean CheckEmptyRow(){
+        if(tableListBan.getRowCount()==0){
+            return  true;
+        }
+        return false;
+    }
+
+    
 
     
 }

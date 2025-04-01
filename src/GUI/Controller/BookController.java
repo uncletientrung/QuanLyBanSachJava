@@ -102,7 +102,6 @@ public void actionPerformed(ActionEvent e){
     if(sukien.equals("Chi tiết")){
         JTable tableB = bf.getTable();
         int selectRow = tableB.getSelectedRow();
-        System.out.println("Ok");
         if (selectRow >= 0) {  // Kiểm tra xem có hàng nào đang được chọn không
             String maSach = tableB.getValueAt(selectRow, 0).toString();
             String tenSach = tableB.getValueAt(selectRow, 1).toString();
