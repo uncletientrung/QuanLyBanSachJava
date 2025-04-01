@@ -28,18 +28,83 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCapDTO>{
 
     @Override
     public int insert(NhaCungCapDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result = 0;
+    try {
+        Connection con = JDBCUtil.getConnection();
+
+        // Kiểm tra xem nhóm quyền đã tồn tại chưa
+        String checkSql = "SELECT COUNT(*) FROM nhacungcap WHERE tenncc = ?";
+        PreparedStatement checkStmt = con.prepareStatement(checkSql);
+        checkStmt.setString(1, t.getTenncc());
+        ResultSet rs = checkStmt.executeQuery();
+        rs.next();
+        int count = rs.getInt(1);
+        
+        if (count > 0) {
+            return 0; // Trả về 0 nếu nhóm quyền đã tồn tại
+        }
+
+        // Nếu không có trong database, tiến hành thêm mới
+        String sql = "INSERT INTO nhacungcap (tenncc,diachincc,sdt,email,trangthai) VALUES (?,?,?,?,1)";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, t.getTenncc());
+        pst.setString(2, t.getDiachincc());
+        pst.setString(3, t.getSdt());
+        pst.setString(4, t.getEmail());
+        
+        result = pst.executeUpdate(); // Thực thi câu lệnh INSERT
+
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        Logger.getLogger(NhaCungCapDAO.class.getName()).log(Level.SEVERE, null, e);
+    }
+    return result; // Trả về số dòng bị ảnh hưởng (1 nếu thành công)
     }
 
     @Override
     public int update(NhaCungCapDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result=0;
+        
+        try{
+            Connection con= JDBCUtil.getConnection();
+            String sql="UPDATE nhacungcap set tenncc=?,diachincc=?,sdt=?,email=? where mancc=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, t.getTenncc());
+            pst.setString(2, t.getDiachincc());
+            pst.setString(3, t.getSdt());
+            pst.setString(4, t.getEmail());
+            pst.setInt(5, t.getMancc());
+            
+            result=pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public int delete(String t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+        int maNhaCungCap = Integer.parseInt(t);  // Chuyển String → int
+        return delete(maNhaCungCap);  // Gọi hàm delete(int)
+    } catch (NumberFormatException e) {
+        return 0;
     }
+    }
+    
+    
+    public int delete(int maNhaCungCap) {
+    String query = "DELETE FROM nhacungcap WHERE mancc = ?";
+    try (Connection conn = JDBCUtil.getConnection();
+         PreparedStatement pst = conn.prepareStatement(query)) {
+         pst.setInt(1, maNhaCungCap);
+        return pst.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
 
     @Override
     public ArrayList<NhaCungCapDTO> selectAll() {

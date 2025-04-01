@@ -13,6 +13,7 @@ public class PhanQuyenDialogAdd extends JDialog {
         super(parent, "Thêm nhóm quyền", true);
         this.pqPanel = pqPanel;
         setSize(400, 250);
+        setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 

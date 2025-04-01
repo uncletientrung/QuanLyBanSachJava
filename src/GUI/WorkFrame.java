@@ -5,6 +5,7 @@
 package GUI;
 
 import GUI.Controller.WorkFrameController;
+import GUI.Dialog.ThongTinChungDialog.NhaCungCapDialog;
 import GUI.View.*;
 import javax.swing.*;
 import java.awt.*;
@@ -119,6 +120,7 @@ public class WorkFrame extends JFrame{
         PanelCard.add(new PhieuXuatPanel(),"Phiếu xuất");
         PanelCard.add(new TaiKhoanPanel(),"Tài khoản");
         PanelCard.add(new KhachhangPanel(),"Khách hàng");
+        
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);

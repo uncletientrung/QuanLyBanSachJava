@@ -6,16 +6,10 @@ package DAO;
 
 import DTO.NhomQuyenDTO;
 import connectDB.JDBCUtil;
-import java.awt.List;
-import java.util.ArrayList;
-import connectDB.JDBCUtil;
-import DTO.TaiKhoanDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import BUS.PhanQuyenBUS;
-import com.mysql.cj.conf.PropertyKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +23,7 @@ public class PhanQuyenDAOo implements DAOInterface<NhomQuyenDTO>{
         return new PhanQuyenDAOo();
     }
 
+    @Override
     public int insert(NhomQuyenDTO t) {
     int result = 0;
     try {
