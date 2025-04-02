@@ -44,16 +44,22 @@ public class KhachHangDialogAdd_Controller implements  ActionListener{
    /*:)) */     String ngaysinh = KHDA.getTxfNgaySinh().getText();
                 String sdt = KHDA.getTxfSdt().getText();
                 
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                Date date=new Date(1000) ;
-//                try {
-//                    date = formatter.parse(ngaysinh);
-//                    
-//                } catch (Exception a) {
-//                    a.printStackTrace();
-//                }
-//                    
-
+               
+                 
+                 if (!KHBUS.checkemail(email)){
+                     JOptionPane.showMessageDialog(null, "Lỗi định dạng email\nĐịnh dạng : Phải bao gồm '@gmail.com' ", "Error", JOptionPane.ERROR_MESSAGE);
+                }     
+                
+               
+                 else if (KHBUS.checkngaysinh(ngaysinh)==null){
+                     JOptionPane.showMessageDialog(null, "Lỗi định dạng ngày sinh\nĐịnh dạng : yyyy-mm-dd", "Error", JOptionPane.ERROR_MESSAGE);
+                } 
+                
+                 else if (!KHBUS.checksdt(sdt)){
+                     JOptionPane.showMessageDialog(null, "Lỗi định dạng số điện thoại\nĐịnh dạng : gồm 10 số và bắt đầu bằng số 0", "Error", JOptionPane.ERROR_MESSAGE);
+                } 
+                 else{
+                 Date date=KHBUS.checkngaysinh(ngaysinh);
                 int maAuto = KhachHangDAO.getInstance().getAutoIncrement();  // Gọi hàm lấy giá trị mã Auto
                 KhachHangDTO KHNew = new KhachHangDTO(maAuto, ho, ten, email, date, sdt);
                 boolean result = KHBUS.add(KHNew);
@@ -64,10 +70,15 @@ public class KhachHangDialogAdd_Controller implements  ActionListener{
                 } else {
                     JOptionPane.showMessageDialog(null, "Thêm thất bại", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                 }
             }
         }
         if(sukien.equals("Xóa")){
             KHDA.ClearTextField();
         }
     }
+    
+
+   
+ 
 }

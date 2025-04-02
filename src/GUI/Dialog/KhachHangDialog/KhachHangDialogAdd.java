@@ -39,7 +39,7 @@ public class KhachHangDialogAdd extends JDialog {
         Font fieldFont = new Font("Arial", Font.PLAIN, 14);
 
         // Các Label và TextField (giữ nguyên tên biến)
-        JLabel lbMa = new JLabel("Mã khách hàng:");        lbMa.setFont(labelFont);
+        
         JLabel lbHo = new JLabel("Họ :");            lbHo.setFont(labelFont);
         JLabel lbTen = new JLabel("Tên :");     lbTen.setFont(labelFont);
         JLabel lbEmail = new JLabel("Email :");  lbEmail.setFont(labelFont);
@@ -47,7 +47,7 @@ public class KhachHangDialogAdd extends JDialog {
         JLabel lbSdt = new JLabel("Số điện thoại:"); lbSdt.setFont(labelFont);
      
 
-        txfMa = createTextField(fieldFont);
+       
         txfHo = createTextField(fieldFont);
         txfTen = createTextField(fieldFont);
         txfEmail = createTextField(fieldFont);
@@ -57,8 +57,8 @@ public class KhachHangDialogAdd extends JDialog {
 
         // Cột 1 - Labels
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
-        formPanel.add(lbMa, gbc);
-        gbc.gridy++; formPanel.add(lbHo, gbc);
+        formPanel.add(lbHo, gbc);
+        
         gbc.gridy++; formPanel.add(lbTen, gbc);
         gbc.gridy++; formPanel.add(lbEmail, gbc);
         gbc.gridy++; formPanel.add(lbNgaySinh, gbc);
@@ -66,8 +66,8 @@ public class KhachHangDialogAdd extends JDialog {
      
         // Cột 2 - TextFields
         gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.7; gbc.fill = GridBagConstraints.HORIZONTAL;
-        formPanel.add(txfMa, gbc);
-        gbc.gridy++; formPanel.add(txfHo, gbc);
+        formPanel.add(txfHo, gbc);
+     
         gbc.gridy++; formPanel.add(txfTen, gbc);
         gbc.gridy++; formPanel.add(txfEmail, gbc);
         gbc.gridy++; formPanel.add(txfNgaySinh, gbc);

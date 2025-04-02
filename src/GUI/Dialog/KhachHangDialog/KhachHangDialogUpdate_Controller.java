@@ -51,18 +51,25 @@ public class KhachHangDialogUpdate_Controller implements  ActionListener{
                     khach.setHokh(ho);
                     khach.setTenkh(ten);
                     khach.setemail(email);
-                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                      Date day=new Date(1000) ;
-                    try {
-                        day = sdf.parse(ns); // Chuyển đổi String thành Date
-                        khach.setNgaysinh(sdf.parse(ns));
-                    } catch (ParseException a) {
-                        khach.setNgaysinh( new Date(1000));
-                    }
+                    
+                    if (!khBUS.checkemail(email)){
+                     JOptionPane.showMessageDialog(null, "Lỗi định dạng email\nĐịnh dạng : Phải bao gồm '@gmail.com' ", "Error", JOptionPane.ERROR_MESSAGE);
+                }     
+                
+               
+                 else if (khBUS.checkngaysinh(ns)==null){
+                     JOptionPane.showMessageDialog(null, "Lỗi định dạng ngày sinh\nĐịnh dạng : yyyy-mm-dd", "Error", JOptionPane.ERROR_MESSAGE);
+                } 
+                
+                 else if (!khBUS.checksdt(sdt)){
+                     JOptionPane.showMessageDialog(null, "Lỗi định dạng số điện thoại\nĐịnh dạng : gồm 10 số và bắt đầu bằng số 0", "Error", JOptionPane.ERROR_MESSAGE);
+                } else{
+                    khach.setNgaysinh(khBUS.checkngaysinh(ns));
+                    
                     
                     khach.setSdt(sdt);
                     
-                    KhachHangDTO khUpdate=new KhachHangDTO(ma, ho, ten, email, day, sdt);
+                    KhachHangDTO khUpdate=new KhachHangDTO(ma, ho, ten, email, khBUS.checkngaysinh(ns), sdt);
                     Boolean result=new KhachHangBUS().updateKhachHang_DB(khUpdate); // Chỉnh sửa sách trong Database
                     if(result){
                          JOptionPane.showMessageDialog(null, "Chỉnh sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -71,7 +78,7 @@ public class KhachHangDialogUpdate_Controller implements  ActionListener{
                     else{ 
                          JOptionPane.showMessageDialog(null, "Lỗi gì đó ", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }else{
+                }}else{
                     JOptionPane.showMessageDialog(null, "Không tìm thấy khach hang để sửa", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 
