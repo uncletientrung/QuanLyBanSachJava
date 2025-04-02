@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PhieuXuatPanel extends  JPanel{
     public ArrayList<PhieuXuatDTO> listPx;
+    private PhieuXuatBUS pxBUS;
     private JTextField txfFind;
     private  JComboBox<String> cbbox;
     private DefaultTableModel dataPhieuXuat;
@@ -123,4 +124,15 @@ public class PhieuXuatPanel extends  JPanel{
         button.setBackground(new Color(240, 240, 240)); // Màu nền nhẹ
         return button;
     }
+    public void refreshTablePx(){
+        listPx=new PhieuXuatBUS().getAll();
+        dataPhieuXuat.setRowCount(0);
+        for (PhieuXuatDTO px: listPx){
+             dataPhieuXuat.addRow(new Object[]{px.getMaphieu(),px.getManv(),px.getMakh(),px.getThoigiantao(),px.getTongTien(),
+                                                    px.getTrangthai()});
+        }
+
+        
+    }
+
 }

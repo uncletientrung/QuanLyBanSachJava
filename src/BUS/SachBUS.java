@@ -86,6 +86,15 @@ public class SachBUS {
         result.sort(Comparator.comparing(SachDTO::getNamxuatban).reversed());
         return result;
     }
+    public int getIdSachByNameSach(String tenSach){
+        int result=0;
+        for(SachDTO sach: listSach){
+            if(sach.getTensach().equals(tenSach)){
+                result=sach.getMasach();
+            }
+        }
+        return result;
+    }
     
 
 }

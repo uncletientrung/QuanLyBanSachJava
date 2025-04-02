@@ -24,6 +24,8 @@ public class PhieuXuatController implements  ActionListener{
         String sukien=e.getActionCommand();
         if(sukien.equals("Thêm")){
             new PhieuXuatDialogAdd(WF, true);
+            PxP.refreshTablePx();
         }
+        
     }
 }

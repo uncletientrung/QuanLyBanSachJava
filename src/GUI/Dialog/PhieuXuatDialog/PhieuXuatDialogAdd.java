@@ -9,6 +9,8 @@ import DTO.SachDTO;
 import DTO.TacGiaDTO;
 import DTO.KhachHangDTO;
 import BUS.KhachHangBUS;
+import GUI.WorkFrame;
+import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -541,6 +543,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
         btnSua.addActionListener(action);
         btnXoaV2.addActionListener(action);
         BtnXoaAllV2.addActionListener(action);
+        btnThemPhieu.addActionListener(action);
         
 //        pack();
         setSize(1200,550);
@@ -626,6 +629,15 @@ public class PhieuXuatDialogAdd extends javax.swing.JDialog {
     }
     public JTextField getTxfThanhToan() {
         return txfThanhToan;
+    }
+    public JTextField getTxfNhanVien(){
+        return txfNhanVien;
+    }
+    public JDateChooser getDateChooser1(){
+        return jDateChooser1;
+    }
+    public JTextField getTxfSDT(){
+        return txfSDT;
     }
     
     

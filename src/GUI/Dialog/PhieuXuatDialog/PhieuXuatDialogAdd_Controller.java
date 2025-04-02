@@ -4,16 +4,30 @@
  */
 package GUI.Dialog.PhieuXuatDialog;
 
+import BUS.KhachHangBUS;
+import BUS.NhanVienBUS;
+import BUS.PhieuXuatBUS;
 import BUS.SachBUS;
+import DTO.ChiTietPhieuNhapDTO;
+import DTO.KhachHangDTO;
+import DTO.PhieuXuatDTO;
 import DTO.SachDTO;
+import DAO.PhieuXuatDAO;
+import DTO.ChiTietPhieuXuatDTO;
+import GUI.View.PhieuXuatPanel;
+import GUI.WorkFrame;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.util.Date;
 
 /**
  *
@@ -21,8 +35,15 @@ import javax.swing.event.ListSelectionListener;
  */
 public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelectionListener,ActionListener{
     public PhieuXuatDialogAdd PXDA;
+    private NhanVienBUS nvBUS=new NhanVienBUS();
+    private KhachHangBUS khBUS=new KhachHangBUS();
+    private PhieuXuatBUS pxBUS=new PhieuXuatBUS();
+    private PhieuXuatDAO pxDAO=new PhieuXuatDAO();
+    private SachBUS sBUS=new SachBUS();
+
     public PhieuXuatDialogAdd_Controller(PhieuXuatDialogAdd PXDA){
         this.PXDA=PXDA;
+
     }
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -150,6 +171,47 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để xóa", "Thông báo", JOptionPane.ERROR_MESSAGE);
            }
            
+       }
+       if(sukien.equals("Thêm phiếu")){
+           ArrayList<ChiTietPhieuXuatDTO> ListCTPhieuXuat=new ArrayList<>();
+           PhieuXuatDTO phieuxuat;
+           if(PXDA.getDataBan().getRowCount()!=0){
+               // Lọc mã nhân viên từ tên nhân viên
+               String tenNv=PXDA.getTxfNhanVien().getText().toString().trim();
+               int maNV=nvBUS.getIdNvByNameNv(tenNv);
+               // Lọc mã khách từ SDT
+               String sdt=PXDA.getTxfSDT().getText().toString().trim();
+               KhachHangDTO KH=khBUS.getKHBySDT(sdt);
+               int maKH=KH.getMakh();
+               // Chuyển JDateChosser sang Date rồi sang TimeStamp
+               Date current_day_type_date= PXDA.getDateChooser1().getDate();
+               Timestamp current_day=new Timestamp(current_day_type_date.getTime());
+               // Gọi mã phiếu xuất auto tiếp theo 
+               int maPhieuXuat = pxDAO.getAutoIncrement();
+                // Gọi tổng tiền và trạng thái auto là 1
+                int tongtien=Integer.parseInt(PXDA.getTxfThanhToan().getText().toString().trim());
+                int trangthai=1;
+               for(int i=0;i<PXDA.getDataBan().getRowCount();i++){
+                   String tensach=PXDA.getDataBan().getValueAt(i, 0).toString();
+                   int soluong=Integer.parseInt(PXDA.getDataBan().getValueAt(i, 1).toString());
+                   int dongia=Integer.parseInt(PXDA.getDataBan().getValueAt(i, 2).toString());
+                   // Chuyển đổi tên sách thành mã sách từ hàm BUS
+                   int masach=sBUS.getIdSachByNameSach(tensach);
+                   // Tạo chi tiết phiếu sách mới
+                   ChiTietPhieuXuatDTO ctpxNew=new ChiTietPhieuXuatDTO(maPhieuXuat, masach, soluong, dongia);
+                   ListCTPhieuXuat.add(ctpxNew);
+               }
+               // Sau khi chạy for xong đủ hết chi tiết phiếu nhập thì thêm vào database
+                phieuxuat= new PhieuXuatDTO(maPhieuXuat, maNV, maKH, current_day, (long)tongtien, trangthai);
+                pxBUS.insert(phieuxuat, ListCTPhieuXuat);
+
+                
+               JOptionPane.showMessageDialog(null, "Xuất hóa đơn thành công!", "Thông báo", JOptionPane.NO_OPTION);
+               
+           }else{
+               JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để xuất hóa đơn", "Thông báo", JOptionPane.ERROR_MESSAGE);
+           }
+
        }
     }
     

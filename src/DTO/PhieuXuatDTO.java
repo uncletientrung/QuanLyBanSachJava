@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class PhieuXuatDTO extends PhieuDTO {
     private int makh;
-
+    public PhieuXuatDTO(){}
     public PhieuXuatDTO(int maphieu, int manv, int makh, Timestamp thoigiantao, long tongTien, int trangthai) {
         super(maphieu, manv, thoigiantao, tongTien, trangthai);
         this.makh = makh;

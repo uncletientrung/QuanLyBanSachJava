@@ -69,4 +69,13 @@ public class NhanVienBUS {
         }
         return  result;
     }
+    public int getIdNvByNameNv(String tenNv) {
+    for (NhanVienDTO nv : listNV) {
+        String fullName = (nv.getHonv() + " " + nv.getTennv()).trim();
+        if (fullName.equalsIgnoreCase(tenNv.trim())) {
+            return nv.getManv();
+        }
+    }
+    return -1;
+}
 }
