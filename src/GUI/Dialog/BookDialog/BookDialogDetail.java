@@ -156,7 +156,6 @@ public class BookDialogDetail extends JDialog{
         return button;
     }
     public void ShowInfo(String maSach,String TenSach,String NXB,String TG,String TL,String soluong,String NamXB,String dongia){
-        System.err.println(maSach);
         txfMasach.setText(maSach);
         txfTensach.setText(TenSach);
         txfManxb.setText(NXB);

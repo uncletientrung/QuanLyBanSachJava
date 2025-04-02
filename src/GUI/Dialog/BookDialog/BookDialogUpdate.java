@@ -4,6 +4,12 @@
  */
 package GUI.Dialog.BookDialog;
 
+import BUS.NhaXuatBanBUS;
+import BUS.TacGiaBUS;
+import BUS.TheLoaiBUS;
+import DTO.NhaXuatBanDTO;
+import DTO.TacGiaDTO;
+import DTO.TheLoaiDTO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -13,6 +19,11 @@ import java.awt.event.ActionListener;
  */
 public class BookDialogUpdate extends JDialog{
     private JTextField txfMasach,txfTensach,txfManxb,txfMatacgia,txfMatheloai,txfSoluong,txfNamxuatban,txfDongia;
+    private NhaXuatBanBUS nxbBUS=new NhaXuatBanBUS();
+    private TacGiaBUS tgBUS=new TacGiaBUS();
+    private TheLoaiBUS tlBUS=new TheLoaiBUS();
+            
+            
     public BookDialogUpdate(JFrame parent) {
         super(parent, "Danh mục sửa sách", true);
 
@@ -154,14 +165,28 @@ public class BookDialogUpdate extends JDialog{
         return button;
     }
     public void ShowInfo(String maSach,String TenSach,String NXB,String TG,String TL,String soluong,String NamXB,String dongia){
+        
         txfMasach.setText(maSach);
         txfTensach.setText(TenSach);  // Tương tác với BookController
-        txfManxb.setText(NXB);
-        txfMatacgia.setText(TG);
-        txfMatheloai.setText(TL);
         txfSoluong.setText(soluong);
         txfNamxuatban.setText(NamXB);
         txfDongia.setText(dongia);
+        
+        // Gán đúng giá trị mã NXBcho chỉnh sửa
+        String maNxb="";
+        NhaXuatBanDTO nxbFind=nxbBUS.getNXBByNameNXB(NXB);
+        maNxb=String.valueOf(nxbFind.getManxb());
+        txfManxb.setText(maNxb);
+        // Gán đúng giá trị mã TG cho chỉnh sửa
+        String maTG="";
+        TacGiaDTO TGFind=tgBUS.getTgByNameTG(TG);
+        maTG=String.valueOf(TGFind.getMatacgia());
+        txfMatacgia.setText(maTG);
+        // Gán đúng giá trị mã TL cho chỉnh sửa
+        String maTL="";
+        TheLoaiDTO tlFind=tlBUS.getTlByNameTL(TL);
+        maTL=String.valueOf(tlFind.getMatheloai());
+        txfMatheloai.setText(maTL);
     }
     public JTextField getTxfMasach() {return txfMasach;}
     public JTextField getTxfTensach() {return txfTensach;}
