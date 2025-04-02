@@ -7,7 +7,6 @@ package GUI.Dialog.BookDialog;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import javax.swing.text.LabelView;
 
 /**
  *

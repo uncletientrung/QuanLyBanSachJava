@@ -32,7 +32,6 @@ import DAO.PhanQuyenDAOo;
 import DAO.TaiKhoanDAO;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
-import com.mysql.cj.MysqlType;
 import java.util.ArrayList;
 
 /**
@@ -68,28 +67,69 @@ public class TaiKhoanBUS {
             }
         }
         return ketqua;
+ }
+    
+    public boolean themTaiKhoan(String tentk,String mk,int manhomquyen) {
+        
+
+        for (TaiKhoanDTO tk : getTaiKhoanAll()) {
+            if (tk.getUsername().equalsIgnoreCase(tentk)) {
+                
+                return false; // Ngăn chặn thêm trùng
+            }
+        }
+
+            return TaiKhoanDAO.getInstance().insert(new TaiKhoanDTO(0, tentk,mk,manhomquyen,1)) > 0;
+}
+    //hàm update
+    public boolean updateTaiKhoan(TaiKhoanDTO taiKhoan){
+        int result = TaiKhoanDAO.getInstance().update(taiKhoan);
+        if(result > 0){
+            listTaiKhoan.clear();
+            listTaiKhoan.addAll(getTaiKhoanAll()); // Cập nhật danh sách mới nhất từ DB
+            return true;
+        }
+        return false;
+        
     }
+    //hàm kiểm tra coi khi sửa có lỡ sửa cùng tên hay không
+    public boolean isTenTaiKhoanTrung(String tentk, int manv) {
+        
+    for (TaiKhoanDTO tk : getTaiKhoanAll()) {
+        if (tk.getUsername().equalsIgnoreCase(tentk) && tk.getManv()!= manv) {
+            return true; // Đã tồn tại nhóm quyền khác có cùng tên
+        }
+    }
+    return false;
+}
+    
+    
+    public boolean xoaNhomQuyen(int manv) {
+        return tkDAO.delete(manv) > 0;
+}
+    
+    
     
     
     
 
-    // Thêm phương thức đăng nhập
-    public TaiKhoanDTO dangNhap(String username, String matkhau) {
-        return tkDAO.kiemTraDangNhap(username, matkhau);
-    }
-
-    // Thêm phương thức lấy vai trò (tuỳ chọn, nếu muốn dùng)
-    public String getVaiTro(TaiKhoanDTO taiKhoan) {
-        if (taiKhoan == null) {
-            return "INVALID";
-        }
-        switch (taiKhoan.getManhomquyen()) {
-            case 1:
-                return "ADMIN";
-            case 2:
-                return "NHANVIEN";
-            default:
-                return "UNKNOWN";
-        }
-    }
+//    // Thêm phương thức đăng nhập
+//    public TaiKhoanDTO dangNhap(String username, String matkhau) {
+//        return tkDAO.kiemTraDangNhap(username, matkhau);
+//    }
+//
+//    // Thêm phương thức lấy vai trò (tuỳ chọn, nếu muốn dùng)
+//    public String getVaiTro(TaiKhoanDTO taiKhoan) {
+//        if (taiKhoan == null) {
+//            return "INVALID";
+//        }
+//        switch (taiKhoan.getManhomquyen()) {
+//            case 1:
+//                return "ADMIN";
+//            case 2:
+//                return "NHANVIEN";
+//            default:
+//                return "UNKNOWN";
+//        }
+//    }
 }

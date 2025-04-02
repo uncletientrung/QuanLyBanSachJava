@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import DTO.TheLoaiDTO;
@@ -14,61 +10,101 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Hi
- */
-public class TheLoaiDAO implements DAOInterface<TheLoaiDTO>{
-    public static TheLoaiDAO getInstance(){
+public class TheLoaiDAO implements DAOInterface<TheLoaiDTO> {
+    
+    public static TheLoaiDAO getInstance() {
         return new TheLoaiDAO();
     }
 
     @Override
     public int insert(TheLoaiDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "INSERT INTO theloai(matheloai, tentheloai) VALUES(?, ?)";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, t.getMatheloai());
+            pst.setString(2, t.getTentheloai());
+            
+            result = pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public int update(TheLoaiDTO t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int result = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "UPDATE theloai SET tentheloai = ? WHERE matheloai = ?";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, t.getTentheloai());
+            pst.setInt(2, t.getMatheloai());
+            result = pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(TheLoaiDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return result;
+    }
+    
+    public int delete(int maTheLoai) {
+        String query = "DELETE FROM theloai WHERE matheloai = ?";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, maTheLoai);
+            return pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
     public int delete(String t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            int maTheLoai = Integer.parseInt(t);
+            return delete(maTheLoai);
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi chuyển đổi ID từ String sang int");
+            return 0;
+        }
     }
 
     @Override
     public ArrayList<TheLoaiDTO> selectAll() {
-    ArrayList<TheLoaiDTO> theLoai = new ArrayList<TheLoaiDTO>();
-    
-    try {
-        Connection con = JDBCUtil.getConnection();
-        String sql = "SELECT * FROM theloai"; 
-        PreparedStatement pst = con.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
-        while (rs.next()) {
-            int maTl = rs.getInt("matheloai"); 
-            String tenTl = rs.getString("tentheloai"); 
-            // Tạo đối tượng
-            TheLoaiDTO doi_tuong_tl = new TheLoaiDTO(maTl, tenTl);
-            theLoai.add(doi_tuong_tl);
-        }
+        ArrayList<TheLoaiDTO> theLoaiList = new ArrayList<>();
         
-    } catch (SQLException e) {
-        Logger.getLogger(TheLoaiDAO.class.getName()).log(Level.SEVERE, null, e); 
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT * FROM theloai";
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                int maTl = rs.getInt("matheloai");
+                String tenTl = rs.getString("tentheloai");
+                
+                TheLoaiDTO doi_tuong_tl = new TheLoaiDTO(maTl, tenTl);
+                theLoaiList.add(doi_tuong_tl);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(TheLoaiDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return theLoaiList;
     }
-    return theLoai;
-}
 
     @Override
     public TheLoaiDTO selectById(String t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public int getAutoIncrement() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
 }

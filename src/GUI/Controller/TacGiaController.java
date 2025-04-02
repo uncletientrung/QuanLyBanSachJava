@@ -3,15 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.Controller;
-
-import BUS.PhanQuyenBUS;
-import DTO.NhomQuyenDTO;
-import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd;
-import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd_Controller;
-import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogDelete;
-import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogUpdate;
-import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogUpdate_Controller;
-import GUI.View.PhanQuyenPanel;
+import BUS.TacGiaBUS;
+import DTO.TacGiaDTO;
+import GUI.Dialog.TacGiaDialog.TacGiaDialogAdd;
+import GUI.Dialog.TacGiaDialog.TacGiaDialogAdd_Controller;
+import GUI.Dialog.TacGiaDialog.TacGiaDialogDelete;
+import GUI.Dialog.TacGiaDialog.TacGiaDialogUpdate;
+import GUI.Dialog.TacGiaDialog.TacGiaDialogUpdate_Controller;
+import GUI.Dialog.ThongTinChungDialog.TacGiaDialog;
 import GUI.WorkFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,17 +24,16 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Hi
  */
-public class PhanQuyenController implements ActionListener,ListSelectionListener,DocumentListener{
-    
-    private PhanQuyenPanel pqp;
+public class TacGiaController implements ActionListener,ListSelectionListener,DocumentListener{
+    private TacGiaDialog tgp;
     private WorkFrame wk;
-    private PhanQuyenBUS phanQuyenBus;
+    private TacGiaBUS tacGiaBus;
     
-    
-    public PhanQuyenController(PhanQuyenPanel pqp,WorkFrame wk){
-        this.pqp=pqp;
+   
+     public TacGiaController(TacGiaDialog tgp,WorkFrame wk){
+        this.tgp=tgp;
         this.wk=wk;
-        this.phanQuyenBus = new PhanQuyenBUS();
+        this.tacGiaBus = new TacGiaBUS();
 
         
     }
@@ -45,50 +43,48 @@ public void actionPerformed(ActionEvent e) {
     String action = e.getActionCommand(); 
 
     if ("Thêm".equals(action)) {  
-        PhanQuyenDialogAdd dialog = new PhanQuyenDialogAdd(wk, pqp); // Truyền panel vào
-        PhanQuyenDialogAdd_Controller controller = new PhanQuyenDialogAdd_Controller(dialog, pqp);
+        TacGiaDialogAdd dialog = new TacGiaDialogAdd(wk, tgp); // Truyền panel vào
+        TacGiaDialogAdd_Controller controller = new TacGiaDialogAdd_Controller(dialog, tgp);
         dialog.setController(controller);
         dialog.setVisible(true);
     }
     
     if("Sửa".equals(action)){
         
-        NhomQuyenDTO nhomQuyenDTO = pqp.getSelectedNhomQuyen(); // Lấy đối tượng đã chọn
-        if (nhomQuyenDTO == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhóm quyền cần sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        TacGiaDTO tacGiaDTO = tgp.getSelectedTacGia(); // Lấy đối tượng đã chọn
+        if (tacGiaDTO == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn tác giả cần sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        PhanQuyenDialogUpdate dialog = new PhanQuyenDialogUpdate(wk, pqp,nhomQuyenDTO);        
-        PhanQuyenDialogUpdate_Controller controller = new PhanQuyenDialogUpdate_Controller(dialog, pqp);
+        TacGiaDialogUpdate dialog = new TacGiaDialogUpdate(wk, tgp,tacGiaDTO);        
+        TacGiaDialogUpdate_Controller controller = new TacGiaDialogUpdate_Controller(dialog, tgp);
         dialog.setController(controller);
         dialog.setVisible(true);
     }
     if ("Xóa".equals(e.getActionCommand())) {
-        NhomQuyenDTO nhomQuyenCanXoa = pqp.getSelectedNhomQuyen();
-        if (nhomQuyenCanXoa == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhóm quyền để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        TacGiaDTO tacGiaCanXoa = tgp.getSelectedTacGia();
+        if (tacGiaCanXoa == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn tác giả để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         // Mở dialog xác nhận xóa
-        PhanQuyenDialogDelete dialog = new PhanQuyenDialogDelete(wk, nhomQuyenCanXoa);
+        TacGiaDialogDelete dialog = new TacGiaDialogDelete(wk, tacGiaCanXoa);
         dialog.setVisible(true);
 
         // Nếu người dùng xác nhận xóa thì thực hiện xóa
         if (dialog.isXacNhan()) {
-            boolean result = phanQuyenBus.xoaNhomQuyen(nhomQuyenCanXoa.getManhomquyen());
+            boolean result = tacGiaBus.xoaTacGia(tacGiaCanXoa.getMatacgia());
             if (result) {
                 JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                pqp.capNhatBang(phanQuyenBus.getNhomQuyenAll());
+                tgp.capNhatBang(tacGiaBus.getTacGiaAll());
             } else {
                 JOptionPane.showMessageDialog(null, "Xóa thất bại! Nhóm quyền có thể đang được sử dụng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-
 }
-
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -109,5 +105,4 @@ public void actionPerformed(ActionEvent e) {
     public void changedUpdate(DocumentEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
 }

@@ -3,7 +3,6 @@ package BUS;
 import DAO.PhanQuyenDAOo;
 import DTO.NhomQuyenDTO;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PhanQuyenBUS {
     private final ArrayList<NhomQuyenDTO> listNhomQuyen;

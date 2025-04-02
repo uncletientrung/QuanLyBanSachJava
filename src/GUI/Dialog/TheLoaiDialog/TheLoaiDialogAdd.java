@@ -2,8 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package GUI.Dialog.TacGiaDialog;
-import GUI.Dialog.ThongTinChungDialog.TacGiaDialog;
+package GUI.Dialog.TheLoaiDialog;  // Changed package name
+import GUI.Dialog.ThongTinChungDialog.TheLoaiDialog;  // Changed import
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,21 +27,21 @@ import javax.swing.SwingConstants;
  *
  * @author Hi
  */
-public class TacGiaDialogAdd extends JDialog{
-    private JTextField txTenTacGia;
-    private TacGiaDialog tgiaPanel;
+public class TheLoaiDialogAdd extends JDialog {  // Changed class name
+    private JTextField txTenTheLoai;  // Changed variable name
+    private TheLoaiDialog theLoaiPanel;  // Changed variable name and type
     private JButton btnXacNhan, btnHuy;
 
-    public TacGiaDialogAdd(JFrame parent, TacGiaDialog tgiaPanel) {
-        super(parent, "Thêm tác giả", true);
-        this.tgiaPanel = tgiaPanel;
+    public TheLoaiDialogAdd(JFrame parent, TheLoaiDialog theLoaiPanel) {  // Changed parameter type and name
+        super(parent, "Thêm thể loại", true);  // Changed dialog title
+        this.theLoaiPanel = theLoaiPanel;  // Updated assignment
         setSize(400, 250);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
         // ======= Tiêu đề =======
-        JLabel titleLabel = new JLabel("THÊM TÁC GIẢ", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("THÊM THỂ LOẠI", SwingConstants.CENTER);  // Changed title text
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
 
@@ -56,17 +56,17 @@ public class TacGiaDialogAdd extends JDialog{
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel lb_ten = new JLabel("Tên Tác giả:");
+        JLabel lb_ten = new JLabel("Tên Thể loại:");  // Changed label text
         lb_ten.setFont(new Font("Arial", Font.BOLD, 14));
 
-        txTenTacGia = new JTextField(20);
-        txTenTacGia.setPreferredSize(new Dimension(200, 30));
+        txTenTheLoai = new JTextField(20);  // Updated variable name
+        txTenTheLoai.setPreferredSize(new Dimension(200, 30));
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
         pn_input.add(lb_ten, gbc);
 
         gbc.gridx = 1; gbc.weightx = 0.7;
-        pn_input.add(txTenTacGia, gbc);
+        pn_input.add(txTenTheLoai, gbc);  // Updated variable name
 
         // ======= Panel nút bấm =======
         JPanel pn_button = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -86,20 +86,20 @@ public class TacGiaDialogAdd extends JDialog{
         btnHuy.addActionListener(e -> dispose());
     }
 
-    public String getTenTacGia() {
-        return txTenTacGia.getText().trim();
+    public String getTenTheLoai() {  // Changed method name
+        return txTenTheLoai.getText().trim();  // Updated variable name
     }
 
-    public void setController(TacGiaDialogAdd_Controller controller) {
+    public void setController(TheLoaiDialogAdd_Controller controller) {  // Changed parameter type
         btnXacNhan.addActionListener(controller);
     }
 
-    public JTextField getTxTenTacGia() {
-        return txTenTacGia;
+    public JTextField getTxTenTheLoai() {  // Changed method name
+        return txTenTheLoai;  // Updated variable name
     }
 
-    public TacGiaDialog gettgiaPanel() {
-        return tgiaPanel;
+    public TheLoaiDialog getTheLoaiPanel() {  // Changed method name and return type
+        return theLoaiPanel;  // Updated variable name
     }
 
     // ======= Tạo button đồng bộ với phong cách UI =======
@@ -135,5 +135,4 @@ public class TacGiaDialogAdd extends JDialog{
 
         return button;
     }
-    
 }

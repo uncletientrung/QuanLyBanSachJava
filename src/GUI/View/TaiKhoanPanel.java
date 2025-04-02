@@ -3,12 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.View;
-
-import BUS.PhanQuyenBUS;
 import BUS.TaiKhoanBUS;
-import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
-import GUI.Controller.PhanQuyenController;
+import GUI.Controller.TaiKhoanController;
 import GUI.WorkFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -56,10 +53,10 @@ public class TaiKhoanPanel extends JPanel{
 //        JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
         btnAdd.setFont(font);
         //goi ham de thuc thi viec them
-//        PhanQuyenController controller = new PhanQuyenController(this, workFrame);
-//        btnAdd.addActionListener(controller);
-//        btnUpdate.addActionListener(controller);
-//        btndelete.addActionListener(controller);
+        TaiKhoanController controller = new TaiKhoanController(this, workFrame);
+        btnAdd.addActionListener(controller);
+        btnUpdate.addActionListener(controller);
+        btndelete.addActionListener(controller);
 
 
 
@@ -242,25 +239,36 @@ public class TaiKhoanPanel extends JPanel{
     public int getSelectedRow() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhóm quyền để sửa!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một tài khoản để sửa!");
         }
         return selectedRow;
     }
     
     
     //lấy đối tượng nhóm quyền đang được click để hàm update biết
-    public NhomQuyenDTO getSelectedNhomQuyen() {
+    public TaiKhoanDTO getSelectedTaiKhoan() {
         int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
         if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
 
         int maNV = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhóm quyền
         String username = (String) table.getValueAt(selectedRow, 1); // Lấy tên nhóm quyền
+        String mk = (String) table.getValueAt(selectedRow,2);
+        int manhomquyen= (int) table.getValueAt(selectedRow, 3);
+        String trangthaistring= (String) table.getValueAt(selectedRow, 3);
+        if(trangthaistring.equals("Còn xài được")){
+            int trangthai=1;
+            return new TaiKhoanDTO(maNV, username,mk,manhomquyen,trangthai); // Tạo đối tượng NhomQuyenDTO
+        }else{
+            int trangthai=0;
+            return new TaiKhoanDTO(maNV, username,mk,manhomquyen,trangthai); // Tạo đối tượng NhomQuyenDTO
+        }
+        
 
-        return new NhomQuyenDTO(maNV, username); // Tạo đối tượng NhomQuyenDTO
+        
 }
 
 
         
-    }
+}
     
 

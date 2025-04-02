@@ -3,9 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package BUS;
-
 import DAO.TacGiaDAO;
-import DTO.NhaXuatBanDTO;
 import DTO.TacGiaDTO;
 import java.util.ArrayList;
 
@@ -42,6 +40,41 @@ public class TacGiaBUS {
         }
         return ketqua;
     }
+   
+    public boolean themTacGia(String tenTacGia){
+        for(TacGiaDTO tg: getTacGiaAll()){
+            if(tg.getHotentacgia().equals(tenTacGia)){
+                return false;
+            }
+        }
+        return TacGiaDAO.getInstance().insert(new TacGiaDTO(0,tenTacGia))>0;
+    }
+    
+    public boolean updateTacGia(TacGiaDTO tacGia){
+        int result = TacGiaDAO.getInstance().update(tacGia);
+        if(result > 0){
+            listTacGia.clear();
+            listTacGia.addAll(getTacGiaAll()); // Cập nhật danh sách mới nhất từ DB
+            return true;
+        }
+        return false;
+        
+    }
+    //hàm kiểm tra coi khi sửa có lỡ sửa cùng tên hay không
+    public boolean isTenTacGiaTrung(String tenTacGia, int maTacGia) {
+        
+    for (TacGiaDTO tg : getTacGiaAll()) {
+        if (tg.getHotentacgia().equalsIgnoreCase(tenTacGia) && tg.getMatacgia()!= maTacGia) {
+            return true; // Đã tồn tại nhóm quyền khác có cùng tên
+        }
+    }
+    return false;
+}
+    
+    
+    public boolean xoaTacGia(int maTacGia) {
+        return tgDAO.delete(maTacGia) > 0;
+}
     public TacGiaDTO getTGById(int manxb){
         TacGiaDTO result=new TacGiaDTO();
         for(TacGiaDTO tg: listTacGia){
@@ -62,6 +95,9 @@ public class TacGiaBUS {
         }
         return result;
     }
-      
+
     
 }
+
+
+

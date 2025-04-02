@@ -6,6 +6,9 @@ package GUI.Dialog.ThongTinChungDialog;
 
 import BUS.TheLoaiBUS;
 import DTO.TheLoaiDTO;
+import GUI.Controller.TacGiaController;
+import GUI.Controller.TheLoaiController;
+import GUI.WorkFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -38,6 +41,7 @@ public class TheLoaiDialog extends JDialog {
     private JTable table;
     private DefaultTableModel tableTheLoai;
     private JTextField txtTimKiem;
+    private WorkFrame workFrame;
     private Boolean checkTimkiem = false;
     private ImageIcon icon;
     private JButton btnThem, btnSua, btnXoa;
@@ -162,6 +166,11 @@ public class TheLoaiDialog extends JDialog {
         btnSua.setFont(new Font("Arial", Font.BOLD, 16));
         btnXoa.setFont(new Font("Arial", Font.BOLD, 16));
         
+        TheLoaiController controller= new TheLoaiController(this, workFrame);
+        btnThem.addActionListener(controller);
+        btnSua.addActionListener(controller);
+        btnXoa.addActionListener(controller);
+        
         buttonPanel.add(btnThem);
         buttonPanel.add(btnSua);
         buttonPanel.add(btnXoa);
@@ -201,6 +210,34 @@ public class TheLoaiDialog extends JDialog {
             tableTheLoai.addRow(new Object[]{tl.getMatheloai(), tl.getTentheloai()});
         }
     }
+    
+     //load lai du lieu khi moi them vo
+    public void loadData() {
+    listTheLoai = new TheLoaiBUS().getTheLoaiAll(); // Lấy danh sách mới
+    capNhatBang(listTheLoai); // Cập nhật lại bảng
+}
+    
+    //hàm kiểm tra coi dòng trong bảng có được click chọn hay không để sửa
+    public int getSelectedRow() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một thể loại để sửa!");
+        }
+        return selectedRow;
+    }
+    
+    
+    //lấy đối tượng thể loại đang được click để hàm update biết
+    public TheLoaiDTO getSelectedTheLoai() {
+        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
+        if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
+
+        int maTheLoai = (int) table.getValueAt(selectedRow, 0); // 
+        String tenTheLoai = (String) table.getValueAt(selectedRow, 1); //
+
+        return new TheLoaiDTO(maTheLoai, tenTheLoai); // Tạo đối tượng
+}
+
         
     // ======= Tạo button đồng bộ với phong cách UI =======
     private JButton createButton(String text, Color bgColor) {

@@ -6,10 +6,8 @@ package GUI.View;
 
 
 import BUS.PhanQuyenBUS;
-import DAO.PhanQuyenDAOo;
 import DTO.NhomQuyenDTO;
 import GUI.Controller.PhanQuyenController;
-import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd;
 import GUI.WorkFrame;
 import javax.swing.*;
 import java.awt.*;
@@ -25,10 +23,7 @@ public class PhanQuyenPanel extends JPanel{
     private JTable table;
     private JTextField txfind;
     private Boolean checkTimkiem=false;
-    private WorkFrame workFrame;
-    
-    
-    
+    private WorkFrame workFrame;    
     private DefaultTableModel tableModelPhanQuyen;
     //goi ham getnhomquyenall ben BUS de lay ra array list
     public ArrayList<NhomQuyenDTO> listNhomQuyen= new PhanQuyenBUS().getNhomQuyenAll();
@@ -237,8 +232,6 @@ public class PhanQuyenPanel extends JPanel{
 
 
     
-    
-    
-    
+      
  
 }

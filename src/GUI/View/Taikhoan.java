@@ -5,7 +5,7 @@
 package GUI.View;
 
 import BUS.TaiKhoanBUS;
-import GUI.Controller.TaiKhoanController;
+import GUI.Controller.TaiKhoanLoginController;
 import javax.swing.JFrame;
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +60,7 @@ public class Taikhoan extends JFrame{
         add(lbtitle, BorderLayout.NORTH);
         add(panelInput, BorderLayout.CENTER);
         add(panelButton, BorderLayout.SOUTH);
-        ActionListener action =new TaiKhoanController(this);
+        ActionListener action =new TaiKhoanLoginController(this);
         btsubmit.addActionListener(action);
         btreset.addActionListener(action);
         

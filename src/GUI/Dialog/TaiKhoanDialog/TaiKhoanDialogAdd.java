@@ -2,8 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package GUI.Dialog.TacGiaDialog;
-import GUI.Dialog.ThongTinChungDialog.TacGiaDialog;
+package GUI.Dialog.TaiKhoanDialog;
+import GUI.View.TaiKhoanPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,21 +27,21 @@ import javax.swing.SwingConstants;
  *
  * @author Hi
  */
-public class TacGiaDialogAdd extends JDialog{
-    private JTextField txTenTacGia;
-    private TacGiaDialog tgiaPanel;
+public class TaiKhoanDialogAdd extends JDialog{
+    private JTextField txTenDangNhap,txmatKhau,txmaNhomQuyen,txMaNhanVien;
+    private TaiKhoanPanel tkPanel;
     private JButton btnXacNhan, btnHuy;
 
-    public TacGiaDialogAdd(JFrame parent, TacGiaDialog tgiaPanel) {
-        super(parent, "Thêm tác giả", true);
-        this.tgiaPanel = tgiaPanel;
-        setSize(400, 250);
+    public TaiKhoanDialogAdd(JFrame parent, TaiKhoanPanel tkPanel) {
+        super(parent, "Thêm tài khoản", true);
+        this.tkPanel = tkPanel;
+        setSize(400, 300);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
         // ======= Tiêu đề =======
-        JLabel titleLabel = new JLabel("THÊM TÁC GIẢ", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("THÊM TÀI KHOẢN", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
 
@@ -55,18 +55,45 @@ public class TacGiaDialogAdd extends JDialog{
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JLabel lb_ten = new JLabel("Tên Tác giả:");
+        
+        JLabel lb_manv = new JLabel("Mã nhân viên:");
+        JLabel lb_ten = new JLabel("Tên đăng nhập:");
+        JLabel lb_mk = new JLabel("Mật khẩu:");
+        JLabel lb_maquyen = new JLabel("Mã nhóm quyền:");
+        lb_manv.setFont(new Font("Arial", Font.BOLD, 14));
         lb_ten.setFont(new Font("Arial", Font.BOLD, 14));
-
-        txTenTacGia = new JTextField(20);
-        txTenTacGia.setPreferredSize(new Dimension(200, 30));
-
+        lb_mk.setFont(new Font("Arial", Font.BOLD, 14));
+        lb_maquyen.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        
+        txMaNhanVien=new JTextField(20);
+        txTenDangNhap = new JTextField(20);
+        txmatKhau= new JTextField(20);
+        txmaNhomQuyen= new JTextField(20);
+        txMaNhanVien.setPreferredSize(new Dimension(200, 30));
+        txTenDangNhap.setPreferredSize(new Dimension(200, 30));
+        txmatKhau.setPreferredSize(new Dimension(200, 30));
+        txmaNhomQuyen.setPreferredSize(new Dimension(200, 30));
+        
+//        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
+//        pn_input.add(lb_manv, gbc);
+//        gbc.gridx = 1; gbc.weightx = 0.7;
+//        pn_input.add(txMaNhanVien, gbc);
+        
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
         pn_input.add(lb_ten, gbc);
-
         gbc.gridx = 1; gbc.weightx = 0.7;
-        pn_input.add(txTenTacGia, gbc);
+        pn_input.add(txTenDangNhap, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.3;
+        pn_input.add(lb_mk, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.7;
+        pn_input.add(txmatKhau, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.3;
+        pn_input.add(lb_maquyen, gbc);
+        gbc.gridx = 1; gbc.weightx = 2.7;
+        pn_input.add(txmaNhomQuyen, gbc);
 
         // ======= Panel nút bấm =======
         JPanel pn_button = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -86,20 +113,28 @@ public class TacGiaDialogAdd extends JDialog{
         btnHuy.addActionListener(e -> dispose());
     }
 
-    public String getTenTacGia() {
-        return txTenTacGia.getText().trim();
+    public String getTenDangNhap() {
+        return txTenDangNhap.getText().trim();
     }
+    public String getMatKhau() {
+        return txmatKhau.getText().trim();
+    }
+    public String getNhomQuyen() {
+        return txmaNhomQuyen.getText().trim();
+    }
+    
+//    public String getMaNhanVien() {
+//        return txmaNhomQuyen.getText().trim();
+//    }
 
-    public void setController(TacGiaDialogAdd_Controller controller) {
+    public void setController(TaiKhoanDialogAdd_Controller controller) {
         btnXacNhan.addActionListener(controller);
     }
 
-    public JTextField getTxTenTacGia() {
-        return txTenTacGia;
-    }
 
-    public TacGiaDialog gettgiaPanel() {
-        return tgiaPanel;
+
+    public TaiKhoanPanel getTkPanel() {
+        return tkPanel;
     }
 
     // ======= Tạo button đồng bộ với phong cách UI =======

@@ -5,8 +5,6 @@
 package GUI.Dialog.PhanQuyenDialog;
 
 import BUS.PhanQuyenBUS;
-import DAO.PhanQuyenDAOo;
-import DTO.NhomQuyenDTO;
 import GUI.View.PhanQuyenPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

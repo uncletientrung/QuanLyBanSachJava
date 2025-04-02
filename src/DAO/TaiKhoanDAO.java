@@ -4,13 +4,13 @@
  */
 package DAO;
 
-import DAO.DAOInterface;
-import DTO.TaiKhoanDTO;
 import connectDB.JDBCUtil;
 import DTO.TaiKhoanDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,26 +22,46 @@ public class TaiKhoanDAO implements  DAOInterface<TaiKhoanDTO>{
     public static TaiKhoanDAO getInstance(){
         return new TaiKhoanDAO();
     }
-    
-    @Override
-    public int insert(TaiKhoanDTO tk){
-        int result=0;
-        try{
-            Connection con=(Connection) JDBCUtil.getConnection();
-            String sql=" Insert into taikhoan(manv, tendangnhap, matkhau, manhomquyen, trangthai) values ( ? , ? , ? , ?,  ?)";
-            PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, tk.getManv());
-            pst.setString(2, tk.getUsername());
-            pst.setString(3, tk.getMatkhau());
-            pst.setInt(4,tk.getManhomquyen());
-            pst.setInt(5, tk.getTrangthai());
-            result=pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        }catch(Exception e){
-           Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+    public int getNextManv() {
+    int nextManv = 1; // Mặc định nếu chưa có nhân viên nào
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT MAX(manv) FROM nhanvien"; // Lấy mã nhân viên lớn nhất
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        if (rs.next()) {
+            nextManv = rs.getInt(1) + 1; // Mã tiếp theo
         }
-        return result;
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return nextManv;
+}
+
+    @Override
+public int insert(TaiKhoanDTO tk) {
+    int result = 0;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        int ma = getNextManv(); // Lấy mã nhân viên tiếp theo
+        
+        String sql = "INSERT INTO taikhoan(manv, tendangnhap, matkhau, manhomquyen, trangthai) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, ma); // Sử dụng mã nhân viên mới
+        pst.setString(2, tk.getUsername());
+        pst.setString(3, tk.getMatkhau());
+        pst.setInt(4, tk.getManhomquyen());
+        pst.setInt(5, 1);
+
+        result = pst.executeUpdate();
+        JDBCUtil.closeConnection(con);
+    } catch (Exception e) {
+        Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+    }
+    return result;
+}
+
     
     @Override
     public int update(TaiKhoanDTO tk){
@@ -62,21 +82,47 @@ public class TaiKhoanDAO implements  DAOInterface<TaiKhoanDTO>{
         return  result;
     }
     
-    @Override
-    public int delete(String manv){
-        int result=0;
-        try{
-            Connection con= (Connection) JDBCUtil.getConnection();
-            String sql="Update taikhoan Set trangthai = -1 Where manv= ? ";
-            PreparedStatement pst= (PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, Integer.parseInt(manv));
-            result=pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        }catch(Exception e){
-            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return  result;
+//    @Override
+//    public int delete(String manv){
+//        int result=0;
+//        try{
+//            Connection con= (Connection) JDBCUtil.getConnection();
+//            String sql="Update taikhoan Set trangthai = -1 Where manv= ? ";
+//            PreparedStatement pst= (PreparedStatement) con.prepareStatement(sql);
+//            pst.setInt(1, Integer.parseInt(manv));
+//            result=pst.executeUpdate();
+//            JDBCUtil.closeConnection(con);
+//        }catch(Exception e){
+//            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+//        }
+//        return  result;
+//    }
+    
+    
+    public int delete(int manv) {
+    String query = "DELETE FROM taikhoan WHERE manv = ?";
+    try (Connection conn = JDBCUtil.getConnection();
+         PreparedStatement pst = conn.prepareStatement(query)) {
+         pst.setInt(1, manv);
+        return pst.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return 0;
+}
+
+
+
+    @Override
+public int delete(String t) {
+    try {
+        int manv = Integer.parseInt(t);  // Chuyển String → int
+        return delete(manv);  // Gọi hàm delete(int)
+    } catch (NumberFormatException e) {
+        System.out.println("Lỗi chuyển đổi ID từ String sang int");
+        return 0;
+    }
+}
     
     @Override
     public ArrayList<TaiKhoanDTO> selectAll(){

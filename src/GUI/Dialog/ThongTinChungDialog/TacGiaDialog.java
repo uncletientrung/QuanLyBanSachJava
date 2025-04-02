@@ -2,6 +2,8 @@ package GUI.Dialog.ThongTinChungDialog;
 
 import BUS.TacGiaBUS;
 import DTO.TacGiaDTO;
+import GUI.Controller.TacGiaController;
+import GUI.WorkFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,6 +36,7 @@ public class TacGiaDialog extends JDialog {
     private JTable table;
     private DefaultTableModel tableTacGia;
     private JTextField txtTimKiem;
+    private WorkFrame workFrame;
     private Boolean checkTimkiem = false;
     private ImageIcon icon;
     private JButton btnThem, btnSua, btnXoa;
@@ -123,6 +126,7 @@ public class TacGiaDialog extends JDialog {
         };
         
         table = new JTable(tableTacGia);
+        
         // Làm tiêu đề đậm hơn
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
@@ -157,6 +161,12 @@ public class TacGiaDialog extends JDialog {
         btnThem.setFont(new Font("Arial", Font.BOLD, 16));
         btnSua.setFont(new Font("Arial", Font.BOLD, 16));
         btnXoa.setFont(new Font("Arial", Font.BOLD, 16));
+        
+        
+        TacGiaController controller= new TacGiaController(this, workFrame);
+        btnThem.addActionListener(controller);
+        btnSua.addActionListener(controller);
+        btnXoa.addActionListener(controller);
 
         buttonPanel.add(btnThem);
         buttonPanel.add(btnSua);
@@ -197,6 +207,34 @@ public class TacGiaDialog extends JDialog {
             tableTacGia.addRow(new Object[]{tg.getMatacgia(), tg.getHotentacgia()});
         }
     }
+    
+    //load lai du lieu khi moi them vo
+    public void loadData() {
+    listTacGia = new TacGiaBUS().getTacGiaAll(); // Lấy danh sách mới
+    capNhatBang(listTacGia); // Cập nhật lại bảng
+}
+    
+    //hàm kiểm tra coi dòng trong bảng có được click chọn hay không để sửa
+    public int getSelectedRow() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một tác giả để sửa!");
+        }
+        return selectedRow;
+    }
+    
+    
+    //lấy đối tượng nhóm quyền đang được click để hàm update biết
+    public TacGiaDTO getSelectedTacGia() {
+        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
+        if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
+
+        int maTacGia = (int) table.getValueAt(selectedRow, 0); // 
+        String tenTacGia = (String) table.getValueAt(selectedRow, 1); //
+
+        return new TacGiaDTO(maTacGia, tenTacGia); // Tạo đối tượng
+}
+
         
     // ======= Tạo button đồng bộ với phong cách UI =======
     private JButton createButton(String text, Color bgColor) {

@@ -4,11 +4,8 @@
  */
 package GUI.Dialog.ThongTinChungDialog;
 
-import BUS.NhaCungCapBUS;
 import BUS.NhaXuatBanBUS;
-import DTO.NhaCungCapDTO;
 import DTO.NhaXuatBanDTO;
-import GUI.Controller.NhaCungCapController;
 import GUI.Controller.NhaXuatBanController;
 import GUI.WorkFrame;
 import java.awt.BorderLayout;
