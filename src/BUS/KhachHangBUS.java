@@ -108,4 +108,33 @@ public class KhachHangBUS {
         return  result;
     }
 
+      public static boolean checkemail(String email){
+    return email.contains("@gmail.com");
+}
+
+public static boolean checksdt(String sdt){
+    if(sdt.length()==10&&sdt.charAt(0)=='0') return true;
+    return false;
+}
+
+ public static Date checkngaysinh(String ngaysinh) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setLenient(false); // Điều này giúp kiểm tra định dạng ngày đúng
+
+        try {
+            // Kiểm tra nếu ngaysinh có thể chuyển đổi sang Date hợp lệ
+            Date date = formatter.parse(ngaysinh);
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
+    
 }
