@@ -30,14 +30,14 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
         int result = 0;
         try{
             Connection con=(Connection) JDBCUtil.getConnection();
-            String sql= "Insert into nhanvien(manv, honv, tennv, gioittinh, sdt, ngaysinh, trang thai) values (?,?,?,?,?,?,?)";
+            String sql= "Insert into nhanvien(manv, honv, tennv, gioittinh, sdt, ngaysinh, trangthai) values (?,?,?,?,?,?,?)";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, nv.getManv());
             pst.setString(2, nv.getHonv());
             pst.setString(3, nv.getTennv());
             pst.setInt(4, nv.getGioitinh());
             pst.setString(5, nv.getSdt());
-            pst.setDate(6, (Date) nv.getNgaysinh());
+            pst.setDate(6, new java.sql.Date( nv.getNgaysinh().getTime()));
             pst.setInt(7, nv.getTrangthai());
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
@@ -60,7 +60,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
             pst.setString(2, nv.getTennv());
             pst.setInt(3, nv.getGioitinh());
             pst.setString(4, nv.getSdt());
-            pst.setDate(5, (Date) nv.getNgaysinh());
+            pst.setDate(5, new java.sql.Date( nv.getNgaysinh().getTime()));
             pst.setInt(6, nv.getTrangthai());
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
@@ -103,7 +103,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
                 String sdt = rs.getString("sdt");
                 Date ngaysinh = rs.getDate("ngaysinh");
                 int trangthai = rs.getInt("trangthai");
-                NhanVienDTO nv = new NhanVienDTO(ma,ho,ten,gioitinh,sdt,trangthai,ngaysinh);
+                NhanVienDTO nv = new NhanVienDTO(ma,ho,ten,gioitinh,sdt,ngaysinh,trangthai);
                 result.add(nv);
             }
             JDBCUtil.closeConnection(con);
@@ -115,11 +115,53 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO> {
 
     @Override
     public NhanVienDTO selectById(String ma) {
-        return new NhanVienDTO();
+        NhanVienDTO result = new NhanVienDTO();
+        try{
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM nhanvien Where manv= ?";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(ma));
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            
+            while(rs.next()){
+                int manv = rs.getInt("manv");
+                String ho = rs.getString("honv");
+                String ten = rs.getString("tennv");
+                int gioitinh = rs.getInt("gioittinh");
+                String sdt = rs.getString("sdt");
+                Date ngaysinh = rs.getDate("ngaysinh");
+                int trangthai = rs.getInt("trangthai");
+                
+                result.setManv(manv);
+                result.setTennv(ten);
+                result.setHonv(ho);
+                result.setGioitinh(gioitinh);
+                result.setSdt(sdt);
+                result.setTrangthai(trangthai);
+                result.setNgaysinh(ngaysinh);
+                return result;
+            }
+        } catch (Exception e){}
+        return result;
     }
 
     @Override
     public int getAutoIncrement() {
-        return 0;
+        int result = -1;
+        try{
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "Select Auto_Increment From Information_Schema.tables Where Table_Schema = 'quanlibansach' and Table_name = 'nhanvien'";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            ResultSet rs=(ResultSet) pst.executeQuery();
+            while(rs.next()){
+                result=rs.getInt("Auto_Increment");
+            }
+            if(result == -1){
+                System.out.println("No data");
+            }
+        } catch (Exception e){
+            Logger.getLogger(NhanVienDAO.class.getName()).log(Level.SEVERE,null,e);
+        }
+        return result;
     }
 }

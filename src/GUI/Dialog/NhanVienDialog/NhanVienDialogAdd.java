@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * @author Minnie
  */
 public class NhanVienDialogAdd extends JDialog{
-    private TextField txfMa, txfHo, txfTen, txfGioitinh, txfSdt, txfNgaysinh, txfTrangthai;
+    private JTextField txfHo, txfTen, txfGioitinh, txfSdt, txfNgaysinh, txfTrangthai;
     public NhanVienDialogAdd(JFrame parent){
         super(parent, "Danh mục thêm nhân viên", true);
         
@@ -47,7 +47,7 @@ public class NhanVienDialogAdd extends JDialog{
         Font fieldFont = new Font("Arial", Font.PLAIN, 14);
         
         // Lable với TextField
-        JLabel lbMa = new JLabel("Mã nhân viên:");  lbMa.setFont(labelFont);
+//        JLabel lbMa = new JLabel("Mã nhân viên:");  lbMa.setFont(labelFont);
         JLabel lbHo = new JLabel("Họ:");  lbHo.setFont(labelFont);
         JLabel lbTen = new JLabel("Tên:");  lbTen.setFont(labelFont);
         JLabel lbGioitinh = new JLabel("Giới tính:");  lbGioitinh.setFont(labelFont);
@@ -55,18 +55,19 @@ public class NhanVienDialogAdd extends JDialog{
         JLabel lbNgaysinh = new JLabel("Ngày sinh:");  lbNgaysinh.setFont(labelFont);
         JLabel lbTrangthai = new JLabel("Trạng thái:");  lbTrangthai.setFont(labelFont);
         
-        JTextField txfMa = createTextField(fieldFont);
-        JTextField txfHo = createTextField(fieldFont);
-        JTextField txfTen = createTextField(fieldFont);
-        JTextField txfGioitinh = createTextField(fieldFont);
-        JTextField txfSdt = createTextField(fieldFont);
-        JTextField txfNgaysinh = createTextField(fieldFont);
-        JTextField txfTrangthai = createTextField(fieldFont);
+//        JTextField txfMa = createTextField(fieldFont);
+        txfHo = createTextField(fieldFont);
+        txfTen = createTextField(fieldFont);
+        txfGioitinh = createTextField(fieldFont);
+        txfSdt = createTextField(fieldFont);
+        txfNgaysinh = createTextField(fieldFont);
+        txfTrangthai = createTextField(fieldFont);
         
         //Cột 1 - Labels
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
-        formPanel.add(lbMa, gbc);
-        gbc.gridy++; formPanel.add(lbHo, gbc);
+//        formPanel.add(lbMa, gbc);
+//        gbc.gridy++; 
+        formPanel.add(lbHo, gbc);
         gbc.gridy++; formPanel.add(lbTen, gbc);
         gbc.gridy++; formPanel.add(lbGioitinh, gbc);
         gbc.gridy++; formPanel.add(lbSdt, gbc);
@@ -75,8 +76,9 @@ public class NhanVienDialogAdd extends JDialog{
         
         //Cột 2 - TextField
         gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.7; gbc.fill = GridBagConstraints.HORIZONTAL;
-        formPanel.add(txfMa, gbc);
-        gbc.gridy++; formPanel.add(txfHo, gbc);
+//        formPanel.add(txfMa, gbc);
+//        gbc.gridy++; 
+        formPanel.add(txfHo, gbc);
         gbc.gridy++; formPanel.add(txfTen, gbc);
         gbc.gridy++; formPanel.add(txfGioitinh, gbc);
         gbc.gridy++; formPanel.add(txfSdt, gbc);
@@ -151,69 +153,69 @@ public class NhanVienDialogAdd extends JDialog{
         return button;
     }
     
-    public TextField getTxfMa(){
-        return txfMa;
-    }
+//    public TextField getTxfMa(){
+//        return txfMa;
+//    }
+//    
+//    public void setTxfMa(TextField txfMa){
+//        this.txfMa = txfMa;
+//    }
     
-    public void setTxfMa(TextField txfMa){
-        this.txfMa = txfMa;
-    }
-    
-    public TextField getTxfHo(){
+    public JTextField getTxfHo(){
         return txfHo;
     }
     
-    public void setTxfHo(TextField txfHo){
+    public void setTxfHo(JTextField txfHo){
         this.txfHo = txfHo;
     }
     
-    public TextField getTxfTen(){
+    public JTextField getTxfTen(){
         return txfTen;
     }
 
-    public TextField getTxfGioitinh() {
+    public JTextField getTxfGioitinh() {
         return txfGioitinh;
     }
 
-    public TextField getTxfSdt() {
+    public JTextField getTxfSdt() {
         return txfSdt;
     }
 
-    public TextField getTxfNgaysinh() {
+    public JTextField getTxfNgaysinh() {
         return txfNgaysinh;
     }
 
-    public TextField getTxfTrangthai() {
+    public JTextField getTxfTrangthai() {
         return txfTrangthai;
     }
 
-    public void setTxfTen(TextField txfTen) {
+    public void setTxfTen(JTextField txfTen) {
         this.txfTen = txfTen;
     }
 
-    public void setTxfGioitinh(TextField txfGioitinh) {
+    public void setTxfGioitinh(JTextField txfGioitinh) {
         this.txfGioitinh = txfGioitinh;
     }
 
-    public void setTxfSdt(TextField txfSdt) {
+    public void setTxfSdt(JTextField txfSdt) {
         this.txfSdt = txfSdt;
     }
 
-    public void setTxfNgaysinh(TextField txfNgaysinh) {
+    public void setTxfNgaysinh(JTextField txfNgaysinh) {
         this.txfNgaysinh = txfNgaysinh;
     }
 
-    public void setTxfTrangthai(TextField txfTrangthai) {
+    public void setTxfTrangthai(JTextField txfTrangthai) {
         this.txfTrangthai = txfTrangthai;
     }
 
     @Override
     public String toString() {
-        return "NhanVienDialogAdd{" + "txfMa=" + txfMa + ", txfHo=" + txfHo + ", txfTen=" + txfTen + ", txfGioitinh=" + txfGioitinh + ", txfSdt=" + txfSdt + ", txfNgaysinh=" + txfNgaysinh + ", txfTrangthai=" + txfTrangthai + '}';
+        return "NhanVienDialogAdd{txfHo=" + txfHo + ", txfTen=" + txfTen + ", txfGioitinh=" + txfGioitinh + ", txfSdt=" + txfSdt + ", txfNgaysinh=" + txfNgaysinh + ", txfTrangthai=" + txfTrangthai + '}';
     }
     
     public void ClearTextField(){
-        txfMa.setText("");
+//        txfMa.setText("");
         txfHo.setText("");
         txfTen.setText("");
         txfNgaysinh.setText("");

@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.sql.Date;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -49,11 +49,11 @@ public class NhanVienDialogUpdate_Controller implements ActionListener{
                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                    String dateString = NVDU.getTxfMa().getText();
                    Date ngaysinh = null;
-//               try {
-//                   ngaysinh = dateFormat.parse(dateString);
-//               } catch (ParseException ex) {
-//                   Logger.getLogger(NhanVienDialogUpdate_Controller.class.getName()).log(Level.SEVERE, null, ex);
-//               }
+               try {
+                   ngaysinh = dateFormat.parse(dateString);
+               } catch (ParseException ex) {
+                   Logger.getLogger(NhanVienDialogUpdate_Controller.class.getName()).log(Level.SEVERE, null, ex);
+               }
                
                NhanVienDTO nv = new NhanVienBUS().getNVByID(ma);
                if(nv!=null){
@@ -64,7 +64,7 @@ public class NhanVienDialogUpdate_Controller implements ActionListener{
                    nv.setTrangthai(trangthai);
                    nv.setNgaysinh(ngaysinh);
                    
-                   NhanVienDTO nvUpdate = new NhanVienDTO(ma,ho,ten,gioitinh,sdt,trangthai,ngaysinh);
+                   NhanVienDTO nvUpdate = new NhanVienDTO(ma,ho,ten,gioitinh,sdt,ngaysinh,trangthai);
                    boolean result = new NhanVienBUS().updateNV_DB(nvUpdate);
                    if(result){
                        JOptionPane.showMessageDialog(null,"Chỉnh sửa thành công","THÔNG BÁO",JOptionPane.INFORMATION_MESSAGE);

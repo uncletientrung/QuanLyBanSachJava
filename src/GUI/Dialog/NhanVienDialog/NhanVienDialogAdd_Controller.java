@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.sql.Date;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -33,34 +33,34 @@ public class NhanVienDialogAdd_Controller implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String sukien= e.getActionCommand();
         if(sukien.equals("Thêm dữ liệu")){
-           if (NVDA.getTxfMa().getText().isEmpty() || 
+           if ( //NVDA.getTxfMa().getText().isEmpty() || 
                 NVDA.getTxfHo().getText().isEmpty() || 
                 NVDA.getTxfTen().getText().isEmpty() || 
                 NVDA.getTxfGioitinh().getText().isEmpty() || 
-                NVDA.getTxfNgaysinh().getText().isEmpty() || 
-                NVDA.getTxfTrangthai().getText().isEmpty())
+                NVDA.getTxfNgaysinh().getText().isEmpty() ) 
+//                NVDA.getTxfTrangthai().getText().isEmpty())
             {
                 JOptionPane.showMessageDialog(null, "Vui lòng đầy đủ thông tin nhân viên", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                    // Thực hiện thêm nhân viên khi tất cả các trường đều có dữ liệu
-                   int ma = Integer.parseInt(NVDA.getTxfMa().getText());
+                   //int ma = Integer.parseInt(NVDA.getTxfMa().getText());
                    String ho = NVDA.getTxfHo().getText();
                    String ten = NVDA.getTxfTen().getText();
                    int gioitinh = Integer.parseInt(NVDA.getTxfGioitinh().getText());
                    String sdt = NVDA.getTxfSdt().getText();
-                   int trangthai = Integer.parseInt(NVDA.getTxfSdt().getText());
-                   SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                   String dateString = NVDA.getTxfMa().getText();
+                   int trangthai = Integer.parseInt(NVDA.getTxfTrangthai().getText());
+                   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                   String dateString = NVDA.getTxfNgaysinh().getText();
                    Date ngaysinh = null;
-//               try {
-//                   ngaysinh = dateFormat.parse(dateString);
-//               } catch (ParseException ex) {
-//                   Logger.getLogger(NhanVienDialogAdd_Controller.class.getName()).log(Level.SEVERE, null, ex);
-//               }
+               try {
+                   ngaysinh = dateFormat.parse(dateString);
+               } catch (ParseException ex) {
+                   Logger.getLogger(NhanVienDialogAdd_Controller.class.getName()).log(Level.SEVERE, null, ex);
+               }
                    int maAuto = NhanVienDAO.getInstance().getAutoIncrement();
                    
                    // Gọi hàm lấy giá trị mã Auto
-                   NhanVienDTO nvnew = new NhanVienDTO(maAuto, ho, ten, gioitinh, sdt, trangthai, ngaysinh);
+                   NhanVienDTO nvnew = new NhanVienDTO(maAuto, ho, ten, gioitinh, sdt, ngaysinh, trangthai);
                    boolean result = NVBUS.addNV(nvnew);
                            
                            if (result) {

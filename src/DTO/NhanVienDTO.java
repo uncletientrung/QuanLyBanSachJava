@@ -1,5 +1,5 @@
 package DTO;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 public class NhanVienDTO {
@@ -13,7 +13,7 @@ public class NhanVienDTO {
 
     public NhanVienDTO() {}
 
-    public NhanVienDTO(int manv, String honv, String tennv, int gioitinh, String sdt, int trangthai, Date ngaysinh) {
+    public NhanVienDTO(int manv, String honv, String tennv, int gioitinh, String sdt, Date ngaysinh, int trangthai) {
         this.manv = manv;
         this.honv = honv;
         this.tennv = tennv;
