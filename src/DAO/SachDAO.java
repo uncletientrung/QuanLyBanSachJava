@@ -136,7 +136,9 @@ public class SachDAO implements  DAOInterface<SachDTO>{
                 result.setDongia(dongia);
                 return result;
             }
+            JDBCUtil.closeConnection(con);
         } catch (Exception e) {
+            Logger.getLogger(SachDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return result;
     }
@@ -155,8 +157,41 @@ public class SachDAO implements  DAOInterface<SachDTO>{
              if(result==-1){
                  System.out.println("No data, try again!");
              }
+             JDBCUtil.closeConnection(con);
         }catch (Exception e) {
-            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(SachDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return  result;
+    }
+    public int getSoLuongById(int masach){ // Hàm lấy số lượng sách từ mã sách 
+        int result=0;
+        try{
+            Connection con=(Connection) JDBCUtil.getConnection();
+            String sql="Select soluongton From sach Where masach= ? ";
+            PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
+            pst.setInt(1, masach);
+            ResultSet rs=pst.executeQuery();
+            while(rs.next()){
+                result=rs.getInt("soluongton");
+            }
+            JDBCUtil.closeConnection(con);
+        }catch(Exception e){
+            Logger.getLogger(SachDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return result;
+    }
+    public int UpdateSoLuong(int masach, int soluong){ // Update số lượng sách từ các chi tiết phiếu xuất và nhập
+        int result=0;
+        try{
+            Connection con=(Connection) JDBCUtil.getConnection();
+            String sql="Update sach Set soluongton = soluongton + ? Where masach= ? ";
+            PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
+            pst.setInt(1, soluong);
+            pst.setInt(2, masach);
+            result = pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        }catch(Exception e){
+            Logger.getLogger(SachDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return  result;
     }

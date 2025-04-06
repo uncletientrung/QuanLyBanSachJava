@@ -16,7 +16,7 @@ import GUI.Dialog.PhieuXuatDialog.PhieuXuatDialogAdd;
 public class PhieuXuatController implements  ActionListener{
     private PhieuXuatPanel PxP;
     private WorkFrame WF;
-    public PhieuXuatController(PhieuXuatPanel PxP, WorkFrame Wf){
+    public PhieuXuatController(PhieuXuatPanel PxP, WorkFrame Wf ){
         this.PxP=PxP;
         this.WF=WF;
     }

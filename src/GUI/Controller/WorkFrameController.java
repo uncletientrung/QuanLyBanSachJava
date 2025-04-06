@@ -6,7 +6,7 @@ package GUI.Controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import  GUI.WorkFrame;
-
+import GUI.View.BookPanel;
 /**
  *
  * @author DELL
@@ -20,8 +20,9 @@ public class WorkFrameController implements  ActionListener{
    public void actionPerformed(ActionEvent e) {
     String sukien = e.getActionCommand();
     if (sukien.equals("Sách")) {
-        wk.cardLayout.show(wk.PanelCard, "Sách");
-    }  if (sukien.equals("Trang chủ")) {
+        wk.cardLayout.show(wk.PanelCard, "Sách"); //getComponent(1) là do add BookPanel vào Sau HomePanel
+        ((BookPanel) wk.PanelCard.getComponent(1)).refreshTableData();
+    }  if (sukien.equals("Trang chủ")) {    
         wk.cardLayout.show(wk.PanelCard, "Trang chủ");
     }  if (sukien.equals("Nhân viên")) {
         wk.cardLayout.show(wk.PanelCard, "Nhân viên");
