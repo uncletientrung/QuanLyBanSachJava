@@ -3,11 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.Dialog.TaiKhoanDialog;
-
-import BUS.NhaCungCapBUS;
 import BUS.TaiKhoanBUS;
-import GUI.Dialog.NhaCungCapDialog.NhaCungCapDialogAdd;
-import GUI.Dialog.ThongTinChungDialog.NhaCungCapDialog;
 import GUI.View.TaiKhoanPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -30,13 +30,29 @@ public class TaiKhoanDAO implements  DAOInterface<TaiKhoanDTO>{
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery(sql);
         if (rs.next()) {
-            nextManv = rs.getInt(1) + 1; // Mã tiếp theo
+            nextManv = rs.getInt(1); // Mã tiếp theo
         }
         JDBCUtil.closeConnection(con);
     } catch (SQLException e) {
         e.printStackTrace();
     }
     return nextManv;
+}
+    public int getSoLuongtkhientai() {
+    int soluong = 1; // Mặc định nếu chưa có nhân viên nào
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT MAX(manv) FROM taikhoan"; // Lấy mã nhân viên lớn nhất
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        if (rs.next()) {
+            soluong = rs.getInt(1); // Mã tiếp theo
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return soluong;
 }
 
     @Override
@@ -74,6 +90,7 @@ public int insert(TaiKhoanDTO tk) {
             pst.setNString(2, tk.getMatkhau());
             pst.setInt(3, tk.getManhomquyen());
             pst.setInt(4, tk.getTrangthai());
+            pst.setInt(5, tk.getManv());
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch(Exception e){

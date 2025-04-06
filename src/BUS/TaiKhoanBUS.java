@@ -28,17 +28,18 @@
  */
 package BUS;
 
-import DAO.PhanQuyenDAOo;
 import DAO.TaiKhoanDAO;
-import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
+import GUI.Dialog.TaiKhoanDialog.TaiKhoanDialogAdd;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author DELL
  */
 public class TaiKhoanBUS {
+    private TaiKhoanDialogAdd TKDA;
     private final ArrayList<TaiKhoanDTO> listTaiKhoan;
     private final TaiKhoanDAO tkDAO;
 
@@ -70,6 +71,12 @@ public class TaiKhoanBUS {
  }
     
     public boolean themTaiKhoan(String tentk,String mk,int manhomquyen) {
+        int soluongnhanvien=TaiKhoanDAO.getInstance().getNextManv();
+        int soluongtaikhoan=TaiKhoanDAO.getInstance().getSoLuongtkhientai();
+        if(soluongnhanvien==soluongtaikhoan){
+           JOptionPane.showMessageDialog(TKDA, "Vui lòng thêm nhân viên trước khi thêm tài khoản!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+           return false;
+        }
         
 
         for (TaiKhoanDTO tk : getTaiKhoanAll()) {
@@ -79,7 +86,7 @@ public class TaiKhoanBUS {
             }
         }
 
-            return TaiKhoanDAO.getInstance().insert(new TaiKhoanDTO(0, tentk,mk,manhomquyen,1)) > 0;
+        return TaiKhoanDAO.getInstance().insert(new TaiKhoanDTO(0, tentk,mk,manhomquyen,1)) > 0;
 }
     //hàm update
     public boolean updateTaiKhoan(TaiKhoanDTO taiKhoan){
@@ -93,18 +100,18 @@ public class TaiKhoanBUS {
         
     }
     //hàm kiểm tra coi khi sửa có lỡ sửa cùng tên hay không
-    public boolean isTenTaiKhoanTrung(String tentk, int manv) {
-        
+public boolean isTenTaiKhoanTrung(String tentk) {
     for (TaiKhoanDTO tk : getTaiKhoanAll()) {
-        if (tk.getUsername().equalsIgnoreCase(tentk) && tk.getManv()!= manv) {
-            return true; // Đã tồn tại nhóm quyền khác có cùng tên
+        if (tk.getUsername().equalsIgnoreCase(tentk)) {
+            return true;
         }
     }
     return false;
 }
+
     
     
-    public boolean xoaNhomQuyen(int manv) {
+    public boolean xoaTaiKhoan(int manv) {
         return tkDAO.delete(manv) > 0;
 }
     

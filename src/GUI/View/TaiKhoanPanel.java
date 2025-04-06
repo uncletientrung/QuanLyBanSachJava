@@ -254,7 +254,7 @@ public class TaiKhoanPanel extends JPanel{
         String username = (String) table.getValueAt(selectedRow, 1); // Lấy tên nhóm quyền
         String mk = (String) table.getValueAt(selectedRow,2);
         int manhomquyen= (int) table.getValueAt(selectedRow, 3);
-        String trangthaistring= (String) table.getValueAt(selectedRow, 3);
+        String trangthaistring= (String) table.getValueAt(selectedRow, 4);
         if(trangthaistring.equals("Còn xài được")){
             int trangthai=1;
             return new TaiKhoanDTO(maNV, username,mk,manhomquyen,trangthai); // Tạo đối tượng NhomQuyenDTO
