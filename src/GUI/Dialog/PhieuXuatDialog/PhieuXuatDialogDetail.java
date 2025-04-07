@@ -135,6 +135,7 @@ public class PhieuXuatDialogDetail extends JDialog{
         // ========== Thêm Action ==========
         ActionListener action=new PhieuXuatDialogDetail_Controller(this);
         cancelButton.addActionListener(action);
+        exportButton.addActionListener(action);
 
         add(mainPanel);
         setSize(900, 500);

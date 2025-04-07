@@ -30,6 +30,9 @@ public class PhieuXuatDialogDetail_Controller implements  ActionListener{
         if(sukien.equals("Đóng")){
             PXDD.dispose();
         }
+        if(sukien.equals("Xuất file Excel")){
+            System.err.println("AA");
+        }
     }
     
     
