@@ -17,8 +17,8 @@ public class PhieuXuatBUS {
     public static PhieuXuatDAO pxDAO;
     public static SachDAO sDAO;
     private final ChiTietPhieuXuatDAO chiTietPhieuXuatDAO=ChiTietPhieuXuatDAO.getInstance();
-    public ArrayList<PhieuXuatDTO> list_px;
-   
+    private ArrayList<PhieuXuatDTO> list_px;
+    
     public PhieuXuatBUS(){
         pxDAO=PhieuXuatDAO.getInstance();
         sDAO=SachDAO.getInstance();
@@ -27,13 +27,43 @@ public class PhieuXuatBUS {
     public ArrayList<PhieuXuatDTO> getAll(){
         return list_px;
     }
-    public void insert(PhieuXuatDTO px, ArrayList<ChiTietPhieuXuatDTO> List_ctpx){
+    public void insert(PhieuXuatDTO px, ArrayList<ChiTietPhieuXuatDTO> List_ctpx){ // Thêm phiếu xuất0
         pxDAO.insert(px);
         chiTietPhieuXuatDAO.insert(List_ctpx);
         for(ChiTietPhieuXuatDTO ctpx: List_ctpx){
             int soluongTru=-(ctpx.getSoluong());
             sDAO.UpdateSoLuong(ctpx.getMasach(), soluongTru);
         }
+        list_px.add(px); // Thêm px vào mảng sau khi thêm vào database
+
+    }
+    public PhieuXuatDTO getPXById(int mapx){
+        PhieuXuatDTO px=new PhieuXuatDTO();
+        for (PhieuXuatDTO p:list_px){
+            if((p.getMaphieu() == mapx)){
+                px=p;
+                return  px;
+            }
+        }
+        return px;
+    }
+    public ArrayList<ChiTietPhieuXuatDTO> getListCTPXById(int mapx){
+        ArrayList<ChiTietPhieuXuatDTO> result=chiTietPhieuXuatDAO.selectAll(mapx+"");
+        return  result;
+    }
+    public void delete(PhieuXuatDTO px, ArrayList<ChiTietPhieuXuatDTO> list_ctpx){
+        for(ChiTietPhieuXuatDTO ctpx: list_ctpx){
+            int soluong=(ctpx.getSoluong());
+            sDAO.UpdateSoLuong(ctpx.getMasach(), soluong);
+        }
+        pxDAO.cancel(px.getMaphieu()+"");
+        chiTietPhieuXuatDAO.delete(px.getMaphieu()+"");
+        list_px.remove(px);
+//        for(PhieuXuatDTO px1: list_px){
+//            System.err.println(px1.toString());
+//        }
     }
     
 }
+    
+

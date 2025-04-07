@@ -4,6 +4,8 @@
  */
 package GUI.View;
 
+import BUS.KhachHangBUS;
+import BUS.NhanVienBUS;
 import java.awt.*;
 import javax.swing.*;
 import BUS.PhieuXuatBUS;
@@ -27,6 +29,9 @@ public class PhieuXuatPanel extends  JPanel{
     private DefaultTableModel dataPhieuXuat;
     private JTable tablePhieuXuat;
     private WorkFrame Wf;
+    private NhanVienBUS nvBUS;
+    private KhachHangBUS khBUS;
+    private JPanel PanelCenter;
 
     public PhieuXuatPanel(){
         // Tạo Panel toolBar cho thanh công cụ trên cùng
@@ -34,14 +39,16 @@ public class PhieuXuatPanel extends  JPanel{
         JPanel toolBar_Left=new JPanel(new FlowLayout(FlowLayout.LEFT,10,20));
         JPanel toolBar_Right=new JPanel(new FlowLayout(FlowLayout.RIGHT,10,30));
         Font font=new Font("Arial", Font.BOLD, 16);
+
         
         // Tạo các nút CRUD cho JPanel toolBar_Left
+        JButton btnHome= createToolBarButton("Trang chủ", "home.png");
         JButton btnAdd= createToolBarButton("Thêm", "insert1.png");
-        JButton btnUpdate= createToolBarButton("Sửa", "update1.png");
-        JButton btndelete= createToolBarButton("Xóa", "trash.png");
+        JButton btndelete= createToolBarButton("Hủy bỏ", "delete.png");
         JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
         JButton btnexport= createToolBarButton("Xuất Excel", "export_excel.png");
-        btnAdd.setFont(font);btnUpdate.setFont(font);btndelete.setFont(font);btndetail.setFont(font);btnexport.setFont(font);
+        btnHome.setFont(font);
+        btnAdd.setFont(font);btndelete.setFont(font);btndetail.setFont(font);btnexport.setFont(font);
         
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
         String[] List_Combobox={"Tất cả","Giá thấp đến cao ⬆","Giá cao đến thấp ⬇","NXB thấp đến cao ⬆","NXB cao đến thấp ⬇"};
@@ -67,9 +74,17 @@ public class PhieuXuatPanel extends  JPanel{
         tablePhieuXuat= new JTable(dataPhieuXuat);
         tablePhieuXuat.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tablePhieuXuat.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
-        for(PhieuXuatDTO px: listPx){
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(),px.getManv(),px.getMakh(),px.getThoigiantao(),px.getTongTien(),
-                                                    px.getTrangthai()});
+        tablePhieuXuat.getTableHeader().setReorderingAllowed(false); // Ngăn kéo các cột
+        tablePhieuXuat.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);// Ngăn chọn nhiều row cùng 1 lúc
+
+        nvBUS=new NhanVienBUS();
+        khBUS=new KhachHangBUS();
+        for(PhieuXuatDTO px: listPx){  
+            String hoTenNv=nvBUS.getHoTenNVById(px.getManv());
+            String hoTenKh=khBUS.getFullNameKHById(px.getMakh());
+            String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(),hoTenNv,hoTenKh,px.getThoigiantao(),px.getTongTien(),
+                                                    trangThai});
         }
         // Tạo renderer để căn giữa dữ liệu trong TableBook
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -89,11 +104,11 @@ public class PhieuXuatPanel extends  JPanel{
         tablePhieuXuat.getColumnModel().getColumn(5).setPreferredWidth(30);
          // Tạo ScrollPane cho Table để tên cột column hiện
         JScrollPane SPPhieuXuat= new JScrollPane(tablePhieuXuat);
-
+        
+        toolBar_Left.add(btnHome);
         toolBar_Left.add(btnAdd);
-        toolBar_Left.add(btnUpdate);
-        toolBar_Left.add(btndelete);
         toolBar_Left.add(btndetail);
+        toolBar_Left.add(btndelete);
         toolBar_Left.add(btnexport);
 
         toolBar_Right.add(cbbox);
@@ -102,13 +117,17 @@ public class PhieuXuatPanel extends  JPanel{
 
         toolBar.add(toolBar_Left);
         toolBar.add(toolBar_Right);
-
+        PanelCenter= new JPanel();
+        PanelCenter.setLayout(new GridLayout(1,1));
+        PanelCenter.add(SPPhieuXuat);
         setLayout(new BorderLayout());
         add(toolBar,BorderLayout.NORTH);
-        add(SPPhieuXuat,BorderLayout.CENTER);
+        add(PanelCenter,BorderLayout.CENTER);
         
         ActionListener action=new PhieuXuatController(this, Wf);
         btnAdd.addActionListener(action);
+        btndetail.addActionListener(action);
+        btndelete.addActionListener(action);
     }
     
     
@@ -124,15 +143,24 @@ public class PhieuXuatPanel extends  JPanel{
         button.setBackground(new Color(240, 240, 240)); // Màu nền nhẹ
         return button;
     }
+    public JPanel getPanelCenter(){
+        return PanelCenter;
+    }
     public void refreshTablePx(){
         listPx=new PhieuXuatBUS().getAll();
         dataPhieuXuat.setRowCount(0);
-        for (PhieuXuatDTO px: listPx){
-             dataPhieuXuat.addRow(new Object[]{px.getMaphieu(),px.getManv(),px.getMakh(),px.getThoigiantao(),px.getTongTien(),
-                                                    px.getTrangthai()});
+        nvBUS=new NhanVienBUS();
+        khBUS=new KhachHangBUS();
+        for(PhieuXuatDTO px: listPx){  
+            String hoTenNv=nvBUS.getHoTenNVById(px.getManv());
+            String hoTenKh=khBUS.getFullNameKHById(px.getMakh());
+            String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(),hoTenNv,hoTenKh,px.getThoigiantao(),px.getTongTien(),
+                                                    trangThai});
         }
-
-        
+    }
+    public JTable getTablePhieuXuat(){
+        return tablePhieuXuat;
     }
 
 }

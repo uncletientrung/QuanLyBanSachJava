@@ -133,6 +133,16 @@ public static boolean checksdt(String sdt){
         }
     }
 
+    public String getFullNameKHById(int makh){
+        String result="";
+        for (KhachHangDTO kh: listkh){
+            if(kh.getMakh() == makh){
+                result=(kh.getHokh() +" "+kh.getTenkh()).trim();
+                return result;
+            }
+        }
+        return result;
+    }
 
 
 

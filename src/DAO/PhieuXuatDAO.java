@@ -83,6 +83,20 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuatDTO>{
         }
         return  result;  
     }
+    public int cancel(String mapx){
+        int result=0;
+         try{
+            Connection con=(Connection) JDBCUtil.getConnection();
+            String sql="Delete From phieuxuat  Where maphieuxuat = ?   ";
+            PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(mapx));
+            result=pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        }catch(Exception e){
+            Logger.getLogger(PhieuXuatDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return  result;  
+    }
 
     @Override
     public ArrayList<PhieuXuatDTO> selectAll() {
