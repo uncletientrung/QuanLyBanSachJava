@@ -1,26 +1,3 @@
-///*
-// * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-// * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
-// */
-//package BUS;
-//import DAO.TaiKhoanDAO;
-//import  DTO.TaiKhoanDTO;
-//import java.util.ArrayList;
-///**
-// *
-// * @author DELL
-// */
-//public class TaiKhoanBUS {
-//    private final ArrayList<TaiKhoanDTO> listTaiKhoan;
-//    public TaiKhoanBUS(){
-//        this.listTaiKhoan =TaiKhoanDAO.getInstance().selectAll();
-//    }
-//    public ArrayList<TaiKhoanDTO> getTaiKhoanAll(){
-//        return listTaiKhoan;
-//    }
-//    
-//}
-
 
 /*
  * Click nbfs://SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -120,23 +97,23 @@ public boolean isTenTaiKhoanTrung(String tentk) {
     
     
 
-//    // Thêm phương thức đăng nhập
-//    public TaiKhoanDTO dangNhap(String username, String matkhau) {
-//        return tkDAO.kiemTraDangNhap(username, matkhau);
-//    }
-//
-//    // Thêm phương thức lấy vai trò (tuỳ chọn, nếu muốn dùng)
-//    public String getVaiTro(TaiKhoanDTO taiKhoan) {
-//        if (taiKhoan == null) {
-//            return "INVALID";
-//        }
-//        switch (taiKhoan.getManhomquyen()) {
-//            case 1:
-//                return "ADMIN";
-//            case 2:
-//                return "NHANVIEN";
-//            default:
-//                return "UNKNOWN";
-//        }
-//    }
+    // Thêm phương thức đăng nhập
+    public TaiKhoanDTO dangNhap(String username, String matkhau) {
+        return tkDAO.kiemTraDangNhap(username, matkhau);
+    }
+
+    // Thêm phương thức lấy vai trò (tuỳ chọn, nếu muốn dùng)
+    public String getVaiTro(TaiKhoanDTO taiKhoan) {
+        if (taiKhoan == null) {
+            return "INVALID";
+        }
+        switch (taiKhoan.getManhomquyen()) {
+            case 1:
+                return "ADMIN";
+            case 2:
+                return "NHANVIEN";
+            default:
+                return "UNKNOWN";
+        }
+    }
 }

@@ -30,7 +30,7 @@ public class ThongTinChungPanel extends JPanel{
         // Tiêu đề
         JPanel pn_tieuDe = new JPanel(new BorderLayout());
         pn_tieuDe.setBackground(Color.decode("#B4CDCD"));
-        pn_tieuDe.setPreferredSize(new Dimension(100, 137));
+        pn_tieuDe.setPreferredSize(new Dimension(100, 135));
 
         JLabel lb_tieude = new JLabel("THÔNG TIN CHUNG", JLabel.CENTER);
         lb_tieude.setFont(new Font("Arial", Font.BOLD, 40));
