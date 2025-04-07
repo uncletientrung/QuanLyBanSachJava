@@ -30,6 +30,7 @@ public class PhieuXuatDialogDetail extends JDialog{
     private SachBUS sBUS=new SachBUS();
     private NhanVienBUS nvBUS=new NhanVienBUS();
     private KhachHangBUS khBUS=new KhachHangBUS();
+    private JTable tableCTPX;
     public PhieuXuatDialogDetail(JFrame parent, PhieuXuatDTO pxDTO) {
         super(parent, "Danh mục  xem chi tiết", true);
 
@@ -80,7 +81,7 @@ public class PhieuXuatDialogDetail extends JDialog{
             }
         };
         
-        JTable tableCTPX = new JTable(dataCTPX);
+        tableCTPX = new JTable(dataCTPX);
         for (int i=0;i<list_ctpx.size();i++){
             String STT=String.valueOf(i+1);
             String maSach=String.valueOf(list_ctpx.get(i).getMasach());
@@ -200,10 +201,35 @@ public class PhieuXuatDialogDetail extends JDialog{
         return button;
     }
 
-    
     public DefaultTableModel getDataCTPX() {
         return dataCTPX;
     }
+
+    public JTextField getTxfMaPhieu() {
+        return txfMaPhieu;
+    }
+
+    public JTextField getTxfNV() {
+        return txfNV;
+    }
+
+    public JTextField getTxfKhachHang() {
+        return txfKhachHang;
+    }
+
+    public JTextField getTxfTongHD() {
+        return txfTongHD;
+    }
+
+    public JTextField getTxfTime() {
+        return txfTime;
+    }
+
+    public JTable getTableCTPX() {
+        return tableCTPX;
+    }
+    
+    
 
     
     
