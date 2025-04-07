@@ -38,17 +38,9 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
 
     public PhieuXuatDialogDetail_Controller(PhieuXuatDialogDetail PXDD) {
         this.PXDD = PXDD;
-        setSystemLookAndFeel(); // Thiết lập giao diện hệ thống
     }
 
-    // Phương thức thiết lập System Look and Feel
-    private void setSystemLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -77,7 +69,7 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
 
         // Tạo JFileChooser để chọn nơi lưu file
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
+        fileChooser.setDialogTitle("Xuất hóa đơn");
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/Documents")); // Mở ở thư mục Documents
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
@@ -310,4 +302,5 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         wb.close();
         file.close();
     }
+    
 }

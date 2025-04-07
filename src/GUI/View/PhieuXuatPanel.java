@@ -128,6 +128,7 @@ public class PhieuXuatPanel extends  JPanel{
         btnAdd.addActionListener(action);
         btndetail.addActionListener(action);
         btndelete.addActionListener(action);
+        btnexport.addActionListener(action);
     }
     
     

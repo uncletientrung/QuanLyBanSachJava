@@ -129,6 +129,15 @@ public class DangNhapFrame extends JFrame {
     public DangNhapFrame() {
         tkBUS = new TaiKhoanBUS();
         initComponents();
+        setSystemLookAndFeel();
+    }
+        // Phương thức thiết lập System Look and Feel
+    private void setSystemLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initComponents() {
