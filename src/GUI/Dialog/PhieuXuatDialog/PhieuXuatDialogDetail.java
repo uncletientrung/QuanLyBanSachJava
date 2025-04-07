@@ -3,162 +3,207 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.Dialog.PhieuXuatDialog;
+import BUS.KhachHangBUS;
+import BUS.NhanVienBUS;
+import BUS.PhieuXuatBUS;
+import BUS.SachBUS;
+import DTO.ChiTietPhieuXuatDTO;
+import DTO.PhieuXuatDTO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.AncestorListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author DELL
  */
 public class PhieuXuatDialogDetail extends JDialog{
-    private JTextField txfMasach,txfTensach,txfManxb,txfMatacgia,txfMatheloai,txfSoluong,txfNamxuatban,txfDongia;
-    public PhieuXuatDialogDetail(JFrame parent) {
+    private JTextField  txfMaPhieu,txfNV,txfKhachHang,txfTime,txfTongHD;
+    private DefaultTableModel dataCTPX;
+    private PhieuXuatBUS pxBUS=new PhieuXuatBUS();
+    private ArrayList<ChiTietPhieuXuatDTO> list_ctpx;
+    private SachBUS sBUS=new SachBUS();
+    private NhanVienBUS nvBUS=new NhanVienBUS();
+    private KhachHangBUS khBUS=new KhachHangBUS();
+    public PhieuXuatDialogDetail(JFrame parent, PhieuXuatDTO pxDTO) {
         super(parent, "Danh mục  xem chi tiết", true);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout(10, 10));
+        // ========== Panel chính ==========
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(new EmptyBorder(10, 15, 10, 15));
 
-        // Tiêu đề
-        JLabel titleLabel = new JLabel("THÔNG TIN CHI TIẾT SÁCH", SwingConstants.CENTER);
-        Font titleFont = new Font("Arial", Font.BOLD, 25);
-        titleLabel.setFont(titleFont);
+        // ========== PHẦN TIÊU ĐỀ ==========
+        JPanel titlePanel = new JPanel();
+        titlePanel.setBackground(new Color(72, 118, 255)); // Màu xanh dương
+        titlePanel.setBorder(new EmptyBorder(15, 0, 15, 0));
+        
+        JLabel titleLabel = new JLabel("THÔNG TIN PHIẾU XUẤT");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
-        
-        JPanel titlePanel = new JPanel(new BorderLayout()); 
-        titlePanel.setBackground(new Color(72, 118, 255));
-        titlePanel.add(titleLabel, BorderLayout.CENTER);
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-        add(titlePanel, BorderLayout.NORTH);
-        
-        // Panel chứa nội dung chính
-        JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
-        
-        // Panel chứa các label và text field - bố cục ngang
-        JPanel formPanel = new JPanel();
-        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
-        
-        Font labelFont = new Font("Arial", Font.BOLD, 14);
-        Font fieldFont = new Font("Arial", Font.PLAIN, 14);
-        
-        // Các Label và TextField
-        JLabel lbMasach=new JLabel("Mã sách: ");            lbMasach.setFont(labelFont);
-        JLabel lbTensach = new JLabel("Tên sách:");        lbTensach.setFont(labelFont);
-        JLabel lbManxb = new JLabel("Mã NXB:");            lbManxb.setFont(labelFont);
-        JLabel lbMatacgia = new JLabel("Mã tác giả:");     lbMatacgia.setFont(labelFont);
-        JLabel lbMatheloai = new JLabel("Mã thể loại:");  lbMatheloai.setFont(labelFont);
-        JLabel lbSoluong = new JLabel("Số lượng:");        lbSoluong.setFont(labelFont);
-        JLabel lbNamxuatban = new JLabel("Năm xuất bản:"); lbNamxuatban.setFont(labelFont);
-        JLabel lbDongia = new JLabel("Đơn giá:");          lbDongia.setFont(labelFont);
+        titlePanel.add(titleLabel);
 
-        txfMasach= createTextField(fieldFont);
-        txfMasach.setEditable(false); // Không cho chỉnh sửa mã sách
-        txfTensach = createTextField(fieldFont);
-        txfTensach.setEditable(false);
-        txfManxb = createTextField(fieldFont);
-        txfManxb.setEditable(false);
-        txfMatacgia = createTextField(fieldFont);
-        txfMatacgia.setEditable(false);
-        txfMatheloai = createTextField(fieldFont);
-        txfMatheloai.setEditable(false);
-        txfSoluong = createTextField(fieldFont);
-        txfSoluong.setEditable(false);
-        txfNamxuatban = createTextField(fieldFont);
-        txfNamxuatban.setEditable(false);
-        txfDongia = createTextField(fieldFont);
-        txfDongia.setEditable(false);
+        // ========== PHẦN THÔNG TIN ==========
+        JPanel infoPanel = new JPanel(new GridLayout(2, 5, 10, 10)); // 2 hàng, 5 cột
+        infoPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         
-        // Hàng 1 chứa 4 trường đầu
-        JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-        row1Panel.add(createFieldPanel(lbMasach, txfMasach));
-        row1Panel.add(createFieldPanel(lbTensach, txfTensach));
-        row1Panel.add(createFieldPanel(lbManxb, txfManxb));
-        row1Panel.add(createFieldPanel(lbMatacgia, txfMatacgia));
+        // Dòng 1: Label
+        infoPanel.add(createLabel("Mã phiếu"));
+        infoPanel.add(createLabel("Nhân viên thực hiện"));
+        infoPanel.add(createLabel("Khách hàng"));
+        infoPanel.add(createLabel("Thời gian tạo"));
+        infoPanel.add(createLabel("Tổng hóa đơn"));
+
+        // Dòng 2: TextField  
+        txfMaPhieu=createTextField(pxDTO.getMaphieu()+"");
+        txfNV=createTextField(nvBUS.getHoTenNVById(pxDTO.getManv()));
+        txfKhachHang=createTextField(khBUS.getFullNameKHById(pxDTO.getMakh()));
+        txfTime=createTextField(pxDTO.getThoigiantao()+"");
+        txfTongHD=createTextField(pxDTO.getTongTien()+"");
+        infoPanel.add(txfMaPhieu);
+        infoPanel.add(txfNV);
+        infoPanel.add(txfKhachHang);
+        infoPanel.add(txfTime);
+        infoPanel.add(txfTongHD);
+
+        // ========== BẢNG CHI TIẾT ==========
+        list_ctpx=pxBUS.getListCTPXById(pxDTO.getMaphieu());
+        String[] columnNames = {"STT", "Mã sách", "Tên sách", "Đơn giá", "Số lượng", "Thành tiền"};
+        dataCTPX =new DefaultTableModel(columnNames,0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa tất cả các ô
+            }
+        };
         
-        // Hàng 2 chứa 3 trường còn lại
-        JPanel row2Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-        row2Panel.add(createFieldPanel(lbMatheloai, txfMatheloai));
-        row2Panel.add(createFieldPanel(lbSoluong, txfSoluong));
-        row2Panel.add(createFieldPanel(lbNamxuatban, txfNamxuatban));
-        row2Panel.add(createFieldPanel(lbDongia, txfDongia));
-        
-        formPanel.add(row1Panel);
-        formPanel.add(row2Panel);
-        
-        contentPanel.add(formPanel, BorderLayout.CENTER);
-        add(contentPanel, BorderLayout.CENTER);
-        
-        // Panel chứa các nút
+        JTable tableCTPX = new JTable(dataCTPX);
+        for (int i=0;i<list_ctpx.size();i++){
+            String STT=String.valueOf(i+1);
+            String maSach=String.valueOf(list_ctpx.get(i).getMasach());
+            String tenSach=sBUS.getSachById(list_ctpx.get(i).getMasach()).getTensach();
+            String donGia=String.valueOf(list_ctpx.get(i).getDongia());
+            String soLuong=String.valueOf(list_ctpx.get(i).getSoluong());
+            String thanhTien=String.valueOf(list_ctpx.get(i).getSoluong()*list_ctpx.get(i).getDongia());
+            dataCTPX.addRow(new Object[]{STT,maSach,tenSach,donGia,soLuong,thanhTien});
+        }
+        tableCTPX.setRowHeight(30);
+        tableCTPX.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tableCTPX.getColumnModel().getColumn(1).setPreferredWidth(30);
+        tableCTPX.getColumnModel().getColumn(2).setPreferredWidth(250);
+        tableCTPX.getColumnModel().getColumn(3).setPreferredWidth(80);
+        tableCTPX.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tableCTPX.getColumnModel().getColumn(5).setPreferredWidth(80);
+        DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
+        centerRenderer1.setHorizontalAlignment(JLabel.CENTER);
+        int[] columnsToCenter1 = {0 , 1,2,3,4,5}; // Căn giữa tất cả trừ tên sách và tên nbx
+        for (int col : columnsToCenter1) {
+            tableCTPX.getColumnModel().getColumn(col).setCellRenderer(centerRenderer1);
+        }
+        tableCTPX.getTableHeader().setReorderingAllowed(false); // Ngăn di chuyển giữa các cột
+        tableCTPX.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tableCTPX.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
+  
+        JScrollPane tableScrollPane = new JScrollPane(tableCTPX);
+        tableScrollPane.setViewportView(tableCTPX);
+
+        // ========== NÚT BẤM ==========
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JButton deleteButton = createButton("Đóng", new Color(72, 118, 255));
-        buttonPanel.add(deleteButton);
+        JButton exportButton = createButton("Xuất file Excel", new Color(76, 175, 80));  // Màu xanh dương
+        JButton cancelButton = createButton("Đóng", new Color(244, 67, 54));   // Màu đỏ
+
+        buttonPanel.add(exportButton);
+        buttonPanel.add(cancelButton);
+
+        // ========== GỘP BẢNG VÀ NÚT BẤM ==========
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.add(tableScrollPane, BorderLayout.CENTER);
+        tablePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // ========== GỘP THÔNG TIN VÀ BẢNG ==========
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.add(infoPanel, BorderLayout.NORTH);
+        contentPanel.add(tablePanel, BorderLayout.CENTER);
+
+        // ========== Thêm vào mainPanel ==========
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
         
-        add(buttonPanel, BorderLayout.SOUTH);
-        
-        pack(); // Điều chỉnh kích thước tự động dựa trên nội dung
-        setLocationRelativeTo(parent); // Hiển thị giữa màn hình
-        
+        // ========== Thêm Action ==========
+        ActionListener action=new PhieuXuatDialogDetail_Controller(this);
+        cancelButton.addActionListener(action);
+
+        add(mainPanel);
+        setSize(900, 500);
+        setLocationRelativeTo(parent);
+        setResizable(false);
+        setVisible(true);
     }
-    
-    private JPanel createFieldPanel(JLabel label, JTextField textField) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(textField, BorderLayout.CENTER);
-        return panel;
+
+    // Hàm tạo Label
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        return label;
     }
-    
-    private JTextField createTextField(Font font) {
-        JTextField textField = new JTextField(20);
-        textField.setFont(font);
-        textField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(180, 180, 180)),
-            BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+
+    // Hàm tạo TextField
+    private JTextField createTextField(String value) {
+        JTextField textField = new JTextField(value);
+        textField.setEditable(false);
+        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        textField.setHorizontalAlignment(SwingConstants.CENTER);
         return textField;
     }
-    
+
+    // Hàm tạo Button với hiệu ứng và màu sắc tùy chỉnh
     private JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    
+
                 // Xác định màu nền dựa trên trạng thái của button
                 Color actualBgColor = bgColor;
                 if (getModel().isPressed()) {
-                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                    actualBgColor = bgColor.darker();
                 } else if (getModel().isRollover()) {
-                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                    actualBgColor = bgColor.brighter();
                 }
-                // Vẽ hình tròn làm nền
+
                 g2.setColor(actualBgColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
-    
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+
                 super.paintComponent(g2);
                 g2.dispose();
             }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+                // Không vẽ border mặc định
+            }
         };
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
+
         button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setPreferredSize(new Dimension(140, 40));
-    
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setPreferredSize(new Dimension(150, 40));  // Kích thước nút
+
         return button;
     }
-    public void ShowInfo(String maSach,String TenSach,String NXB,String TG,String TL,String soluong,String NamXB,String dongia){
-        txfMasach.setText(maSach);
-        txfTensach.setText(TenSach);
-        txfManxb.setText(NXB);
-        txfMatacgia.setText(TG);
-        txfMatheloai.setText(TL);
-        txfSoluong.setText(soluong);
-        txfNamxuatban.setText(NamXB);
-        txfDongia.setText(dongia);
+
+    
+    public DefaultTableModel getDataCTPX() {
+        return dataCTPX;
     }
+
+    
+    
 }

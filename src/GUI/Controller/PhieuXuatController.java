@@ -24,6 +24,7 @@ public class PhieuXuatController implements  ActionListener{
     private WorkFrame WF;
     private PhieuXuatBUS pxBUS;
     private PhieuXuatDialogDelete PXDD;
+    private PhieuXuatDialogDetail PXDDetail;
     public PhieuXuatController(PhieuXuatPanel PxP, WorkFrame Wf ){
         this.PxP=PxP;
         this.WF=WF;
@@ -34,8 +35,17 @@ public class PhieuXuatController implements  ActionListener{
             new PhieuXuatDialogAdd(WF, true);
             PxP.refreshTablePx();
         }
-        if(sukien.equals("Chi Tiết")){
-            new PhieuXuatDialogDetail(WF);
+        if(sukien.equals("Chi tiết")){
+            JTable tablePX=PxP.getTablePhieuXuat();
+            if(tablePX.getSelectedRow() >=0){
+                int selectRow=tablePX.getSelectedRow();
+                pxBUS=new PhieuXuatBUS();
+                PhieuXuatDTO phieu=pxBUS.getPXById(Integer.parseInt(tablePX.getValueAt(selectRow, 0).toString()));
+                PXDDetail=new PhieuXuatDialogDetail(WF,phieu);
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "Vui Lòng chọn Hóa đơn  muốn xóa", "Error", JOptionPane.ERROR_MESSAGE);
+            }
                     
         }
         if(sukien.equals("Hủy bỏ")){
