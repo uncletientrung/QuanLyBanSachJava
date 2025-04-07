@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -49,15 +51,35 @@ public class PhieuXuatController implements  ActionListener{
     private PhieuXuatBUS pxBUS;
     private PhieuXuatDialogDelete PXDD;
     private PhieuXuatDialogDetail PXDDetail;
+    private PhieuXuatDialogAdd currentPhieuXuatDialogAdd;
+    private JScrollPane scrollPanePhieuXuatAdd;
+        public PhieuXuatController() {
+        }
+
     public PhieuXuatController(PhieuXuatPanel PxP, WorkFrame Wf ){
         this.PxP=PxP;
         this.WF=WF;
     }
     public void actionPerformed(ActionEvent e){
         String sukien=e.getActionCommand();
-        if(sukien.equals("Thêm")){
-            new PhieuXuatDialogAdd(WF, true);
+        if(sukien.equals("Trang chủ")){
+            PxP.getPanelCenter().remove(PxP.getScrollPanePhieuXuat()); // Xóa ScrollPane hiện tịa
+            PxP.getScrollPanePhieuXuat().setViewportView(PxP.getTablePhieuXuat());
+            PxP.getPanelCenter().add(PxP.getScrollPanePhieuXuat());
             PxP.refreshTablePx();
+            System.out.print("aaaa");
+            
+        }
+        if (sukien.equals("Thêm")) {
+            PxP.getPanelCenter().remove(PxP.getScrollPanePhieuXuat());
+            currentPhieuXuatDialogAdd = new PhieuXuatDialogAdd();
+            PxP.getScrollPanePhieuXuat().setViewportView(currentPhieuXuatDialogAdd);
+            // Thêm lại JScrollPane vào panelCenter
+            PxP.getPanelCenter().add(PxP.getScrollPanePhieuXuat());
+
+            // Làm mới giao diện
+            PxP.getPanelCenter().revalidate();
+            PxP.getPanelCenter().repaint();
         }
         if(sukien.equals("Chi tiết")){
             JTable tablePX=PxP.getTablePhieuXuat();
@@ -72,6 +94,7 @@ public class PhieuXuatController implements  ActionListener{
             }
                     
         }
+
         if(sukien.equals("Hủy bỏ")){
             JTable tablePX=PxP.getTablePhieuXuat();
             if(tablePX.getSelectedRow() >=0){

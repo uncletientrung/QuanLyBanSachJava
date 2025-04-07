@@ -474,10 +474,18 @@ public void actionPerformed(ActionEvent e){
         // Cập nhật lại bảng sau khi nhập
         bf.refreshTableData();
         // Hiển thị thông báo
-        JOptionPane.showMessageDialog(bf,
+        if(successCount==0){
+            JOptionPane.showMessageDialog(bf,
+                "Danh sách rỗng!!! Không có gì để thêm vào ",
+                "Thông báo",
+                JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(bf,
                 "Nhập sách thành công! Số sách đã nhập: " + successCount,
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE);
+        }
+        
 
     } catch (IOException e) {
         JOptionPane.showMessageDialog(bf,
