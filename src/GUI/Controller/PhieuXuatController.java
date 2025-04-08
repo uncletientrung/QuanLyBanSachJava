@@ -83,19 +83,19 @@ public class PhieuXuatController implements ActionListener, ChangeListener {
     public void actionPerformed(ActionEvent e) {
         String sukien = e.getActionCommand();
         if (sukien.equals("Trang chủ")) {
-            PxP.getPanelCenter().remove(PxP.getScrollPanePhieuXuat()); // Xóa ScrollPane hiện tại
+            PxP.getPanelCenter().removeAll(); // Xóa ScrollPane hiện tại
             PxP.getScrollPanePhieuXuat().setViewportView(PxP.getTablePhieuXuat());
             PxP.getPanelCenter().setLayout(new GridLayout(1, 1));
             PxP.getPanelCenter().add(PxP.getScrollPanePhieuXuat());
             PxP.refreshTablePx();
         }
         if (sukien.equals("Thêm")) {
-            PxP.getPanelCenter().remove(PxP.getScrollPanePhieuXuat());// Xóa đi cái Table hiện tại
+             PxP.getPanelCenter().removeAll();// Xóa đi cái Table hiện tại
             if (PxP.getTabbedPane().getTabCount() == 0) { // Nếu chưa có tab nào thì mới tạo 
                 ThemTabAdd();
                 ThemTabPlus();
-                PxP.getPanelCenter().add(PxP.getTabbedPane());
             }
+                PxP.getPanelCenter().add(PxP.getTabbedPane());
             // Làm mới giao diện
             PxP.getPanelCenter().revalidate();
             PxP.getPanelCenter().repaint();
