@@ -14,6 +14,7 @@ import GUI.Controller.PhieuXuatController;
 import GUI.WorkFrame;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,6 +34,7 @@ public class PhieuXuatPanel extends JPanel {
     private KhachHangBUS khBUS;
     private JPanel PanelCenter;
     private JScrollPane SPPhieuXuat;
+    private JTabbedPane tabbedPane;
     
     public PhieuXuatPanel() {
         // Tạo Panel toolBar cho thanh công cụ trên cùng
@@ -135,6 +137,11 @@ public class PhieuXuatPanel extends JPanel {
         btndelete.addActionListener(action);
         btnexport.addActionListener(action);
         btnHome.addActionListener(action);
+        
+        tabbedPane=new JTabbedPane();
+        tabbedPane.addChangeListener((ChangeListener)action);
+
+        
     }
     
     private JButton createToolBarButton(String text, String imageLink) {
@@ -176,5 +183,15 @@ public class PhieuXuatPanel extends JPanel {
     public void setSPPhieuXuat(JScrollPane SPPhieuXuat) {
         this.SPPhieuXuat = SPPhieuXuat;
     }
+
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
+    public void setTabbedPane(JTabbedPane tabbedPane) {
+        this.tabbedPane = tabbedPane;
+    }
+    
+
     
 }
