@@ -1,0 +1,122 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package GUI.View;
+import BUS.PhieuNhapBUS;
+import DTO.PhieuNhapDTO;
+import GUI.Controller.PhieuNhapController;
+import GUI.WorkFrame;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Minnie
+ */
+public class PhieuNhapPanel extends JPanel{
+    public ArrayList<PhieuNhapDTO> listpn;
+    private PhieuNhapBUS pnBUS;
+    private JTextField txfFind;
+    private JComboBox<String> cbbox;
+    private DefaultTableModel dataPhieuNhap;
+    private JTable tablePhieuNhap;
+    private WorkFrame wf;
+    
+    public PhieuNhapPanel(){
+        // Tạo Panel toolBar cho thanh công cụ trên cùng
+        JPanel toolBar= new JPanel(new GridLayout(1,2));
+        JPanel toolBar_Left=new JPanel(new FlowLayout(FlowLayout.LEFT,10,20));
+        JPanel toolBar_Right=new JPanel(new FlowLayout(FlowLayout.RIGHT,10,30));
+        Font font=new Font("Arial", Font.BOLD, 16);
+        
+        // Tạo các nút CRUD cho JPanel toolBar_Left
+        JButton btnAdd= createToolBarButton("Thêm", "insert1.png");
+        JButton btndelete= createToolBarButton("Xóa", "trash.png");
+        JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
+        JButton btnexport= createToolBarButton("Xuất Excel", "export_excel.png");
+        btnAdd.setFont(font);btndelete.setFont(font);btndetail.setFont(font);btnexport.setFont(font);
+        
+        // Tạo phần tìm kiếm cho JPanel toolBar_Right
+        String[] List_Combobox={"Tất cả","Giá thấp đến cao ⬆","Giá cao đến thấp ⬇","NXB thấp đến cao ⬆","NXB cao đến thấp ⬇"};
+        cbbox=new JComboBox<String>(List_Combobox);
+        cbbox.setPreferredSize(new Dimension(150,35));
+        
+        txfFind=new JTextField("");
+        txfFind.setPreferredSize(new Dimension(200,35));
+        txfFind.setForeground(Color.GRAY);
+        
+        JButton btnfind=createToolBarButton("", "find.png");
+        btnfind.setPreferredSize(new Dimension(50,50));
+        
+        //Tạo JTable cho PhieuNhapPanel
+        listpn = new PhieuNhapBUS().getAll();
+        String[] columnPhieuNhap = {"Mã phiếu nhập","Nhân viên","Nhà cung cấp","Thời gian","Tổng tiền","Trạng thái"};
+        dataPhieuNhap = new DefaultTableModel(columnPhieuNhap,0){
+            //Hàm không cho chỉnh sửa ô
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false; 
+            }
+        };
+        tablePhieuNhap = new JTable(dataPhieuNhap);
+        tablePhieuNhap.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tablePhieuNhap.getTableHeader().setForeground(Color.BLACK);
+        for (PhieuNhapDTO pn: listpn){
+            dataPhieuNhap.addRow(new Object[]{pn.getMaphieu(),pn.getManv(),pn.getMancc(),pn.getThoigiantao(),pn.getTongTien(),pn.getTrangthai()});
+        }
+        //Tạo renderer để căn giữa dữ liệu
+        DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+        center.setHorizontalAlignment(JLabel.CENTER);
+        int[] columnsToCenter = {0,1,2,3,4,5};
+        for (int col: columnsToCenter){
+            tablePhieuNhap.getColumnModel().getColumn(col).setCellRenderer(center);
+        }
+        
+        //Set size cho các cột
+        tablePhieuNhap.setRowHeight(30);
+        tablePhieuNhap.getColumnModel().getColumn(0).setPreferredWidth(30);
+        tablePhieuNhap.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tablePhieuNhap.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tablePhieuNhap.getColumnModel().getColumn(3).setPreferredWidth(165);
+        tablePhieuNhap.getColumnModel().getColumn(4).setPreferredWidth(65);
+        tablePhieuNhap.getColumnModel().getColumn(5).setPreferredWidth(30);
+         // Tạo ScrollPane cho Table để tên cột column hiện
+        JScrollPane SPPhieuNhap= new JScrollPane(tablePhieuNhap);
+
+        toolBar_Left.add(btnAdd);
+        toolBar_Left.add(btndelete);
+        toolBar_Left.add(btndetail);
+        toolBar_Left.add(btnexport);
+
+        toolBar_Right.add(cbbox);
+        toolBar_Right.add(txfFind);
+        toolBar_Right.add(btnfind);
+
+        toolBar.add(toolBar_Left);
+        toolBar.add(toolBar_Right);
+
+        setLayout(new BorderLayout());
+        add(toolBar,BorderLayout.NORTH);
+        add(SPPhieuNhap,BorderLayout.CENTER);
+        
+        ActionListener action=new PhieuNhapController(this, wf);
+        btnAdd.addActionListener(action); 
+    }
+    
+   private JButton createToolBarButton(String text,String imageLink) {
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/GUI/Image/" + imageLink));
+        JButton button = new JButton(text, imageIcon); // Đặt ảnh và chữ
+        button.setHorizontalTextPosition(SwingConstants.CENTER); // Căn chữ vào giữa
+        button.setVerticalTextPosition(SwingConstants.BOTTOM); // Đặt chữ dưới ảnh
+        button.setFocusPainted(false); // Bỏ viền khi click
+        button.setBorderPainted(false); // Ẩn viền nút
+        // button.setContentAreaFilled(false); // Ẩn nền nút
+        button.setBackground(new Color(240, 240, 240)); // Màu nền nhẹ
+        return button;
+    }
+}

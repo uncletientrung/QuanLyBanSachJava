@@ -334,6 +334,7 @@ public class WorkFrame extends JFrame {
         PanelCard.add(new PhanQuyenPanel(), "Phân quyền");
         PanelCard.add(new ThongTinChungPanel(this), "Thông tin chung");
         PanelCard.add(new PhieuXuatPanel(), "Phiếu xuất");
+        PanelCard.add(new PhieuNhapPanel(), "Phiếu nhập");
         PanelCard.add(new TaiKhoanPanel(), "Tài khoản");
         PanelCard.add(new KhachhangPanel(), "Khách hàng");
 
@@ -352,6 +353,7 @@ public class WorkFrame extends JFrame {
         btnDong.addActionListener(action);
         btnThongTinChung.addActionListener(action);
         btnPhieuXuat.addActionListener(action);
+        btnPhieuNhap.addActionListener(action);
         btnTaiKhoan.addActionListener(action);
         btnKhachHang.addActionListener(action);
 

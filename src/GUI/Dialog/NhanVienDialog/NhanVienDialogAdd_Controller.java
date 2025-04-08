@@ -40,7 +40,7 @@ public class NhanVienDialogAdd_Controller implements ActionListener{
                 NVDA.getTxfNgaysinh().getText().isEmpty() ) 
 //                NVDA.getTxfTrangthai().getText().isEmpty())
             {
-                JOptionPane.showMessageDialog(null, "Vui lòng đầy đủ thông tin nhân viên", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin nhân viên", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                    // Thực hiện thêm nhân viên khi tất cả các trường đều có dữ liệu
                    //int ma = Integer.parseInt(NVDA.getTxfMa().getText());

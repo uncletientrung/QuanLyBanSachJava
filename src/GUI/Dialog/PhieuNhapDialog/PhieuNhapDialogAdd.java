@@ -2,25 +2,44 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package GUI.Dialog.NhanVienDialog;
-import javax.swing.*;
-import java.awt.*;
+package GUI.Dialog.PhieuNhapDialog;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 /**
  *
  * @author Minnie
  */
-public class NhanVienDialogAdd extends JDialog{
-    private JTextField txfHo, txfTen, txfGioitinh, txfSdt, txfNgaysinh, txfTrangthai;
-    public NhanVienDialogAdd(JFrame parent){
-        super(parent, "Danh mục thêm nhân viên", true);
+public class PhieuNhapDialogAdd extends JDialog{
+    private JTextField txfMaPhieu, txfMaNv, txfMaNcc, txfThoigian, txfTongTien, txfTrangthai;
+    public PhieuNhapDialogAdd(JFrame parent){
+        super(parent, "Danh mục thêm phiếu nhập", true);
         
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(1200, 700));
         panel.setLayout(new BorderLayout(10,10));
         
         //Tittle
-        JLabel titleLabel = new JLabel("THÊM NHÂN VIÊN", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("THÊM PHIẾU NHẬP HÀNG", SwingConstants.CENTER);
         Font tittleFont = new Font("Arial", Font.BOLD, 25); 
         titleLabel.setFont(tittleFont);
         titleLabel.setForeground(Color.WHITE);
@@ -45,43 +64,43 @@ public class NhanVienDialogAdd extends JDialog{
         Font labelFont = new Font("Arial", Font.BOLD, 14);
         Font fieldFont = new Font("Arial", Font.PLAIN, 14);
         
-        // Lable với TextField
-//        JLabel lbMa = new JLabel("Mã nhân viên:");  lbMa.setFont(labelFont);
-        JLabel lbHo = new JLabel("Họ:");  lbHo.setFont(labelFont);
-        JLabel lbTen = new JLabel("Tên:");  lbTen.setFont(labelFont);
-        JLabel lbGioitinh = new JLabel("Giới tính:");  lbGioitinh.setFont(labelFont);
-        JLabel lbSdt = new JLabel("Số điện thoại:");  lbSdt.setFont(labelFont);
-        JLabel lbNgaysinh = new JLabel("Ngày sinh:");  lbNgaysinh.setFont(labelFont);
-        JLabel lbTrangthai = new JLabel("Trạng thái:");  lbTrangthai.setFont(labelFont);
+        //Lable với textfield
+        JLabel lbMa = new JLabel("Mã phiếu: ");
+        JLabel lbManv = new JLabel("Mã nhân viên: ");
+        JLabel lbMancc = new JLabel("Mã nhà cung cấp: ");
+        JLabel lbThoigiantao = new JLabel("Thời gian tạo: ");
+        JLabel lbTongtien = new JLabel("Tổng tiền: ");
+        JLabel lbTrangthai = new JLabel("Trạng thái: ");
+        lbMa.setFont(labelFont);
+        lbManv.setFont(labelFont);
+        lbMancc.setFont(labelFont);
+        lbThoigiantao.setFont(labelFont);
+        lbTongtien.setFont(labelFont);
+        lbTrangthai.setFont(labelFont);
         
-//        JTextField txfMa = createTextField(fieldFont);
-        txfHo = createTextField(fieldFont);
-        txfTen = createTextField(fieldFont);
-        txfGioitinh = createTextField(fieldFont);
-        txfSdt = createTextField(fieldFont);
-        txfNgaysinh = createTextField(fieldFont);
+        txfMaPhieu = createTextField(fieldFont);
+        txfMaNv = createTextField(fieldFont);
+        txfMaNcc = createTextField(fieldFont);
+        txfThoigian = createTextField(fieldFont);
+        txfTongTien = createTextField(fieldFont);
         txfTrangthai = createTextField(fieldFont);
         
         //Cột 1 - Labels
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
-//        formPanel.add(lbMa, gbc);
-//        gbc.gridy++; 
-        formPanel.add(lbHo, gbc);
-        gbc.gridy++; formPanel.add(lbTen, gbc);
-        gbc.gridy++; formPanel.add(lbGioitinh, gbc);
-        gbc.gridy++; formPanel.add(lbSdt, gbc);
-        gbc.gridy++; formPanel.add(lbNgaysinh, gbc);
+        formPanel.add(lbMa, gbc);
+        gbc.gridy++; formPanel.add(lbManv, gbc);
+        gbc.gridy++; formPanel.add(lbMancc, gbc);
+//        gbc.gridy++; formPanel.add(lbThoigiantao, gbc);
+        gbc.gridy++; formPanel.add(lbTongtien, gbc);
         gbc.gridy++; formPanel.add(lbTrangthai, gbc);
         
-        //Cột 2 - TextField
+        //Cột 2 - TexfField
         gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.7; gbc.fill = GridBagConstraints.HORIZONTAL;
-//        formPanel.add(txfMa, gbc);
-//        gbc.gridy++; 
-        formPanel.add(txfHo, gbc);
-        gbc.gridy++; formPanel.add(txfTen, gbc);
-        gbc.gridy++; formPanel.add(txfGioitinh, gbc);
-        gbc.gridy++; formPanel.add(txfSdt, gbc);
-        gbc.gridy++; formPanel.add(txfNgaysinh, gbc);
+        formPanel.add(txfMaPhieu, gbc);
+        gbc.gridy++; formPanel.add(txfMaNv, gbc);
+        gbc.gridy++; formPanel.add(txfMaNcc, gbc);
+//        gbc.gridy++; formPanel.add(txfThoigian, gbc);
+        gbc.gridy++; formPanel.add(txfTongTien, gbc);
         gbc.gridy++; formPanel.add(txfTrangthai, gbc);
         
         contentPanel.add(formPanel, BorderLayout.CENTER);
@@ -100,7 +119,7 @@ public class NhanVienDialogAdd extends JDialog{
 
         add(buttonPanel, BorderLayout.SOUTH);
         // Thêm sự kiện cho 2 nút
-        ActionListener action= new NhanVienDialogAdd_Controller(this);
+        ActionListener action= new PhieuNhapDialogAdd_Controller(this);
         addButton.addActionListener(action);
         deleteButton.addActionListener(action);
 
@@ -109,7 +128,7 @@ public class NhanVienDialogAdd extends JDialog{
         setLocationRelativeTo(parent); // Hiển thị giữa màn hình
         setVisible(true);
     }
-
+    
     private JTextField createTextField(Font font) {
         JTextField textField = new JTextField(20);
         textField.setFont(font);
@@ -151,57 +170,49 @@ public class NhanVienDialogAdd extends JDialog{
 
         return button;
     }
-    
-//    public TextField getTxfMa(){
-//        return txfMa;
-//    }
-//    
-//    public void setTxfMa(TextField txfMa){
-//        this.txfMa = txfMa;
-//    }
-    
-    public JTextField getTxfHo(){
-        return txfHo;
-    }
-    
-    public void setTxfHo(JTextField txfHo){
-        this.txfHo = txfHo;
-    }
-    
-    public JTextField getTxfTen(){
-        return txfTen;
+
+    public JTextField getTxfMaPhieu() {
+        return txfMaPhieu;
     }
 
-    public JTextField getTxfGioitinh() {
-        return txfGioitinh;
+    public void setTxfMaPhieu(JTextField txfMaPhieu) {
+        this.txfMaPhieu = txfMaPhieu;
     }
 
-    public JTextField getTxfSdt() {
-        return txfSdt;
+    public JTextField getTxfMaNv() {
+        return txfMaNv;
     }
 
-    public JTextField getTxfNgaysinh() {
-        return txfNgaysinh;
+    public void setTxfMaNv(JTextField txfMaNv) {
+        this.txfMaNv = txfMaNv;
+    }
+
+    public JTextField getTxfMaNcc() {
+        return txfMaNcc;
+    }
+
+    public void setTxfMaNcc(JTextField txfMaNcc) {
+        this.txfMaNcc = txfMaNcc;
+    }
+
+    public JTextField getTxfThoigian() {
+        return txfThoigian;
+    }
+
+    public void setTxfThoigian(JTextField txfThoigian) {
+        this.txfThoigian = txfThoigian;
+    }
+
+    public JTextField getTxfTongTien() {
+        return txfTongTien;
+    }
+
+    public void setTxfTongTien(JTextField txfTongTien) {
+        this.txfTongTien = txfTongTien;
     }
 
     public JTextField getTxfTrangthai() {
         return txfTrangthai;
-    }
-
-    public void setTxfTen(JTextField txfTen) {
-        this.txfTen = txfTen;
-    }
-
-    public void setTxfGioitinh(JTextField txfGioitinh) {
-        this.txfGioitinh = txfGioitinh;
-    }
-
-    public void setTxfSdt(JTextField txfSdt) {
-        this.txfSdt = txfSdt;
-    }
-
-    public void setTxfNgaysinh(JTextField txfNgaysinh) {
-        this.txfNgaysinh = txfNgaysinh;
     }
 
     public void setTxfTrangthai(JTextField txfTrangthai) {
@@ -210,16 +221,15 @@ public class NhanVienDialogAdd extends JDialog{
 
     @Override
     public String toString() {
-        return "NhanVienDialogAdd{txfHo=" + txfHo + ", txfTen=" + txfTen + ", txfGioitinh=" + txfGioitinh + ", txfSdt=" + txfSdt + ", txfNgaysinh=" + txfNgaysinh + ", txfTrangthai=" + txfTrangthai + '}';
+        return "PhieuNhapDialogAdd{" + "txfMaPhieu=" + txfMaPhieu + ", txfMaNv=" + txfMaNv + ", txfMaNcc=" + txfMaNcc + ", txfThoigian=" + txfThoigian + ", txfTongTien=" + txfTongTien + ", txfTrangthai=" + txfTrangthai + '}';
     }
     
     public void ClearTextField(){
-//        txfMa.setText("");
-        txfHo.setText("");
-        txfTen.setText("");
-        txfNgaysinh.setText("");
-        txfGioitinh.setText("");
-        txfSdt.setText("");
+        txfMaPhieu.setText("");
+        txfMaNv.setText("");
+        txfMaNcc.setText("");
+        txfThoigian.setText("");
+        txfTongTien.setText("");
         txfTrangthai.setText("");
     }
 }

@@ -4,7 +4,10 @@ import java.sql.Timestamp;
 
 public class PhieuNhapDTO extends PhieuDTO {
     private int mancc;
-
+    
+    public PhieuNhapDTO(){
+    }
+    
     public PhieuNhapDTO(int maphieu, int manv, int mancc, Timestamp thoigiantao, long tongTien, int trangthai) {
         super(maphieu, manv, thoigiantao, tongTien, trangthai);
         this.mancc = mancc;

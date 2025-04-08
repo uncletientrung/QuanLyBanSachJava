@@ -20,6 +20,9 @@ import GUI.WorkFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import static java.time.temporal.TemporalQueries.localDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -184,9 +187,15 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                KhachHangDTO KH=khBUS.getKHBySDT(sdt);
                int maKH=KH.getMakh();
                // Chuyển JDateChosser sang Date rồi sang TimeStamp
-               Date current_day_type_date= PXDA.getDateChooser1().getDate();
-               Timestamp current_day=new Timestamp(current_day_type_date.getTime());
-               // Gọi mã phiếu xuất auto tiếp theo 
+//               Date current_day_type_date= PXDA.getDateChooser1().getDate();
+//               Timestamp current_day=new Timestamp(current_day_type_date.getTime());
+               //Xài LocalDate để thay thế cho JDate bị lỗi
+                LocalDate  current_day_type_date = LocalDate.now();
+               // Chuyển từ LocalDate sang LocalDateTime
+                LocalDateTime current_day_type_datetime = current_day_type_date.atStartOfDay();
+                // Chuyển từ LocalDateTime sang Timestamp
+                Timestamp current_day = Timestamp.valueOf(current_day_type_datetime);
+                // Gọi mã phiếu xuất auto tiếp theo 
                int maPhieuXuat = pxDAO.getAutoIncrement();
                 // Gọi tổng tiền và trạng thái auto là 1
                 int tongtien=Integer.parseInt(PXDA.getTxfThanhToan().getText().toString().trim());
