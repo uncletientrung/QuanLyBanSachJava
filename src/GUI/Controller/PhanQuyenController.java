@@ -5,16 +5,21 @@
 package GUI.Controller;
 
 import BUS.PhanQuyenBUS;
+import DAO.ChiTietQuyenDAO;
 import DTO.NhomQuyenDTO;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogAdd_Controller;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogDelete;
+import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogDetail;
+import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogDetail_Controller;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogUpdate;
 import GUI.Dialog.PhanQuyenDialog.PhanQuyenDialogUpdate_Controller;
 import GUI.View.PhanQuyenPanel;
 import GUI.WorkFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -58,6 +63,10 @@ public void actionPerformed(ActionEvent e) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhóm quyền cần sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        List<Integer> danhSachChucNang = new ChiTietQuyenDAO().getDanhSachChucNang(nhomQuyenDTO.getManhomquyen());
+        nhomQuyenDTO.setDsMaChucNang((ArrayList<Integer>) danhSachChucNang);
+        
+
 
         PhanQuyenDialogUpdate dialog = new PhanQuyenDialogUpdate(wk, pqp,nhomQuyenDTO);        
         PhanQuyenDialogUpdate_Controller controller = new PhanQuyenDialogUpdate_Controller(dialog, pqp);
@@ -85,6 +94,14 @@ public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null, "Xóa thất bại! Nhóm quyền có thể đang được sử dụng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+    
+    if("Chi tiết".equals(e.getActionCommand())){
+        NhomQuyenDTO nhomQuyen = pqp.getSelectedNhomQuyen(); 
+        PhanQuyenDialogDetail dialog = new PhanQuyenDialogDetail(wk);
+        PhanQuyenDialogDetail_Controller controller = new PhanQuyenDialogDetail_Controller(dialog, nhomQuyen);
+        dialog.setVisible(true);
+
     }
 
 }

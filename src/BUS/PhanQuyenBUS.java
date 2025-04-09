@@ -89,6 +89,17 @@ public class PhanQuyenBUS {
         ct.setHanhdong("CRUD");
         ChiTietQuyenDAO.getInstance().insert(ct);
 }
+   public void updateChiTietQuyen(int maNhomQuyen, List<Integer> dsChucNangMoi) {
+    ChiTietQuyenDAO dao = new ChiTietQuyenDAO();
+    dao.deleteByMaNhom(maNhomQuyen);
+    for (int maCN : dsChucNangMoi) {
+        ChiTietQuyenDTO ct = new ChiTietQuyenDTO(maNhomQuyen, maCN, "ALL");
+        dao.insert(ct);
+    }
+}
+
+
+
 
 
     public int layMaNhomQuyenMoi() {
@@ -131,9 +142,24 @@ public class PhanQuyenBUS {
 }
     
     
-    public boolean xoaNhomQuyen(int maNhomQuyen) {
-        return pqDAO.delete(maNhomQuyen) > 0;
+//    public boolean xoaNhomQuyen(int maNhomQuyen) {
+//        return pqDAO.delete(maNhomQuyen) > 0;
+//}
+public boolean xoaNhomQuyen(int maNhomQuyen) {
+    try {
+        // 1. Xoá chi tiết quyền trước
+        new ChiTietQuyenDAO().deleteByMaNhom(maNhomQuyen);
+
+        // 2. Xoá nhóm quyền
+        int result = new PhanQuyenDAOo().delete(maNhomQuyen);
+
+        return result > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
 }
+
 
  
 

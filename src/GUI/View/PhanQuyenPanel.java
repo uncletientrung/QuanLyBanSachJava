@@ -46,6 +46,7 @@ public class PhanQuyenPanel extends JPanel{
         btnAdd.addActionListener(controller);
         btnUpdate.addActionListener(controller);
         btndelete.addActionListener(controller);
+        btndetail.addActionListener(controller);
 
 
 

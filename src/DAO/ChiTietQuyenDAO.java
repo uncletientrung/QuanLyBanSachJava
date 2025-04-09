@@ -67,6 +67,22 @@ public class ChiTietQuyenDAO implements DAOInterface<ChiTietQuyenDTO>{
         }
         return list;
 }
+    
+public int deleteByMaNhom(int maNhomQuyen) {
+    String sql = "DELETE FROM ctquyen WHERE manhomquyen = ?";
+    try (Connection conn = JDBCUtil.getConnection();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+        pst.setInt(1, maNhomQuyen);
+        return pst.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return 0;
+    }
+}
+
+
+
+
 
 
     @Override

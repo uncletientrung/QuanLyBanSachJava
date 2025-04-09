@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -235,4 +236,25 @@ public int delete(String t) {
         }
         return tk;
     }
+    
+    public List<TaiKhoanDTO> getTaiKhoanTheoMaNhom(int maNhom) {
+    List<TaiKhoanDTO> list = new ArrayList<>();
+    String sql = "SELECT * FROM taikhoan WHERE manhomquyen = ?";
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pst = con.prepareStatement(sql)) {
+        pst.setInt(1, maNhom);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            TaiKhoanDTO tk = new TaiKhoanDTO();
+            tk.setManv(rs.getInt("manv"));
+            tk.setUsername(rs.getString("tendangnhap"));
+            tk.setMatkhau(rs.getString("matkhau"));
+            list.add(tk);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
 }

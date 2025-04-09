@@ -1,9 +1,11 @@
 package DTO;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class NhomQuyenDTO {
     private int manhomquyen;
     private String tennhomquyen;
+    private ArrayList<Integer> dsMaChucNang;
 
     public NhomQuyenDTO() {
     }
@@ -50,5 +52,13 @@ public class NhomQuyenDTO {
     @Override
     public String toString() {
         return "NhomQuyenDTO{" + "manhomquyen=" + manhomquyen + ", tennhomquyen=" + tennhomquyen + '}';
+    }
+    
+    public ArrayList<Integer> getDsMaChucNang() {
+        return dsMaChucNang;
+}
+
+    public void setDsMaChucNang(ArrayList<Integer> dsMaChucNang) {
+        this.dsMaChucNang = dsMaChucNang;
     }
 }

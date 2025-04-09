@@ -5,10 +5,13 @@
 package GUI.Dialog.PhanQuyenDialog;
 
 import BUS.PhanQuyenBUS;
+import DAO.ChiTietQuyenDAO;
+import DTO.ChiTietQuyenDTO;
 import DTO.NhomQuyenDTO;
 import GUI.View.PhanQuyenPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,9 +56,33 @@ public class PhanQuyenDialogUpdate_Controller implements  ActionListener{
         try {
             Boolean result = PQBUS.updateNhomQuyen(nhomQuyenCanSua);
             if (result) {
-                JOptionPane.showMessageDialog(PQDU, "Thêm nhóm quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                // ==== Cập nhật lại danh sách chức năng ====
+                int maNhom = nhomQuyenCanSua.getManhomquyen();
+
+                // 1. Xoá quyền cũ
+                new ChiTietQuyenDAO().deleteByMaNhom(maNhom);
+
+                // 2. Lấy danh sách chức năng mới
+                List<Integer> dsChucNang = PQDU.getDanhSachChucNangDaChon();
+
+                // 3. Thêm quyền mới
+                for (int maCN : dsChucNang) {
+                    ChiTietQuyenDTO ct = new ChiTietQuyenDTO();
+                    ct.setManhomquyen(maNhom);
+                    ct.setMachucnang(maCN);
+                    ct.setHanhdong("ALL"); // hoặc "XEM", "THEM", tùy vào logic bạn định nghĩa
+                    new ChiTietQuyenDAO().insert(ct);
+                }
+                PQBUS.updateChiTietQuyen(maNhom, dsChucNang);
+
+
+                // ==== Xong phần cập nhật ctquyen ====
+
+                JOptionPane.showMessageDialog(PQDU, "Cập nhật nhóm quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 PQDU.dispose();
                 pqPanel.capNhatBang(PQBUS.getNhomQuyenAll()); // Cập nhật lại danh sách
+
+
             } else {
                 JOptionPane.showMessageDialog(PQDU, "Nhóm quyền có thể đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }

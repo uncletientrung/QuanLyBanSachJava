@@ -66,6 +66,26 @@ public class DanhMucChucNangDAO implements DAOInterface<DanhMucChucNangDTO>{
         }
         return chucNang;
     }
+    
+    
+    public String getTenChucNangByMa(int maChucNang) {
+        String query = "SELECT tenchucnang FROM danhmucchucnang WHERE machucnang = ?";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
+
+            pst.setInt(1, maChucNang);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("tenchucnang");
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(DanhMucChucNangDAO.class.getName()).log(Level.SEVERE,null,e);
+        }
+
+        return null; // Không tìm thấy
+    }
 
     @Override
     public DanhMucChucNangDTO selectById(String t) {
