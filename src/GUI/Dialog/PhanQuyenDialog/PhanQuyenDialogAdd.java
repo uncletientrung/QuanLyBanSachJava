@@ -1,18 +1,27 @@
 package GUI.Dialog.PhanQuyenDialog;
 
+import BUS.DanhMucChucNangBUS;
+
+import DTO.DanhMucChucNangDTO;
 import GUI.View.PhanQuyenPanel;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List; 
+
 
 public class PhanQuyenDialogAdd extends JDialog {
     private JTextField txTenNhomQuyen;
     private PhanQuyenPanel pqPanel;
     private JButton btnXacNhan, btnHuy;
+    private JPanel checkboxPanel;
+
+    public ArrayList<DanhMucChucNangDTO> listChucNang= new DanhMucChucNangBUS().getAllchucnang();
 
     public PhanQuyenDialogAdd(JFrame parent, PhanQuyenPanel pqPanel) {
         super(parent, "Thêm nhóm quyền", true);
         this.pqPanel = pqPanel;
-        setSize(400, 250);
+        setSize(600, 400);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -35,6 +44,9 @@ public class PhanQuyenDialogAdd extends JDialog {
 
         JLabel lb_ten = new JLabel("Tên nhóm quyền:");
         lb_ten.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        JLabel lb_cn = new JLabel("Chức năng:");
+        lb_cn.setFont(new Font("Arial", Font.BOLD, 14));
 
         txTenNhomQuyen = new JTextField(20);
         txTenNhomQuyen.setPreferredSize(new Dimension(200, 30));
@@ -44,6 +56,33 @@ public class PhanQuyenDialogAdd extends JDialog {
 
         gbc.gridx = 1; gbc.weightx = 0.7;
         pn_input.add(txTenNhomQuyen, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.3;
+        pn_input.add(lb_cn, gbc);
+        
+        
+        //panel chuwcv năng
+        
+        
+        checkboxPanel = new JPanel();
+        checkboxPanel.setLayout(new GridLayout(5, 2, 10, 10));
+        for (DanhMucChucNangDTO cn : listChucNang) {
+            JCheckBox cb = new JCheckBox(cn.getTenchucnang());
+            cb.setActionCommand(String.valueOf(cn.getMachucnang())); // dùng để lấy lại mã
+            checkboxPanel.add(cb);
+        }
+        
+        gbc.gridx = 0;
+        gbc.gridy = 2; 
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        pn_input.add(checkboxPanel, gbc);
+
+        
+
+
+     
 
         // ======= Panel nút bấm =======
         JPanel pn_button = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -61,7 +100,21 @@ public class PhanQuyenDialogAdd extends JDialog {
 
         // Xử lý sự kiện nút "Hủy"
         btnHuy.addActionListener(e -> dispose());
+        
     }
+    
+    public List<Integer> getDanhSachChucNangDuocChon() {
+        List<Integer> danhSach = new ArrayList<>();
+        for (Component comp : checkboxPanel.getComponents()) {
+            if (comp instanceof JCheckBox cb && cb.isSelected()) {
+                danhSach.add(Integer.parseInt(cb.getActionCommand()));
+            }
+        }
+        return danhSach;
+   }
+    
+  
+
 
     public String getTenNhomQuyen() {
         return txTenNhomQuyen.getText().trim();

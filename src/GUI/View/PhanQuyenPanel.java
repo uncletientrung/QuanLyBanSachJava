@@ -39,7 +39,7 @@ public class PhanQuyenPanel extends JPanel{
         JButton btnAdd= createToolBarButton("Thêm", "insert1.png");
         JButton btnUpdate= createToolBarButton("Sửa", "update1.png");
         JButton btndelete= createToolBarButton("Xóa", "trash.png");
-//        JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
+        JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
         btnAdd.setFont(font);
         //goi ham de thuc thi viec them
         PhanQuyenController controller = new PhanQuyenController(this, workFrame);
@@ -51,7 +51,7 @@ public class PhanQuyenPanel extends JPanel{
 
         btnUpdate.setFont(font);
         btndelete.setFont(font);
-//        btndetail.setFont(font);
+        btndetail.setFont(font);
          // Tạo phần tìm kiếm cho JPanel toolBar_Right
        
 
@@ -148,7 +148,7 @@ public class PhanQuyenPanel extends JPanel{
         toolBar_Left.add(btnAdd);
         toolBar_Left.add(btnUpdate);
         toolBar_Left.add(btndelete);
-//        toolBar_Left.add(btndetail);
+        toolBar_Left.add(btndetail);
 
         
         toolBar_Right.add(txfind);

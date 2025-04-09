@@ -170,11 +170,15 @@
 
 package GUI;
 
+import DAO.ChiTietQuyenDAO;
+import DAO.PhanQuyenDAOo;
 import DTO.TaiKhoanDTO;
+import GUI.Controller.ChucNangConst;
 import GUI.Controller.WorkFrameController;
 import GUI.View.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.ActionListener;
 
 /**
@@ -185,7 +189,7 @@ public class WorkFrame extends JFrame {
     public CardLayout cardLayout = new CardLayout();
     public JPanel PanelCard = new JPanel(cardLayout);
     private TaiKhoanDTO taiKhoan;
-    private JButton btnTaiKhoan, btnPhanQuyen, btnThongKe, btnNhanVien;
+    private JButton btnTaiKhoan, btnPhanQuyen, btnThongKe, btnNhanVien,btnPhieuXuat,btnPhieuNhap,btnKhachHang;
 
     public WorkFrame(TaiKhoanDTO taiKhoan) {
         this.taiKhoan = taiKhoan;
@@ -232,7 +236,8 @@ public class WorkFrame extends JFrame {
         // Tên và vai trò
         JLabel nameLabel = new JLabel(taiKhoan.getUsername());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        JLabel roleLabel = new JLabel(taiKhoan.getManhomquyen() == 1 ? "Quản lý" : "Nhân viên");
+        String tenNhomQuyen = PhanQuyenDAOo.getInstance().getTenNhomQuyen(taiKhoan.getManhomquyen());
+        JLabel roleLabel = new JLabel(tenNhomQuyen);
         roleLabel.setFont(new Font("Arial", Font.PLAIN, 12));
 
         // Căn giữa tên và vai trò theo chiều dọc với avatar
@@ -255,9 +260,9 @@ public class WorkFrame extends JFrame {
         // Menu items
         JButton btnTrangChu = createMenuButton("Trang chủ");
         JButton btnSach = createMenuButton("Sách");
-        JButton btnPhieuXuat = createMenuButton("Phiếu xuất");
-        JButton btnPhieuNhap = createMenuButton("Phiếu nhập");
-        JButton btnKhachHang = createMenuButton("Khách hàng");
+        btnPhieuXuat = createMenuButton("Phiếu xuất");
+        btnPhieuNhap = createMenuButton("Phiếu nhập");
+        btnKhachHang = createMenuButton("Khách hàng");
         btnNhanVien = createMenuButton("Nhân viên");
         JButton btnThongTinChung = createMenuButton("Thông tin chung");
         btnTaiKhoan = createMenuButton("Tài khoản");
@@ -332,7 +337,7 @@ public class WorkFrame extends JFrame {
         PanelCard.add(new BookPanel(), "Sách");
         PanelCard.add(new NhanVienPanel(), "Nhân viên");
         PanelCard.add(new PhanQuyenPanel(), "Phân quyền");
-        PanelCard.add(new ThongTinChungPanel(this), "Thông tin chung");
+        PanelCard.add(new ThongTinChungPanel(this,ChiTietQuyenDAO.getInstance().getDanhSachChucNang(taiKhoan.getManhomquyen())), "Thông tin chung");
         PanelCard.add(new PhieuXuatPanel(), "Phiếu xuất");
         PanelCard.add(new PhieuNhapPanel(), "Phiếu nhập");
         PanelCard.add(new TaiKhoanPanel(), "Tài khoản");
@@ -360,18 +365,48 @@ public class WorkFrame extends JFrame {
         applyPermission();
     }
 
-    private void applyPermission() {
+      private void applyPermission() {
         if (taiKhoan == null) return;
 
-        int quyen = taiKhoan.getManhomquyen(); // 1 = quản lý, 2 = nhân viên
+        List<Integer> chucNangDuocCap = ChiTietQuyenDAO.getInstance().getDanhSachChucNang(taiKhoan.getManhomquyen());
 
-        if (quyen == 2) { // nhân viên bị giới hạn quyền
-            btnTaiKhoan.setVisible(false);
-            btnPhanQuyen.setVisible(false);
-            btnThongKe.setVisible(false);
-            btnNhanVien.setVisible(false);
+        // Ẩn hết trước
+        //trang chu,sach,khuyenmai,dang xuat, dong ai cx tuong tac dc
+        btnTaiKhoan.setVisible(false);
+        btnPhanQuyen.setVisible(false);
+        btnThongKe.setVisible(false);
+        btnNhanVien.setVisible(false);  
+        btnPhieuXuat.setVisible(false);
+        btnPhieuNhap.setVisible(false);
+        btnKhachHang.setVisible(false);
+
+
+        for (Integer cn : chucNangDuocCap) {
+            switch (cn) {
+                case ChucNangConst.TAI_KHOAN:
+                    btnTaiKhoan.setVisible(true);
+                    break;
+                case ChucNangConst.PHAN_QUYEN:
+                    btnPhanQuyen.setVisible(true);
+                    break;
+                case ChucNangConst.NHAN_VIEN:
+                    btnNhanVien.setVisible(true);
+                    break;
+                case ChucNangConst.THONG_KE:
+                    btnThongKe.setVisible(true);
+                    break;
+                case ChucNangConst.PHIEU_XUAT:
+                    btnPhieuXuat.setVisible(true);
+                    break;
+                case ChucNangConst.PHIEU_NHAP:
+                    btnPhieuNhap.setVisible(true);
+                    break;
+                case ChucNangConst.KHACH_HANG:
+                    btnKhachHang.setVisible(true);
+                    break;          
+            }
         }
-    }
+}
 
     // Phương thức tạo nút menu với kích thước và căn chỉnh phù hợp
     private JButton createMenuButton(String text) {

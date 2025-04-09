@@ -43,9 +43,12 @@ public class PhanQuyenDAOo implements DAOInterface<NhomQuyenDTO>{
         }
 
         // Nếu không có trong database, tiến hành thêm mới
-        String sql = "INSERT INTO nhomquyen (tennhomquyen,trangthai) VALUES (?,1)";
+        String sql = "INSERT INTO nhomquyen (manhomquyen, tennhomquyen, trangthai) VALUES (?, ?, 1)";
         PreparedStatement pst = con.prepareStatement(sql);
-        pst.setString(1, t.getTennhomquyen());
+        pst.setInt(1, t.getManhomquyen());
+        pst.setString(2, t.getTennhomquyen());
+        
+
         
         result = pst.executeUpdate(); // Thực thi câu lệnh INSERT
 
@@ -129,8 +132,8 @@ public class PhanQuyenDAOo implements DAOInterface<NhomQuyenDTO>{
              if(result==-1){
                  System.out.println("No data, try again!");
              }
-        }catch (Exception e) {
-            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+        }catch (SQLException e) {
+            Logger.getLogger(PhanQuyenDAOo.class.getName()).log(Level.SEVERE, null, e);
         }
         return  result;
     }
@@ -142,8 +145,8 @@ public int delete(int maNhomQuyen) {
          pst.setInt(1, maNhomQuyen);
         return pst.executeUpdate();
     } catch (SQLException e) {
-        e.printStackTrace();
-    }
+            Logger.getLogger(PhanQuyenDAOo.class.getName()).log(Level.SEVERE, null, e);
+        }
     return 0;
 }
 
@@ -159,6 +162,50 @@ public int delete(String t) {
         return 0;
     }
 }
+
+public int getNextAvailableMaNhomQuyen() {
+    int next = 1;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT manhomquyen FROM nhomquyen ORDER BY manhomquyen ASC";
+        PreparedStatement pst = con.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            int current = rs.getInt("manhomquyen");
+            if (current == next) {
+                next++;
+            } else {
+                break; // đã tìm ra mã trống
+            }
+        }
+
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+            Logger.getLogger(PhanQuyenDAOo.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+    return next;
+}
+
+public String getTenNhomQuyen(int maNhom) {
+    String ten = "";
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT tennhomquyen FROM nhomquyen WHERE manhomquyen = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, maNhom);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            ten = rs.getString("tennhomquyen");
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+            Logger.getLogger(PhanQuyenDAOo.class.getName()).log(Level.SEVERE, null, e);
+        }
+    return ten;
+}
+
 
 
   

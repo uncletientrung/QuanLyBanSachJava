@@ -1,8 +1,11 @@
 package BUS;
 
+import DAO.ChiTietQuyenDAO;
 import DAO.PhanQuyenDAOo;
+import DTO.ChiTietQuyenDTO;
 import DTO.NhomQuyenDTO;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PhanQuyenBUS {
     private final ArrayList<NhomQuyenDTO> listNhomQuyen;
@@ -14,7 +17,7 @@ public class PhanQuyenBUS {
     }
 
     public ArrayList<NhomQuyenDTO> getNhomQuyenAll(){
-//        return listNhomQuyen;
+       
           return PhanQuyenDAOo.getInstance().selectAll();
     }
 
@@ -35,20 +38,76 @@ public class PhanQuyenBUS {
         return ketqua;
     }
 
+ 
+   public boolean themNhomQuyen(String tenNhomQuyen, List<Integer> danhSachChucNang) {
+            ArrayList<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
 
-    
-    public boolean themNhomQuyen(String tenNhomQuyen) {
-        ArrayList<NhomQuyenDTO> danhSachNhomQuyen = getNhomQuyenAll();
+            for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
+                if (quyen.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
+                    System.out.println("Nhóm quyền đã tồn tại! Không thêm.");
+                    return false;
+                }
+            }
 
-        for (NhomQuyenDTO quyen : danhSachNhomQuyen) {
-            if (quyen.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
-                System.out.println("Nhóm quyền đã tồn tại! Không thêm.");
-                return false; // Ngăn chặn thêm trùng
+            int maNhomMoi = PhanQuyenDAOo.getInstance().getNextAvailableMaNhomQuyen();
+            NhomQuyenDTO nhomMoi = new NhomQuyenDTO(maNhomMoi, tenNhomQuyen);
+
+            boolean themNhomQuyen = pqDAO.insert(nhomMoi) > 0;
+            if (!themNhomQuyen) return false;
+
+            for (int maCN : danhSachChucNang) {
+                ChiTietQuyenDTO ct = new ChiTietQuyenDTO();
+                ct.setManhomquyen(maNhomMoi);
+                ct.setMachucnang(maCN);
+                ct.setHanhdong("CRUD"); // nếu cần set thủ công
+                ChiTietQuyenDAO.getInstance().insert(ct);
+            }
+
+            return true;
+}
+
+    public int themNhomQuyenVaLayMa(String tenNhomQuyen) {
+        ArrayList<NhomQuyenDTO> danhSach = getNhomQuyenAll();
+
+        for (NhomQuyenDTO nq : danhSach) {
+            if (nq.getTennhomquyen().equalsIgnoreCase(tenNhomQuyen)) {
+                return -1; // đã tồn tại
             }
         }
 
-            return PhanQuyenDAOo.getInstance().insert(new NhomQuyenDTO(0, tenNhomQuyen)) > 0;
+
+        int maMoi = layMaNhomQuyenMoi(); // bạn cần có hàm này
+        NhomQuyenDTO nhom = new NhomQuyenDTO(maMoi, tenNhomQuyen);
+        boolean success = pqDAO.insert(nhom) > 0;
+        return success ? maMoi : -1;
 }
+    
+    public void themChiTietQuyen(int maNhom, int maCN) {
+        ChiTietQuyenDTO ct = new ChiTietQuyenDTO();
+        ct.setManhomquyen(maNhom);
+        ct.setMachucnang(maCN);
+        ct.setHanhdong("CRUD");
+        ChiTietQuyenDAO.getInstance().insert(ct);
+}
+
+
+    public int layMaNhomQuyenMoi() {
+        ArrayList<NhomQuyenDTO> danhSach = getNhomQuyenAll();
+        int ma = 1;
+        while (true) {
+            boolean trung = false;
+            for (NhomQuyenDTO nq : danhSach) {
+                if (nq.getManhomquyen() == ma) {
+                    trung = true;
+                    break;
+                }
+            }
+            if (!trung) return ma;
+            ma++;
+        }
+}
+
+
     //hàm update
     public boolean updateNhomQuyen(NhomQuyenDTO nhomQuyen){
         int result = PhanQuyenDAOo.getInstance().update(nhomQuyen);

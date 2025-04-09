@@ -8,6 +8,7 @@ import BUS.PhanQuyenBUS;
 import GUI.View.PhanQuyenPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,22 +28,31 @@ public class PhanQuyenDialogAdd_Controller implements  ActionListener{
 
 
     
-    @Override
+ @Override
 public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equals("Thêm dữ liệu")) {
-        String tenNhomQuyen = PQDA.getTenNhomQuyen();
-        
+        String tenNhomQuyen = PQDA.getTenNhomQuyen().trim();
         if (tenNhomQuyen.isEmpty()) {
             JOptionPane.showMessageDialog(PQDA, "Vui lòng nhập tên nhóm quyền!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+        List<Integer> danhSachChucNang = PQDA.getDanhSachChucNangDuocChon();
+        if (danhSachChucNang.isEmpty()) {
+            JOptionPane.showMessageDialog(PQDA, "Vui lòng chọn ít nhất một chức năng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         try {
-            Boolean result = PQBUS.themNhomQuyen(tenNhomQuyen);
-            if (result) {
+            int maNhomQuyenMoi = PQBUS.themNhomQuyenVaLayMa(tenNhomQuyen);
+            if (maNhomQuyenMoi != -1) {
+                for (int maCN : danhSachChucNang) {
+                    PQBUS.themChiTietQuyen(maNhomQuyenMoi, maCN);
+                }
+
                 JOptionPane.showMessageDialog(PQDA, "Thêm nhóm quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 PQDA.dispose();
-                pqPanel.capNhatBang(PQBUS.getNhomQuyenAll()); // Cập nhật lại danh sách
+                pqPanel.capNhatBang(PQBUS.getNhomQuyenAll());
             } else {
                 JOptionPane.showMessageDialog(PQDA, "Nhóm quyền có thể đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
@@ -52,5 +62,7 @@ public void actionPerformed(ActionEvent e) {
         }
     }
 }
+
+
 
 }
