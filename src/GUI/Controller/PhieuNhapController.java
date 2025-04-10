@@ -4,23 +4,37 @@
  */
 package GUI.Controller;
 
+import BUS.PhieuNhapBUS;
+import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogAdd;
+import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDelete;
+import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDetail;
 import GUI.View.PhieuNhapPanel;
 import GUI.WorkFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.GridLayout;
+import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  *
  * @author Minnie
  */
-public class PhieuNhapController implements ActionListener, ListSelectionListener, DocumentListener{
+public class PhieuNhapController implements ActionListener, ChangeListener{
     
-    private final PhieuNhapPanel pnp;
-    private final WorkFrame wf;
+    private PhieuNhapPanel pnp;
+    private WorkFrame wf;
+    private PhieuNhapBUS pnBUS;
+    private PhieuNhapDialogAdd PNDA;
+    private PhieuNhapDialogDelete PNDD;
+    private PhieuNhapDialogDetail PNDX;
+    private int tabCount = 1;
+    private boolean isRemoving = false;
+    
+    public PhieuNhapController(){}
     
     public PhieuNhapController(PhieuNhapPanel pnp, WorkFrame wf){
         this.pnp = pnp;
@@ -29,26 +43,29 @@ public class PhieuNhapController implements ActionListener, ListSelectionListene
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String evt = e.getActionCommand();
+        switch (evt) {
+            case "Trang chủ":
+                pnp.getPanelCenter().removeAll();
+                pnp.getScrollPanePhieuNhap().setViewportView(pnp.getTablePhieuNhap());
+                pnp.getPanelCenter().setLayout(new GridLayout(1, 1));
+                pnp.getPanelCenter().add(pnp.getScrollPanePhieuNhap());
+                pnp.refreshTablePn();
+                break;
+            case "Thêm":
+                System.out.println("GUI.Controller.PhieuNhapController.actionPerformed()");
+                break;
+            
+            default:
+                break;
+        }
     }
+    
+    
+
 
     @Override
-    public void valueChanged(ListSelectionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
+    public void stateChanged(ChangeEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

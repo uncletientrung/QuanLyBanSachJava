@@ -87,7 +87,6 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         } catch (Exception e) {
             Logger.getLogger(ChiTietPhieuXuatDAO.class.getName()).log(Level.SEVERE, null, e);
         }
-        return result;    }
-    
-    
+        return result;    
+    }    
 }

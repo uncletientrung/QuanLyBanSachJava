@@ -64,12 +64,12 @@ public class NhanVienDialogUpdate extends JDialog{
         
         // Các Label và TextField
         JLabel lbMa = new JLabel("Mã nhân viên: "); lbMa.setFont(labelFont);
-        JLabel lbHo = new JLabel("Mã nhân viên: "); lbHo.setFont(labelFont);
-        JLabel lbTen = new JLabel("Mã nhân viên: "); lbTen.setFont(labelFont);
-        JLabel lbGioitinh = new JLabel("Mã nhân viên: "); lbGioitinh.setFont(labelFont);
-        JLabel lbSdt = new JLabel("Mã nhân viên: "); lbSdt.setFont(labelFont);
-        JLabel lbNgaysinh = new JLabel("Mã nhân viên: "); lbNgaysinh.setFont(labelFont);
-        JLabel lbTrangthai = new JLabel("Mã nhân viên: "); lbTrangthai.setFont(labelFont);
+        JLabel lbHo = new JLabel("Họ: "); lbHo.setFont(labelFont);
+        JLabel lbTen = new JLabel("Tên: "); lbTen.setFont(labelFont);
+        JLabel lbGioitinh = new JLabel("Giới tính: "); lbGioitinh.setFont(labelFont);
+        JLabel lbSdt = new JLabel("Số điện thoại: "); lbSdt.setFont(labelFont);
+        JLabel lbNgaysinh = new JLabel("Ngày sinh: "); lbNgaysinh.setFont(labelFont);
+        JLabel lbTrangthai = new JLabel("Trạng thái: "); lbTrangthai.setFont(labelFont);
         
         txfMa = createTextField(fieldFont);
         txfMa.setEditable(false);

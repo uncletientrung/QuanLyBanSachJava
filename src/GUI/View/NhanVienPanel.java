@@ -66,14 +66,16 @@ public class NhanVienPanel extends JPanel{
         tableNV = new JTable(dataNV);
         // Thêm dữ liệu từ bảng nhân viên vào Frame
         for(NhanVienDTO nv: listNV){
-            dataNV.addRow(new Object[]{nv.getManv(),nv.getHonv(),nv.getTennv(),nv.getGioitinh(),
-                nv.getSdt(),nv.getNgaysinh(),nv.getTrangthai()});
+            String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
+            String trangthai = (nv.getTrangthai() == 1) ? "Hoạt động" : "Khóa";
+            dataNV.addRow(new Object[]{nv.getManv(),nv.getHonv(),nv.getTennv(),gioitinh,
+                nv.getSdt(),nv.getNgaysinh(),trangthai});
         }
         
         // Căn giữa dữ liệu trong Table
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter = {0,3,5,6}; //Trừ Họ tên & SĐT
+        int[] columnsToCenter = {0,1,2,3,4,5,6}; 
         for (int col : columnsToCenter){
             tableNV.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
@@ -157,14 +159,16 @@ public class NhanVienPanel extends JPanel{
         listNV = new NhanVienBUS().getNVAll();
         dataNV.setRowCount(0);
         for(NhanVienDTO nv : listNV){
+            String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
+            String trangthai = (nv.getTrangthai() == 1) ? "Hoạt động" : "Khóa";
             dataNV.addRow(new Object[]{
                 nv.getManv(),
                 nv.getHonv(),
                 nv.getTennv(),
-                nv.getGioitinh(),
+                gioitinh,
                 nv.getSdt(),
                 nv.getNgaysinh(),
-                nv.getTrangthai()
+                trangthai
             });
         }
     }
@@ -187,15 +191,17 @@ public class NhanVienPanel extends JPanel{
     
     public void FilterTableData(ArrayList<NhanVienDTO> list_Sort){
         dataNV.setRowCount(0);
-        for(NhanVienDTO nv : list_Sort){
+        for(NhanVienDTO nv : listNV){
+            String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
+            String trangthai = (nv.getTrangthai() == 1) ? "Hoạt động" : "Khóa";
             dataNV.addRow(new Object[]{
                 nv.getManv(),
                 nv.getHonv(),
                 nv.getTennv(),
-                nv.getGioitinh(),
+                gioitinh,
                 nv.getSdt(),
                 nv.getNgaysinh(),
-                nv.getTrangthai()
+                trangthai
             });
         }
     }

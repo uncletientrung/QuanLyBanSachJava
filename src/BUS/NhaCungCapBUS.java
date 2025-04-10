@@ -27,6 +27,15 @@ public class NhaCungCapBUS {
     public ArrayList<NhaCungCapDTO> getNhaCungCapAll(){
         return NhaCungCapDAO.getInstance().selectAll();
     }
+
+    public String getTenNCC(int maNCC) {
+        for (NhaCungCapDTO ncc : listNhaCungCap) {
+            if (ncc.getMancc() == maNCC) {
+                return ncc.getTenncc();
+            }
+        }
+        return null;
+    }
     
     public ArrayList<NhaCungCapDTO> timkiem(String keywords) {
         ArrayList<NhaCungCapDTO> ketqua = new ArrayList<>();

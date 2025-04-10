@@ -5,14 +5,12 @@
 package DAO;
 
 import DTO.PhieuNhapDTO;
-import java.sql.PreparedStatement;
-import java.sql.Connection;
 import connectDB.JDBCUtil;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -81,6 +79,21 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
             Logger.getLogger(PhieuXuatDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return  result;
+    }
+
+    public int cancel(String t) {
+        int result = 0;
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "Update phieunhap Set trangthai = 0 Where maphieunhap = ? ";
+            PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
+            pst.setInt(1, Integer.parseInt(t));
+            result = pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+            Logger.getLogger(PhieuNhapDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return result;
     }
 
     @Override
