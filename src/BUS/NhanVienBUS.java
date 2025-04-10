@@ -39,6 +39,26 @@ public class NhanVienBUS {
         }
         return null;
     }
+
+    public String getTenNV(int ma){
+        String result = null;
+        for (NhanVienDTO nv: listNV){
+            if(nv.getManv() == ma){
+                result = nv.getTennv();
+            }
+        }
+        return result;
+    }
+    
+    public String getHoTenNVById(int ma){
+        String result = null;
+        for (NhanVienDTO nv: listNV){
+            if(nv.getManv() == ma){
+                result = nv.getHonv() + " " + nv.getTennv();
+            }
+        }
+        return result;
+    }
     
     public Boolean updateNV_DB(NhanVienDTO nv){ //Update sách lên database kết hợp với hàm updateByID_List
         boolean result=nvDAO.update(nv) !=0;
