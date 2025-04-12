@@ -159,6 +159,16 @@ public boolean xoaNhomQuyen(int maNhomQuyen) {
         return false;
     }
 }
+public  String getTenquyenbyid(int id){
+     String result = "";
+     for( NhomQuyenDTO nq : listNhomQuyen){
+         if(nq.getManhomquyen()==id){
+             result=nq.getTennhomquyen();
+             return result;
+         }
+     }
+     return result;
+ }
 
 
  

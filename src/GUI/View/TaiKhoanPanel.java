@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.View;
+import BUS.PhanQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DTO.TaiKhoanDTO;
 import GUI.Controller.TaiKhoanController;
@@ -37,6 +38,7 @@ public class TaiKhoanPanel extends JPanel{
     private Boolean checkTimkiem=false;
     private WorkFrame workFrame;
     public ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
+    public PhanQuyenBUS pqBUS;
     
     
     public TaiKhoanPanel(){
@@ -135,14 +137,22 @@ public class TaiKhoanPanel extends JPanel{
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
         //them du lieu vao bang GUI
+        
+        pqBUS= new PhanQuyenBUS();
         for(TaiKhoanDTO tk: listTaiKhoan){
             String trangthai="";
             if(tk.getTrangthai()==0){
                 trangthai="Hết đát";
             }else{
                 trangthai="Còn xài được";
-            }            
-            tableTaiKhoan.addRow(new Object[]{tk.getManv(),tk.getUsername(),tk.getMatkhau(),tk.getManhomquyen(),trangthai});
+            }   
+            
+            String tenquyen;
+            tenquyen=pqBUS.getTenquyenbyid(tk.getManhomquyen());
+            
+            
+            tableTaiKhoan.addRow(new Object[]{tk.getManv(),tk.getUsername(),tk.getMatkhau(),tenquyen,trangthai});
+            
         }
         
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -218,14 +228,20 @@ public class TaiKhoanPanel extends JPanel{
    public void capNhatBang(ArrayList<TaiKhoanDTO> danhSach) {
     tableTaiKhoan.setRowCount(0); // Xóa bảng cũ
     
-    for (TaiKhoanDTO tk : danhSach) {
-        String trangthai="";
-        if(tk.getTrangthai()==0){
+    pqBUS= new PhanQuyenBUS();
+        for(TaiKhoanDTO tk: listTaiKhoan){
+            String trangthai="";
+            if(tk.getTrangthai()==0){
                 trangthai="Hết đát";
-        }else{
+            }else{
                 trangthai="Còn xài được";
-            }            
-        tableTaiKhoan.addRow(new Object[]{tk.getManv(),tk.getUsername(),tk.getMatkhau(),tk.getManhomquyen(),trangthai});
+            }   
+            
+            String tenquyen;
+            tenquyen=pqBUS.getTenquyenbyid(tk.getManhomquyen());
+            
+            
+            tableTaiKhoan.addRow(new Object[]{tk.getManv(),tk.getUsername(),tk.getMatkhau(),tenquyen,trangthai});
     }
 }
 

@@ -128,7 +128,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfGiamGia = new javax.swing.JTextField();
         lbThanhToan = new javax.swing.JLabel();
         txfThanhToan = new javax.swing.JTextField();
-        btnThemPhieu = new javax.swing.JButton();
+        btnThemPhieu = createButton("Thêm phiếu", new Color(76, 175, 80));
         btnSua = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         lbTenSachV2 = new javax.swing.JLabel();
@@ -522,6 +522,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         btnXoaV2.addActionListener(action);
         BtnXoaAllV2.addActionListener(action);
         btnThemPhieu.addActionListener(action);
+        System.err.println(getDateChooser1().getToolTipText());
     }
 
     private void btnThemPhieuActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -603,6 +604,43 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     }
     public JTextField getTxfSDT() {
         return txfSDT;
+    }
+        // Hàm tạo Button với hiệu ứng và màu sắc tùy chỉnh
+    private JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Xác định màu nền dựa trên trạng thái của button
+                Color actualBgColor = bgColor;
+                if (getModel().isPressed()) {
+                    actualBgColor = bgColor.darker();
+                } else if (getModel().isRollover()) {
+                    actualBgColor = bgColor.brighter();
+                }
+
+                g2.setColor(actualBgColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+                // Không vẽ border mặc định
+            }
+        };
+
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+
+        return button;
     }
     
     // Show các số điện thoại

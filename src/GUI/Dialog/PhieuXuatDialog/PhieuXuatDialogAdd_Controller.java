@@ -187,14 +187,16 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                KhachHangDTO KH=khBUS.getKHBySDT(sdt);
                int maKH=KH.getMakh();
                // Chuyển JDateChosser sang Date rồi sang TimeStamp
-//               Date current_day_type_date= PXDA.getDateChooser1().getDate();
-//               Timestamp current_day=new Timestamp(current_day_type_date.getTime());
+               Date current_day_type_date= PXDA.getDateChooser1().getDate();
+               Timestamp current_day=new Timestamp(current_day_type_date.getTime());
+               
                //Xài LocalDate để thay thế cho JDate bị lỗi
-                LocalDate  current_day_type_date = LocalDate.now();
+//                LocalDate  current_day_type_date = LocalDate.now();
                // Chuyển từ LocalDate sang LocalDateTime
-                LocalDateTime current_day_type_datetime = current_day_type_date.atStartOfDay();
+//                LocalDateTime current_day_type_datetime = current_day_type_date.atStartOfDay();
                 // Chuyển từ LocalDateTime sang Timestamp
-                Timestamp current_day = Timestamp.valueOf(current_day_type_datetime);
+//                Timestamp current_day = Timestamp.valueOf(current_day_type_datetime);
+
                 // Gọi mã phiếu xuất auto tiếp theo 
                int maPhieuXuat = pxDAO.getAutoIncrement();
                 // Gọi tổng tiền và trạng thái auto là 1

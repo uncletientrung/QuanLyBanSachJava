@@ -100,7 +100,9 @@ public class BookPanel extends JPanel {
 
         // Tạo renderer để căn giữa dữ liệu trong TableBook
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        centerRenderer.setHorizontalAlignment(centerRenderer.CENTER);
+        tableBook.getTableHeader().setDefaultRenderer(centerRenderer);
         int[] columnsToCenter = {0, 1, 2, 3, 4, 5, 6, 7}; // Căn giữa tất cả trừ tên sách và tên nxb
         for (int col : columnsToCenter) {
             tableBook.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
