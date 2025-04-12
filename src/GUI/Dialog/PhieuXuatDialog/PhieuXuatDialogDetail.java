@@ -113,7 +113,7 @@ public class PhieuXuatDialogDetail extends JDialog{
 
         // ========== NÚT BẤM ==========
         JPanel buttonPanel = new JPanel();
-        JButton exportButton = createButton("Xuất file Excel", new Color(76, 175, 80));  // Màu xanh dương
+        JButton exportButton = createButton("Xuất file Excel", new Color(76, 175, 80));  // Màu xanh lá
         JButton cancelButton = createButton("Đóng", new Color(244, 67, 54));   // Màu đỏ
 
         buttonPanel.add(exportButton);
