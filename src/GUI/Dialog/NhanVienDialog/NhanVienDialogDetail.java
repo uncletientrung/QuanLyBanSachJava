@@ -66,8 +66,8 @@ public class NhanVienDialogDetail extends JDialog{
         JLabel lbTen = new JLabel("Tên: "); lbTen.setFont(labelFont);
         JLabel lbGioitinh = new JLabel("Giới tính: "); lbGioitinh.setFont(labelFont);
         JLabel lbSdt = new JLabel("Số điện thoại: "); lbSdt.setFont(labelFont);
-        JLabel lbNgaysinh = new JLabel("Ngày sinh: "); lbNgaysinh.setFont(labelFont);
         JLabel lbTrangthai = new JLabel("Trạng thái: "); lbTrangthai.setFont(labelFont);
+        JLabel lbNgaysinh = new JLabel("Ngày sinh: "); lbNgaysinh.setFont(labelFont);
         
         txfMa = createTextField(fieldFont);
         txfMa.setEditable(false);
@@ -167,7 +167,7 @@ public class NhanVienDialogDetail extends JDialog{
         return button;
     }
     
-    public void ShowInfo(String ma, String ho, String ten, String gioitinh, String sdt, String trangthai, String ngaysinh){
+    public void ShowInfo(String ma, String ho, String ten, String gioitinh, String sdt, String ngaysinh,String trangthai){
         System.err.println(ma);
         txfMa.setText(ma);
         txfHo.setText(ho);

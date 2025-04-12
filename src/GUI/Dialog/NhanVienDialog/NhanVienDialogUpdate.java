@@ -72,19 +72,12 @@ public class NhanVienDialogUpdate extends JDialog{
         JLabel lbTrangthai = new JLabel("Trạng thái: "); lbTrangthai.setFont(labelFont);
         
         txfMa = createTextField(fieldFont);
-        txfMa.setEditable(false);
         txfHo = createTextField(fieldFont);
-        txfHo.setEditable(false);
         txfTen = createTextField(fieldFont);
-        txfTen.setEditable(false);
         txfGioitinh = createTextField(fieldFont);
-        txfGioitinh.setEditable(false);
         txfSdt = createTextField(fieldFont);
-        txfSdt.setEditable(false);
         txfNgaysinh = createTextField(fieldFont);
-        txfNgaysinh.setEditable(false);
         txfTrangthai = createTextField(fieldFont);
-        txfTrangthai.setEditable(false);
         
         //Hàng 1
         JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
@@ -177,7 +170,7 @@ public class NhanVienDialogUpdate extends JDialog{
         return button;
     }
     
-    public void ShowInfo(String ma, String ho, String ten, String gioitinh, String sdt, String trangthai, String ngaysinh){
+    public void ShowInfo(String ma, String ho, String ten, String gioitinh, String sdt, String ngaysinh, String trangthai){
         System.err.println(ma);
         txfMa.setText(ma);
         txfHo.setText(ho);

@@ -66,12 +66,12 @@ public class PhieuNhapBUS {
         list_pn.remove(pn);
     }
 
-    // public Boolean addPN(PhieuNhapDTO pn){
-    //     boolean result = pnDAO.insert(pn) != 0;
+    public Boolean addPN(PhieuNhapDTO pn){
+         boolean result = pnDAO.insert(pn) != 0;
         
-    //     if(result){
-    //         list_pn.add(pn);
-    //     }
-    //     return result;
-    // }
+        if(result){
+             list_pn.add(pn);
+        }
+        return result;
+    }
 }

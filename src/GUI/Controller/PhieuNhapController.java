@@ -5,6 +5,8 @@
 package GUI.Controller;
 
 import BUS.PhieuNhapBUS;
+import DTO.PhieuNhapDTO;
+import GUI.Dialog.PhieuNhapDialog.AddPanel;
 import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogAdd;
 import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDelete;
 import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDetail;
@@ -43,22 +45,43 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        pnp.refreshTablePn();
         String evt = e.getActionCommand();
         switch (evt) {
-            case "Trang chủ":
-                pnp.getPanelCenter().removeAll();
-                pnp.getScrollPanePhieuNhap().setViewportView(pnp.getTablePhieuNhap());
-                pnp.getPanelCenter().setLayout(new GridLayout(1, 1));
-                pnp.getPanelCenter().add(pnp.getScrollPanePhieuNhap());
+            case "Trang chủ":       
                 pnp.refreshTablePn();
                 break;
             case "Thêm":
-                System.out.println("GUI.Controller.PhieuNhapController.actionPerformed()");
+                AddPanel test = new AddPanel();
+                test.setVisible(true);
+                System.err.println("DANG NHAN THEM");
                 break;
-            
+            case "Chi tiết":
+                JTable tablePN = pnp.getTablePhieuNhap();
+                if (tablePN.getSelectedRow() >= 0) {
+                    int selectRow = tablePN.getSelectedRow();
+                    pnBUS = new PhieuNhapBUS();
+                    PhieuNhapDTO phieu = pnBUS.getPNById(Integer.parseInt(tablePN.getValueAt(selectRow, 0).toString()));
+                    PNDX = new PhieuNhapDialogDetail(wf, phieu);
+                } else {
+                JOptionPane.showMessageDialog(null, "Vui Lòng chọn phiếu nhập muốn xem", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            case "Hủy bỏ":
+                JTable tablePNC = pnp.getTablePhieuNhap();
+                if (tablePNC.getSelectedRow() >= 0) {
+                    int selectRow = tablePNC.getSelectedRow();
+                    pnBUS = new PhieuNhapBUS();
+                    PhieuNhapDTO phieu = pnBUS.getPNById(Integer.parseInt(tablePNC.getValueAt(selectRow, 0).toString()));
+                    PNDD = new PhieuNhapDialogDelete(wf, phieu);
+                    pnp.refreshTablePn();
+                } else {
+                JOptionPane.showMessageDialog(null, "Vui Lòng chọn phiếu nhập muốn xóa", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             default:
+                pnp.refreshTablePn();
                 break;
         }
+       
     }
     
     
@@ -66,7 +89,7 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
     
     

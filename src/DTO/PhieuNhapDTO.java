@@ -12,6 +12,8 @@ public class PhieuNhapDTO extends PhieuDTO {
         super(maphieu, manv, thoigiantao, tongTien, trangthai);
         this.mancc = mancc;
     }
+    
+    
 
     
     public int getMancc() {
@@ -51,5 +53,9 @@ public class PhieuNhapDTO extends PhieuDTO {
                 ", tongTien=" + getTongTien() +
                 ", trangthai=" + getTrangthai() +
                 '}';
+    }
+
+    public String getThoiGian() {
+        return String.valueOf(getThoigiantao());
     }
 }

@@ -6,6 +6,7 @@ package GUI.Dialog.PhieuNhapDialog;
 
 import BUS.PhieuNhapBUS;
 import DAO.PhieuNhapDAO;
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.PhieuNhapDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

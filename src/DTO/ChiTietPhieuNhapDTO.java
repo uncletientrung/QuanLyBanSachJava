@@ -76,4 +76,8 @@ public class ChiTietPhieuNhapDTO {
                ", dongia=" + dongia +
                '}';
     }
+
+    public int getThanhtien() {
+        return this.getSoluong() * this.getDongia();
+    }
 }
