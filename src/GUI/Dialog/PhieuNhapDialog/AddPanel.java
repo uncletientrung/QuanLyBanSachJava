@@ -4,18 +4,22 @@
  */
 package GUI.Dialog.PhieuNhapDialog;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 /**
  *
  * @author Minnie
  */
-public class AddPanel extends javax.swing.JPanel {
+public class AddPanel extends JPanel{
 
     /**
-     * Creates new form AddPanel
      */
+   
+    
     public AddPanel() {
         initComponents();
-        txfMaSach.setEditable(false);
+        txfFind.setEditable(false);
         txfMaPhieuNhap.setEditable(false);
         txfNhanVien.setEditable(false);
         txfTenSach.setEditable(false);
@@ -32,11 +36,14 @@ public class AddPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         txfFind = new javax.swing.JTextField();
         btnThem = new javax.swing.JButton();
         SPSach = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         lbMaSach = new javax.swing.JLabel();
         lbTenSach = new javax.swing.JLabel();
@@ -60,6 +67,20 @@ public class AddPanel extends javax.swing.JPanel {
         cbboxNCC = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         SPSachThem = new javax.swing.JScrollPane();
+        tableListThem = new javax.swing.JTable();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setBackground(new java.awt.Color(204, 204, 204));
 
@@ -83,6 +104,19 @@ public class AddPanel extends javax.swing.JPanel {
         });
 
         SPSach.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        SPSach.setViewportView(jTable2);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -338,6 +372,19 @@ public class AddPanel extends javax.swing.JPanel {
 
         SPSachThem.setBackground(new java.awt.Color(255, 255, 255));
 
+        tableListThem.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        SPSachThem.setViewportView(tableListThem);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -346,7 +393,7 @@ public class AddPanel extends javax.swing.JPanel {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(SPSachThem)
+            .addComponent(SPSachThem, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -417,6 +464,9 @@ public class AddPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JLabel lbGiaNhap;
     private javax.swing.JLabel lbMaPhieuNhap;
     private javax.swing.JLabel lbMaSach;
@@ -426,6 +476,7 @@ public class AddPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lbTenSach;
     private javax.swing.JLabel lbThanhTien;
     private javax.swing.JLabel lbTongTien;
+    private javax.swing.JTable tableListThem;
     private javax.swing.JTextField txfFind;
     private javax.swing.JTextField txfGiaNhap;
     private javax.swing.JTextField txfMaPhieuNhap;

@@ -156,7 +156,7 @@ public class PhieuNhapPanel extends JPanel{
         nvBUS = new NhanVienBUS();
         nccBUS = new NhaCungCapBUS();
         for (PhieuNhapDTO pn : listpn) {
-            String hoTenNV = nvBUS.getTenNV(pn.getManv());
+            String hoTenNV = nvBUS.getHoTenNVById(pn.getManv());
             String hoTenNCC = nccBUS.getTenNCC(pn.getMancc());
             String trangThai = pn.getTrangthai() == 1 ? "Đã xử lý" : "Chưa xử lý";
             // Thay đổi dữ liệu trong bảng

@@ -12,14 +12,12 @@ import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDelete;
 import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDetail;
 import GUI.View.PhieuNhapPanel;
 import GUI.WorkFrame;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.GridLayout;
-import javax.swing.JOptionPane;
-import javax.swing.*;
-import java.awt.*;
 
 /**
  *
@@ -52,13 +50,16 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
                 pnp.refreshTablePn();
                 break;
             case "Thêm":
-                AddPanel test = new AddPanel();
-                test.setVisible(true);
-                System.err.println("DANG NHAN THEM");
+                pnp.removeAll(); // Xóa tất cả các thành phần hiện tại trong tab
+                pnp.setLayout(new BorderLayout()); // Đặt layout cho tab
+                pnp.add(new AddPanel(), BorderLayout.CENTER); // Thêm AddPanel vào tab
+                pnp.revalidate(); // Làm mới giao diện
+                pnp.repaint(); // Vẽ lại giao diện
+                System.err.println("Đã thêm AddPanel vào tab Phiếu Nhập");
                 break;
             case "Chi tiết":
                 JTable tablePN = pnp.getTablePhieuNhap();
-                if (tablePN.getSelectedRow() >= 0) {
+                if (tablePN.getSelectedRow() > -1) {
                     int selectRow = tablePN.getSelectedRow();
                     pnBUS = new PhieuNhapBUS();
                     PhieuNhapDTO phieu = pnBUS.getPNById(Integer.parseInt(tablePN.getValueAt(selectRow, 0).toString()));
@@ -68,7 +69,7 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
                 }
             case "Hủy bỏ":
                 JTable tablePNC = pnp.getTablePhieuNhap();
-                if (tablePNC.getSelectedRow() >= 0) {
+                if (tablePNC.getSelectedRow() > -1) {
                     int selectRow = tablePNC.getSelectedRow();
                     pnBUS = new PhieuNhapBUS();
                     PhieuNhapDTO phieu = pnBUS.getPNById(Integer.parseInt(tablePNC.getValueAt(selectRow, 0).toString()));
