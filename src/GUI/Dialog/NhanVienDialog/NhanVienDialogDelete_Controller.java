@@ -26,11 +26,11 @@ public class NhanVienDialogDelete_Controller implements ActionListener {
         if(evt.equals("Xóa")){
             boolean result = new NhanVienBUS().deleteById(Integer.parseInt(NVDD.getMaNV()));
             if(result){
-                JOptionPane.showMessageDialog(null, "Xóa sách thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 NVDD.dispose();
             }
             else{
-                JOptionPane.showMessageDialog(null, "Không tìm thấy sách để xóa", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên để xóa", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         if (evt.equals("Đóng")) {

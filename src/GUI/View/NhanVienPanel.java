@@ -64,6 +64,7 @@ public class NhanVienPanel extends JPanel{
         };
                 
         tableNV = new JTable(dataNV);
+        tableNV.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         // Thêm dữ liệu từ bảng nhân viên vào Frame
         for(NhanVienDTO nv: listNV){
             String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
