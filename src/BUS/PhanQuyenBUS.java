@@ -170,6 +170,16 @@ public  String getTenquyenbyid(int id){
      return result;
  }
 
+public int getIdquyenbyTen(String tenquyen) {
+    for (NhomQuyenDTO nq : listNhomQuyen) {
+        if (nq.getTennhomquyen().equalsIgnoreCase(tenquyen)) {
+            return nq.getManhomquyen();
+        }
+    }
+    return -1; // hoặc throw exception nếu không tìm thấy
+}
+
+
 
  
 

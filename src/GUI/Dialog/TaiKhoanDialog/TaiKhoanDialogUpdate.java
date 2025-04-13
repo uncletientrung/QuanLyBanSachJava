@@ -1,9 +1,12 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.Dialog.TaiKhoanDialog;
 
+import BUS.PhanQuyenBUS;
+import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 import GUI.View.TaiKhoanPanel;
 import java.awt.BorderLayout;
@@ -17,6 +20,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -26,165 +30,155 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-/**
- *
- * @author Hi
- */
-public class TaiKhoanDialogUpdate extends JDialog{
-    private JTextField txTenTaiKhoan,txMatKhau,txNhomQuyen,txMaNhanVien;
-    String[] trangThaiOptions = {"Còn xài được", "Hết đát"};
-    JComboBox<String> comboBoxTrangThai;
-
+public class TaiKhoanDialogUpdate extends JDialog {
+    private JTextField txTenTaiKhoan, txMatKhau, txMaNhanVien;
+    private JComboBox<String> comboBoxTrangThai;
+    private JComboBox<String> comboBoxNhomQuyen;
     private TaiKhoanPanel tkPanel;
     private JButton btnXacNhan, btnHuy;
-    private TaiKhoanDTO taiKhoanHienTai; // tao bien de lay doi tuong hien tai dang chon
-    
-    public TaiKhoanDialogUpdate(JFrame parent, TaiKhoanPanel tkPanel,TaiKhoanDTO taiKhoan){
+    private TaiKhoanDTO taiKhoanHienTai;
+
+    public TaiKhoanDialogUpdate(JFrame parent, TaiKhoanPanel tkPanel, TaiKhoanDTO taiKhoan) {
         super(parent, "Sửa tài khoản", true);
         this.tkPanel = tkPanel;
-        this.taiKhoanHienTai = taiKhoan; // Lưu lại đối tượng nhóm quyền hiện tại
+        this.taiKhoanHienTai = taiKhoan;
         setSize(500, 450);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
-        // ======= Tiêu đề =======
         JLabel titleLabel = new JLabel("SỬA TÀI KHOẢN", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
 
         JPanel titlePanel = new JPanel();
-        titlePanel.setBackground(new Color(41, 128, 185)); // Xanh dương
+        titlePanel.setBackground(new Color(41, 128, 185));
         titlePanel.add(titleLabel);
 
-        // ======= Panel nhập liệu =======
         JPanel pn_input = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        // Label tài khoản
+
         JLabel lb_ma = new JLabel("Mã nhân viên:");
         lb_ma.setFont(new Font("Arial", Font.BOLD, 14));
         txMaNhanVien = new JTextField(20);
         txMaNhanVien.setPreferredSize(new Dimension(200, 30));
-        txMaNhanVien.setEditable(false); // Không cho sửa
+        txMaNhanVien.setEditable(false);
         txMaNhanVien.setBackground(Color.LIGHT_GRAY);
 
-        // Label Tên tk
         JLabel lb_ten = new JLabel("Tên tài khoản:");
         lb_ten.setFont(new Font("Arial", Font.BOLD, 14));
         txTenTaiKhoan = new JTextField(20);
         txTenTaiKhoan.setPreferredSize(new Dimension(200, 30));
-        
-        // lable mk
+
         JLabel lb_mk = new JLabel("Mật khẩu:");
         lb_mk.setFont(new Font("Arial", Font.BOLD, 14));
         txMatKhau = new JTextField(20);
         txMatKhau.setPreferredSize(new Dimension(200, 30));
-        //lb nhom quyen
-        JLabel lb_nq = new JLabel("Mã nhóm quyền:");
+
+        JLabel lb_nq = new JLabel("Nhóm quyền:");
         lb_nq.setFont(new Font("Arial", Font.BOLD, 14));
-        txNhomQuyen = new JTextField(20);
-        txNhomQuyen.setPreferredSize(new Dimension(200, 30));
-        //lbtrang thai
-        JLabel lb_trangthai = new JLabel("Trạng thái:");
-        lb_trangthai.setFont(new Font("Arial", Font.BOLD, 14));
-        comboBoxTrangThai = new JComboBox<>(trangThaiOptions);
-        comboBoxTrangThai.setPreferredSize(new Dimension(200, 30));
-        
-        // Hiển thị dữ liệu từ taiKhoan
+        comboBoxNhomQuyen = new JComboBox<>();
+        comboBoxNhomQuyen.setPreferredSize(new Dimension(200, 30));
+
         txMaNhanVien.setText(String.valueOf(taiKhoan.getManv()));
         txTenTaiKhoan.setText(taiKhoan.getUsername());
         txMatKhau.setText(taiKhoan.getMatkhau());
-        txNhomQuyen.setText(String.valueOf(taiKhoan.getManhomquyen()));
+        PhanQuyenBUS phanQuyenBUS = new PhanQuyenBUS();
+        ArrayList<NhomQuyenDTO> danhSachTenNhomQuyen = phanQuyenBUS.getNhomQuyenAll();
+        for (NhomQuyenDTO q : danhSachTenNhomQuyen) {
+            comboBoxNhomQuyen.addItem(q.getTennhomquyen());
+        }
+        String tenHienTai = phanQuyenBUS.getTenquyenbyid(taiKhoan.getManhomquyen());
+        comboBoxNhomQuyen.setSelectedItem(tenHienTai);
+
+        JLabel lb_trangthai = new JLabel("Trạng thái:");
+        lb_trangthai.setFont(new Font("Arial", Font.BOLD, 14));
+        String[] trangThaiOptions = {"Còn xài được", "Hết đát"};
+        comboBoxTrangThai = new JComboBox<>(trangThaiOptions);
+        comboBoxTrangThai.setPreferredSize(new Dimension(200, 30));
         if (taiKhoan.getTrangthai() == 1) {
             comboBoxTrangThai.setSelectedItem("Còn xài được");
         } else {
             comboBoxTrangThai.setSelectedItem("Hết đát");
         }
-        comboBoxTrangThai.setSelectedItem(taiKhoan.getTrangthai());
 
-        // Thêm vào panel
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
         pn_input.add(lb_ma, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
         pn_input.add(txMaNhanVien, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.3;
         pn_input.add(lb_ten, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
         pn_input.add(txTenTaiKhoan, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.3;
         pn_input.add(lb_mk, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
         pn_input.add(txMatKhau, gbc);
-        
+
         gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.3;
         pn_input.add(lb_nq, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
-        pn_input.add(txNhomQuyen, gbc);
-        
+        pn_input.add(comboBoxNhomQuyen, gbc);
+
         gbc.gridx = 0; gbc.gridy = 4; gbc.weightx = 0.3;
         pn_input.add(lb_trangthai, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
         pn_input.add(comboBoxTrangThai, gbc);
 
-        // ======= Panel nút bấm =======
         JPanel pn_button = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        btnXacNhan = createButton("Lưu thông tin", new Color(46, 204, 113)); // Xanh lá
-        btnHuy = createButton("Hủy", new Color(231, 76, 60)); // Đỏ
+        btnXacNhan = createButton("Lưu thông tin", new Color(46, 204, 113));
+        btnHuy = createButton("Hủy", new Color(231, 76, 60));
 
         pn_button.add(btnXacNhan);
         pn_button.add(btnHuy);
 
-        // ======= Thêm vào dialog =======
         add(titlePanel, BorderLayout.NORTH);
         add(pn_input, BorderLayout.CENTER);
         add(pn_button, BorderLayout.SOUTH);
 
-        // Xử lý sự kiện nút "Hủy"
         btnHuy.addActionListener(e -> dispose());
-        
     }
-    
+
     public String getMaNhanVien() {
         return txMaNhanVien.getText().trim();
     }
-    
-    public String getTenTaiKhoan(){
+
+    public String getTenTaiKhoan() {
         return txTenTaiKhoan.getText().trim();
     }
-    
-    public String getMk(){
+
+    public String getMk() {
         return txMatKhau.getText().trim();
     }
-    
-    public String getNhomquyen(){
-        return txNhomQuyen.getText().trim();
+
+    public String getNhomquyen() {
+        String ten = (String) comboBoxNhomQuyen.getSelectedItem();
+        PhanQuyenBUS pqBus = new PhanQuyenBUS();
+        int ma = pqBus.getIdquyenbyTen(ten);
+        return String.valueOf(ma);
     }
-    
-    public String getTrangThai(){
+
+    public String getTrangThai() {
         return (String) comboBoxTrangThai.getSelectedItem();
     }
 
     public void setController(TaiKhoanDialogUpdate_Controller controller) {
         btnXacNhan.addActionListener(controller);
     }
+
     public TaiKhoanPanel getTkPanel() {
         return tkPanel;
     }
+
     public TaiKhoanDTO getTaiKhoanCanSua() {
-       return taiKhoanHienTai;
-}
+        return taiKhoanHienTai;
+    }
 
-    
-
-
-      
-     // ======= Tạo button đồng bộ với phong cách UI =======
     private JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text) {
             @Override
@@ -192,16 +186,15 @@ public class TaiKhoanDialogUpdate extends JDialog{
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Xác định màu nền dựa trên trạng thái của button
                 Color actualBgColor = bgColor;
                 if (getModel().isPressed()) {
-                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                    actualBgColor = bgColor.darker();
                 } else if (getModel().isRollover()) {
-                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                    actualBgColor = bgColor.brighter();
                 }
-                // Vẽ bo tròn góc cho nút
+
                 g2.setColor(actualBgColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
 
                 super.paintComponent(g2);
                 g2.dispose();
@@ -217,5 +210,4 @@ public class TaiKhoanDialogUpdate extends JDialog{
 
         return button;
     }
-    
 }

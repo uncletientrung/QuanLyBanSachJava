@@ -37,7 +37,6 @@ public class TaiKhoanPanel extends JPanel{
     private JTextField txfind;
     private Boolean checkTimkiem=false;
     private WorkFrame workFrame;
-    public ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
     public PhanQuyenBUS pqBUS;
     
     
@@ -139,6 +138,7 @@ public class TaiKhoanPanel extends JPanel{
         //them du lieu vao bang GUI
         
         pqBUS= new PhanQuyenBUS();
+        ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
         for(TaiKhoanDTO tk: listTaiKhoan){
             String trangthai="";
             if(tk.getTrangthai()==0){
@@ -229,6 +229,7 @@ public class TaiKhoanPanel extends JPanel{
     tableTaiKhoan.setRowCount(0); // Xóa bảng cũ
     
     pqBUS= new PhanQuyenBUS();
+    ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
         for(TaiKhoanDTO tk: listTaiKhoan){
             String trangthai="";
             if(tk.getTrangthai()==0){
@@ -247,8 +248,9 @@ public class TaiKhoanPanel extends JPanel{
 
 //load lai du lieu khi moi them vo
     public void loadData() {
-    listTaiKhoan = new TaiKhoanBUS().getTaiKhoanAll(); // Lấy danh sách mới
-    capNhatBang(listTaiKhoan); // Cập nhật lại bảng
+        ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
+        
+        capNhatBang(listTaiKhoan); // Cập nhật lại bảng
 }
     
     //hàm kiểm tra coi dòng trong bảng có được click chọn hay không để sửa
@@ -269,7 +271,8 @@ public class TaiKhoanPanel extends JPanel{
         int maNV = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhóm quyền
         String username = (String) table.getValueAt(selectedRow, 1); // Lấy tên nhóm quyền
         String mk = (String) table.getValueAt(selectedRow,2);
-        int manhomquyen= (int) table.getValueAt(selectedRow, 3);
+        String tenQuyen = (String) table.getValueAt(selectedRow, 3);
+        int manhomquyen = pqBUS.getIdquyenbyTen(tenQuyen);
         String trangthaistring= (String) table.getValueAt(selectedRow, 4);
         if(trangthaistring.equals("Còn xài được")){
             int trangthai=1;

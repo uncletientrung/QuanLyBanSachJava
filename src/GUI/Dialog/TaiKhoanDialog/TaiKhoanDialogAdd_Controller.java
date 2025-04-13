@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.Dialog.TaiKhoanDialog;
+import BUS.PhanQuyenBUS;
 import BUS.TaiKhoanBUS;
 import GUI.View.TaiKhoanPanel;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ public class TaiKhoanDialogAdd_Controller implements ActionListener{
     private TaiKhoanDialogAdd TKDA;
     private TaiKhoanBUS TKBUS = new TaiKhoanBUS();
     private final TaiKhoanPanel TKPanel;
+    private PhanQuyenBUS pqBUS= new PhanQuyenBUS();
     
     public TaiKhoanDialogAdd_Controller(TaiKhoanDialogAdd TKDA,TaiKhoanPanel TKPanel){
         this.TKDA =TKDA;
@@ -28,7 +30,8 @@ public class TaiKhoanDialogAdd_Controller implements ActionListener{
         if (e.getActionCommand().equals("Thêm dữ liệu")) {
         String tendangnhap = TKDA.getTenDangNhap();
         String mk = TKDA.getMatKhau();
-        String inputquyen = TKDA.getNhomQuyen();
+        String inputquyen = TKDA.getTenQuyen();
+        
         
         
         if (tendangnhap.isEmpty()) {
@@ -44,7 +47,7 @@ public class TaiKhoanDialogAdd_Controller implements ActionListener{
             return;
         }
         try {
-        int quyen = Integer.parseInt(inputquyen); // Chuyển đổi thành số nguyên
+        int quyen = pqBUS.getIdquyenbyTen(inputquyen); // Chuyển đổi thành số nguyên
             // Tiếp tục xử lý với quyen...
              try {
                     Boolean result = TKBUS.themTaiKhoan(tendangnhap,mk,quyen);
