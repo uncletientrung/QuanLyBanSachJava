@@ -9,6 +9,8 @@ import BUS.NhanVienBUS;
 import java.awt.*;
 import javax.swing.*;
 import BUS.PhieuXuatBUS;
+import DTO.KhachHangDTO;
+import DTO.NhanVienDTO;
 import DTO.PhieuXuatDTO;
 import GUI.Controller.PhieuXuatController;
 import GUI.WorkFrame;
@@ -21,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.border.Border;
 
+
 /**
  *
  * @author DELL
@@ -28,8 +31,6 @@ import javax.swing.border.Border;
 public class PhieuXuatPanel extends JPanel {
     public ArrayList<PhieuXuatDTO> listPx;
     private PhieuXuatBUS pxBUS;
-    private JTextField txfNhanVien; // Tìm kiếm nhân viên
-    private JTextField txfKhach; // Tìm kiếm khách hàng
     private JDateChooser dateStart; // Ngày bắt đầu
     private JDateChooser dateEnd;   // Ngày kết thúc
     private JTextField txfPriceStart; // Giá bắt đầu
@@ -42,6 +43,10 @@ public class PhieuXuatPanel extends JPanel {
     private JPanel PanelCenter;
     private JScrollPane SPPhieuXuat;
     private JTabbedPane tabbedPane;
+    private ArrayList<String> listCBB_NV;
+    private ArrayList<String> listCBB_KH;
+    private JComboBox<String> cbb_nv;
+    private JComboBox<String> cbb_kh;
     
     public PhieuXuatPanel() {
         // Tạo Panel toolBar cho thanh công cụ trên cùng
@@ -78,17 +83,17 @@ public class PhieuXuatPanel extends JPanel {
 
         // Hàng 1: Nhân viên, Ngày bắt đầu, Ngày kết thúc
         JLabel lblEmployee = new JLabel("Nhân viên:");
-        txfNhanVien = new JTextField("");
-        txfNhanVien.setPreferredSize(new Dimension(120, 30)); // Tăng kích thước để tận dụng không gian
-
+        cbb_nv=new JComboBox<String>(getListNameNV().toArray(new String[0]));   // Jcombobox không nhân ArrayList chỉ nhận kiểu String[]
+        cbb_nv.setPreferredSize(new Dimension(120, 30)); 
+        
         JLabel lblDateStart = new JLabel("Từ:");
         dateStart = new JDateChooser();
-        dateStart.setPreferredSize(new Dimension(100, 30)); // Thu nhỏ để vừa đủ hiển thị ngày tháng năm
+        dateStart.setPreferredSize(new Dimension(100, 30)); 
         dateStart.setDateFormatString("dd-MM-yyyy");
 
         JLabel lblDateEnd = new JLabel("Đến:");
         dateEnd = new JDateChooser();
-        dateEnd.setPreferredSize(new Dimension(100, 30)); // Thu nhỏ để vừa đủ hiển thị ngày tháng năm
+        dateEnd.setPreferredSize(new Dimension(100, 30)); 
         dateEnd.setDateFormatString("dd-MM-yyyy");
 
         // Thêm vào toolBar_Right (Hàng 1)
@@ -103,7 +108,7 @@ public class PhieuXuatPanel extends JPanel {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        toolBar_Right.add(txfNhanVien, gbc);
+        toolBar_Right.add(cbb_nv, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 0;
@@ -135,8 +140,8 @@ public class PhieuXuatPanel extends JPanel {
 
         // Hàng 2: Khách hàng, Tổng tiền từ, Đến
         JLabel lblCustomer = new JLabel("Khách hàng:");
-        txfKhach = new JTextField("");
-        txfKhach.setPreferredSize(new Dimension(120, 30)); // Tăng kích thước để tận dụng không gian
+        cbb_kh=new JComboBox<>(getListNameKH().toArray(new String[0]));
+        cbb_kh.setPreferredSize(new Dimension(120, 30)); // Tăng kích thước để tận dụng không gian
 
         JLabel lblPriceStart = new JLabel("Giá từ:");
         txfPriceStart = new JTextField("");
@@ -158,7 +163,7 @@ public class PhieuXuatPanel extends JPanel {
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        toolBar_Right.add(txfKhach, gbc);
+        toolBar_Right.add(cbb_kh, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 1;
@@ -308,15 +313,6 @@ public class PhieuXuatPanel extends JPanel {
         this.tabbedPane = tabbedPane;
     }
 
-    // Thêm các getter cho các thành phần tìm kiếm
-    public JTextField getTxfNhanVien() {
-        return txfNhanVien;
-    }
-
-    public JTextField getTxfKhach() {
-        return txfKhach;
-    }
-
     public JDateChooser getDateStart() {
         return dateStart;
     }
@@ -331,5 +327,27 @@ public class PhieuXuatPanel extends JPanel {
 
     public JTextField getTxfPriceEnd() {
         return txfPriceEnd;
+    }
+    public ArrayList<String> getListNameNV(){
+        nvBUS=new NhanVienBUS();
+        ArrayList<NhanVienDTO> list_Nv=nvBUS.getNVAll();
+        listCBB_NV=new ArrayList<>();
+        listCBB_NV.add("Tất cả");
+        for(NhanVienDTO nv:list_Nv){
+            String FullName=nvBUS.getHoTenNVById(nv.getManv());
+            listCBB_NV.add(FullName);
+        }
+        return  listCBB_NV;
+    }
+    public ArrayList<String> getListNameKH(){
+        khBUS=new KhachHangBUS();
+        ArrayList<KhachHangDTO> list_Kh=khBUS.getKhachHangAll();
+        listCBB_KH=new ArrayList<>();
+        listCBB_KH.add("Tất cả");
+        for(KhachHangDTO kh: list_Kh){
+            String FullName=khBUS.getFullNameKHById(kh.getMakh());
+            listCBB_KH.add(FullName);
+        }
+        return  listCBB_KH;
     }
 }

@@ -123,7 +123,6 @@ public class DangNhapFrame extends JFrame {
 
         TaiKhoanDTO taiKhoan = tkBUS.dangNhap(username, matkhau);
         if (taiKhoan != null) {
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
             WorkFrame workFrame = new WorkFrame(taiKhoan);
             workFrame.setVisible(true);
             dispose();
