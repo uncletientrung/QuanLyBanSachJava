@@ -118,7 +118,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfSoLuong = new javax.swing.JTextField();
         lbGiaBan = new javax.swing.JLabel();
         txfGiaBan = new javax.swing.JTextField();
-        btnThemChiTiet = new javax.swing.JButton();
+        btnThemChiTiet = createButton("Thêm", new Color(76, 175, 80)); // Xánh lá chuối
         lbListBan = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableListBan = new javax.swing.JTable();
@@ -128,8 +128,8 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfGiamGia = new javax.swing.JTextField();
         lbThanhToan = new javax.swing.JLabel();
         txfThanhToan = new javax.swing.JTextField();
-        btnThemPhieu = createButton("Thêm phiếu", new Color(76, 175, 80));
-        btnSua = new javax.swing.JButton();
+        btnThemPhieu = createButton("Thêm phiếu", new Color(76, 175, 80)); // Xánh lá chuối
+        btnSua = createButton("Sửa", new Color(255,191,0)); // Vàng
         jSeparator3 = new javax.swing.JSeparator();
         lbTenSachV2 = new javax.swing.JLabel();
         txfTenSachV2 = new javax.swing.JTextField();
@@ -139,8 +139,8 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfDonGiaV2 = new javax.swing.JTextField();
         lbThanhTienV2 = new javax.swing.JLabel();
         txfThanhTienV2 = new javax.swing.JTextField();
-        btnXoaV2 = new javax.swing.JButton();
-        BtnXoaAllV2 = new javax.swing.JButton();
+        btnXoaV2 = createButton("Xóa", new Color(244, 67, 54)); // Màu đỏ
+        BtnXoaAllV2 = createButton("Xóa tất cả", new Color(244, 67, 54));
         lbSDT = new javax.swing.JLabel();
         txfSDT = new javax.swing.JTextField();
 
@@ -226,6 +226,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfGiaBan.setEditable(false);
 
         btnThemChiTiet.setText("Thêm");
+        btnThemChiTiet.setFont(new Font("Arial", Font.BOLD, 24));
         btnThemChiTiet.setPreferredSize(new Dimension(200, 46));
 
         lbListBan.setFont(new java.awt.Font("Segoe UI", 0, 24));
@@ -638,7 +639,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font("Arial", Font.BOLD, 12));
 
         return button;
     }
