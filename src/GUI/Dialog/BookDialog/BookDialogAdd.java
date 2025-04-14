@@ -3,9 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.Dialog.BookDialog;
+import BUS.NhaXuatBanBUS;
+import BUS.TacGiaBUS;
+import BUS.TheLoaiBUS;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 /**
  *
  * @author DELL
@@ -13,7 +17,11 @@ import java.awt.event.ActionListener;
 
  */
 public class BookDialogAdd extends JDialog {
-    private JTextField txfTensach,txfManxb,txfMatacgia,txfMatheloai,txfSoluong,txfNamxuatban,txfDongia;
+    private JTextField txfTensach,txfSoluong,txfNamxuatban,txfDongia;
+    private JComboBox<String> cbb_NXB,cbb_TG,cbb_TL;
+    private NhaXuatBanBUS nxbBUS=new NhaXuatBanBUS();
+    private TacGiaBUS tgBUS=new TacGiaBUS();
+    private TheLoaiBUS tlBUS=new TheLoaiBUS();
     public BookDialogAdd(JFrame parent) {
         super(parent, "Danh mục thêm sách", true);
 
@@ -48,20 +56,23 @@ public class BookDialogAdd extends JDialog {
 
         // Các Label và TextField (giữ nguyên tên biến)
         JLabel lbTensach = new JLabel("Tên sách:");        lbTensach.setFont(labelFont);
-        JLabel lbManxb = new JLabel("Mã NXB:");            lbManxb.setFont(labelFont);
-        JLabel lbMatacgia = new JLabel("Mã tác giả:");     lbMatacgia.setFont(labelFont);
-        JLabel lbMatheloai = new JLabel("Mã thể loại:");  lbMatheloai.setFont(labelFont);
+        JLabel lbManxb = new JLabel("Nhà xuất bản:");            lbManxb.setFont(labelFont);
+        JLabel lbMatacgia = new JLabel("Tác giả:");     lbMatacgia.setFont(labelFont);
+        JLabel lbMatheloai = new JLabel("Thể loại:");  lbMatheloai.setFont(labelFont);
         JLabel lbSoluong = new JLabel("Số lượng:");        lbSoluong.setFont(labelFont);
         JLabel lbNamxuatban = new JLabel("Năm xuất bản:"); lbNamxuatban.setFont(labelFont);
         JLabel lbDongia = new JLabel("Đơn giá:");          lbDongia.setFont(labelFont);
 
         txfTensach = createTextField(fieldFont);
-        txfManxb = createTextField(fieldFont);
-        txfMatacgia = createTextField(fieldFont);
-        txfMatheloai = createTextField(fieldFont);
         txfSoluong = createTextField(fieldFont);
         txfNamxuatban = createTextField(fieldFont);
         txfDongia = createTextField(fieldFont);
+        
+        // Tạo các Combox nxb
+        cbb_NXB=createComboBox(fieldFont, nxbBUS.getAllNameNXB().toArray(new String[0]));
+        cbb_TG=createComboBox(fieldFont, tgBUS.getAllNameTG().toArray(new String[0]));
+        cbb_TL=createComboBox(fieldFont, tlBUS.getAllNameTL().toArray(new String[0]));
+        
 
         // Cột 1 - Labels
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
@@ -76,10 +87,10 @@ public class BookDialogAdd extends JDialog {
         // Cột 2 - TextFields
         gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.7; gbc.fill = GridBagConstraints.HORIZONTAL;
         formPanel.add(txfTensach, gbc);
-        gbc.gridy++; formPanel.add(txfManxb, gbc);
-        gbc.gridy++; formPanel.add(txfMatacgia, gbc);
-        gbc.gridy++; formPanel.add(txfMatheloai, gbc);
-        gbc.gridy++; formPanel.add(txfSoluong, gbc);
+        gbc.gridy++; formPanel.add(cbb_NXB, gbc);
+        gbc.gridy++; formPanel.add(cbb_TG, gbc);
+        gbc.gridy++; formPanel.add(cbb_TL, gbc);
+        gbc.gridy++; formPanel.add(txfSoluong, gbc);    
         gbc.gridy++; formPanel.add(txfNamxuatban, gbc);
         gbc.gridy++; formPanel.add(txfDongia, gbc);
 
@@ -116,6 +127,15 @@ public class BookDialogAdd extends JDialog {
             BorderFactory.createEmptyBorder(5, 10, 5, 10)));
         return textField;
     }
+    private JComboBox<String> createComboBox(Font font, String[] items) {
+    JComboBox<String> comboBox = new JComboBox<>(items);
+    comboBox.setFont(font);
+    comboBox.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(180, 180, 180)),
+        BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+    comboBox.setBackground(Color.WHITE);
+    return comboBox;
+}
 
     private JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text) {
@@ -150,18 +170,19 @@ public class BookDialogAdd extends JDialog {
         return button;
     }
     public JTextField getTxfTensach() {return txfTensach;}
-    public JTextField getTxfManxb() {return txfManxb;}
-    public JTextField getTxfMatacgia() { return txfMatacgia;}
-    public JTextField getTxfMatheloai() {return txfMatheloai;}
     public JTextField getTxfSoluong() { return txfSoluong;}
     public JTextField getTxfNamxuatban() { return txfNamxuatban; }
     public JTextField getTxfDongia() {return txfDongia;}
+    public JComboBox<String> getCbb_TG() {return cbb_TG;}
+    public JComboBox<String> getCbb_TL() {return cbb_TL;}
+    public JComboBox<String> getCbb_NXB() {return cbb_NXB; }
+
     
     public void ClearTextField(){
         txfTensach.setText("");
-        txfManxb.setText("");
-        txfMatacgia.setText("");
-        txfMatheloai.setText("");
+        cbb_NXB.setSelectedIndex(0);
+        cbb_TG.setSelectedIndex(0);
+        cbb_TL.setSelectedIndex(0);
         txfSoluong.setText("");
         txfNamxuatban.setText("");
         txfDongia.setText(""); 

@@ -102,20 +102,14 @@ public void actionPerformed(ActionEvent e){
     }
     if (sukien.equals("Xóa")){
         JTable tableB = bf.getTable();
+        sachBUS=new SachBUS();
         int selectRow = tableB.getSelectedRow();
         
         if (selectRow==-1){
             JOptionPane.showMessageDialog(null, "Hãy chọn một cuốn sách!", "Thông báo", JOptionPane.ERROR_MESSAGE);
         }else{
             String maSach = tableB.getValueAt(selectRow, 0).toString();
-            String tenSach = tableB.getValueAt(selectRow, 1).toString();
-            String maNxb = tableB.getValueAt(selectRow, 2).toString();
-            String maTacgia = tableB.getValueAt(selectRow, 3).toString();
-            String matheloai = tableB.getValueAt(selectRow, 4).toString();
-            String soluongton = tableB.getValueAt(selectRow, 5).toString();
-            String namxuatban = tableB.getValueAt(selectRow, 6).toString();
-            String dongia = tableB.getValueAt(selectRow, 7).toString();
-            bddelete=new BookDialogDelete(wk,maSach);
+            bddelete=new BookDialogDelete(wk,sachBUS.getSachById(Integer.parseInt(maSach)));
             bf.refreshTableData();
         }
     }

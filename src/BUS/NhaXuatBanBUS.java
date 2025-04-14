@@ -168,5 +168,11 @@ public class NhaXuatBanBUS {
         }
         return result;
     }
-    
+    public ArrayList<String> getAllNameNXB(){
+        ArrayList<String> result=new ArrayList<>();
+        for(NhaXuatBanDTO nxb: listNhaXuatBan){
+            result.add(nxb.getTennxb());
+        }
+        return result;
+    }
 }

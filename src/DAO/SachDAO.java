@@ -50,14 +50,15 @@ public class SachDAO implements  DAOInterface<SachDTO>{
         int result=0;
         try{
             Connection con= (Connection) JDBCUtil.getConnection();
-            String sql="Update sach Set tensach= ? , manxb= ? ,  matacgia= ? , matheloai = ? , namxuatban= ? Where masach= ? ";
+            String sql="Update sach Set tensach= ? , manxb= ? ,  matacgia= ? , matheloai = ? , namxuatban= ? , dongia=? Where masach= ? ";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
             pst.setString(1, sach.getTensach());
             pst.setInt(2, sach.getManxb());
             pst.setInt(3, sach.getMatacgia());
             pst.setInt(4, sach.getMatheloai());
             pst.setString(5, sach.getNamxuatban());
-            pst.setInt(6, sach.getMasach());
+            pst.setInt(6, sach.getDongia());
+            pst.setInt(7, sach.getMasach());
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch(Exception e){

@@ -34,13 +34,22 @@ public class SachBUS {
         SachDTO result=new SachDTO();
         for(SachDTO sach: listSach){
             if(sach.getMasach() == maSach){
-                return sach;
+                
+                result=sach;
+                return result;
             }
         }
-        return null;
+        return result;
     }
     public Boolean updateSach_DB(SachDTO sach){ //Update sách lên database kết hợp với hàm updateByID_List
         boolean result=sDAO.update(sach) !=0;
+        if(result){ // Nếu update đc database sẽ update lên mảng Array
+            for(int i=0;i<listSach.size()-1;i++){
+                if(listSach.get(i).getMasach()==sach.getMasach()){
+                    listSach.set(i,sach);
+                }
+            }
+        }
         return result;
     }
     public Boolean deleteById(int masach){ // Xóa trong List lẫn trong Database

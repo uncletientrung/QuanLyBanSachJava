@@ -24,7 +24,7 @@ public class BookDialogDelete_Controller implements ActionListener{
     public void actionPerformed(ActionEvent e){
         String sukien=e.getActionCommand();
         if(sukien.equals("Xóa")){
-            Boolean result=new SachBUS().deleteById(Integer.parseInt(BDD.getMasach()));
+            Boolean result=new SachBUS().deleteById(BDD.getsDTO().getMasach());
             if(result){
                 JOptionPane.showMessageDialog(null, "Xóa sách thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 BDD.dispose();

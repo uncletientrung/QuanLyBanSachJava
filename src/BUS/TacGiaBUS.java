@@ -95,6 +95,13 @@ public class TacGiaBUS {
         }
         return result;
     }
+    public ArrayList<String> getAllNameTG(){
+        ArrayList<String> result=new ArrayList<>();
+        for(TacGiaDTO nxb: listTacGia){
+            result.add(nxb.getHotentacgia());
+        }
+        return result;
+    }
 
     
 }

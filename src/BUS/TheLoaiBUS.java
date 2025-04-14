@@ -85,6 +85,13 @@ public TheLoaiDTO getTlbyId(int matheloai){
         }
         return result;
     }
+    public ArrayList<String> getAllNameTL(){
+        ArrayList<String> result=new ArrayList<>();
+        for(TheLoaiDTO tl: listTheLoai){
+            result.add(tl.getTentheloai());
+        }
+        return result;
+    }
 }
 
 
