@@ -390,8 +390,6 @@ public class PhieuXuatPanel extends JPanel {
     }
     
     
-    
-    
     public ArrayList<String> getListNameNV(){
         nvBUS=new NhanVienBUS();
         ArrayList<NhanVienDTO> list_Nv=nvBUS.getNVAll();

@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import  GUI.WorkFrame;
 import GUI.View.BookPanel;
+import GUI.View.PhieuXuatPanel;
 /**
  *
  * @author DELL
@@ -34,6 +35,7 @@ public class WorkFrameController implements  ActionListener{
         wk.cardLayout.show(wk.PanelCard, "Thông tin chung");
     } if(sukien.equals("Phiếu xuất")){
         wk.cardLayout.show(wk.PanelCard, "Phiếu xuất");
+        ((PhieuXuatPanel) wk.PanelCard.getComponent(5)).refreshTablePx();
     } if(sukien.equals("Tài khoản")){
         wk.cardLayout.show(wk.PanelCard, "Tài khoản");
    

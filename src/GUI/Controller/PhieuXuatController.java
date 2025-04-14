@@ -95,6 +95,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
             PxP.getBtndetail().setVisible(true);
             PxP.getBtnexport().setVisible(true);
             PxP.getToolBar_Right().setVisible(true);
+            
             PxP.getPanelCenter().removeAll(); // Xóa ScrollPane hiện tại
             PxP.getScrollPanePhieuXuat().setViewportView(PxP.getTablePhieuXuat());
             PxP.getPanelCenter().setLayout(new GridLayout(1, 1));
@@ -107,6 +108,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
             PxP.getBtndetail().setVisible(false);
             PxP.getBtnexport().setVisible(false);
             PxP.getToolBar_Right().setVisible(false);
+            
             PxP.getPanelCenter().removeAll();// Xóa đi cái Table hiện tại
             if (PxP.getTabbedPane().getTabCount() == 0) { // Nếu chưa có tab nào thì mới tạo 
                 ThemTabAdd();
@@ -116,6 +118,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
             // Làm mới giao diện
             PxP.getPanelCenter().revalidate();
             PxP.getPanelCenter().repaint();
+            
         }
         if (sukien.equals("Chi tiết")) {
             JTable tablePX = PxP.getTablePhieuXuat();
@@ -124,6 +127,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
                 pxBUS = new PhieuXuatBUS();
                 PhieuXuatDTO phieu = pxBUS.getPXById(Integer.parseInt(tablePX.getValueAt(selectRow, 0).toString()));
                 PXDDetail = new PhieuXuatDialogDetail(WF, phieu);
+                PxP.refreshTablePx();
             } else {
                 JOptionPane.showMessageDialog(null, "Vui Lòng chọn Hóa đơn muốn xóa", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -152,9 +156,12 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
         // Thêm action cho tìm kiếm nâng cao CBB NhanVien và KhachHang
         if(!PxP.getCbb_nv().getSelectedItem().equals("Tất cả")  || !PxP.getCbb_kh().getSelectedItem().equals("Tất cả")){
             PxP.Filter();
-        }else if (PxP.getCbb_nv().getSelectedItem().equals("Tất cả")  || !PxP.getCbb_kh().getSelectedItem().equals("Tất cả")){
-            PxP.Filter();
+
+        }else if (PxP.getCbb_nv().getSelectedItem().equals("Tất cả")  && PxP.getCbb_kh().getSelectedItem().equals("Tất cả")){
+            PxP.refreshTablePx();
+
         }     
+        
     }
 
     public void ThemTabAdd() { // Thêm tab hóa đơn
