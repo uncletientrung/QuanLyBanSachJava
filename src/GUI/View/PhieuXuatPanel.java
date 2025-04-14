@@ -17,11 +17,15 @@ import GUI.WorkFrame;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
+import java.beans.PropertyChangeListener;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentListener;
 
 
 /**
@@ -47,12 +51,18 @@ public class PhieuXuatPanel extends JPanel {
     private ArrayList<String> listCBB_KH;
     private JComboBox<String> cbb_nv;
     private JComboBox<String> cbb_kh;
+    private JButton btnHome;
+    private JButton btnAdd;
+    private JButton btndelete;
+    private JButton btndetail;
+    private JButton btnexport;
+    private  JPanel toolBar_Right;
     
     public PhieuXuatPanel() {
         // Tạo Panel toolBar cho thanh công cụ trên cùng
         JPanel toolBar = new JPanel(new GridLayout(1, 2));
         JPanel toolBar_Left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
-        JPanel toolBar_Right = new JPanel(new GridBagLayout()); // Sử dụng GridBagLayout cho toàn bộ toolBar_Right
+        toolBar_Right = new JPanel(new GridBagLayout()); // Sử dụng GridBagLayout cho toàn bộ toolBar_Right
         Font font = new Font("Arial", Font.BOLD, 16);
 
         // Thêm viền cho toolBar_Right
@@ -60,17 +70,17 @@ public class PhieuXuatPanel extends JPanel {
         toolBar_Right.setBorder(border);
 
         // Tạo các nút CRUD cho JPanel toolBar_Left
-        JButton btnHome = createToolBarButton("Trang chủ", "home.png");
-        JButton btnAdd = createToolBarButton("Thêm", "insert1.png");
-        JButton btndelete = createToolBarButton("Hủy bỏ", "delete.png");
-        JButton btndetail = new JButton("Chi tiết");
+        btnHome = createToolBarButton("Trang chủ", "home.png");
+        btnAdd = createToolBarButton("Thêm", "insert1.png");
+        btndelete = createToolBarButton("Hủy bỏ", "delete.png");
+        btndetail = new JButton("Chi tiết");
         btndetail.setIcon(new ImageIcon(getClass().getResource("/GUI/Image/detail1.png")));
         btndetail.setHorizontalTextPosition(SwingConstants.CENTER);
         btndetail.setVerticalTextPosition(SwingConstants.BOTTOM);
         btndetail.setFocusPainted(false);
         btndetail.setBorderPainted(false);
         btndetail.setBackground(new Color(240, 240, 240));
-        JButton btnexport = createToolBarButton("Xuất Excel", "export_excel.png");
+        btnexport = createToolBarButton("Xuất Excel", "export_excel.png");
         btnHome.setFont(font);
         btnAdd.setFont(font);
         btndelete.setFont(font);
@@ -89,13 +99,11 @@ public class PhieuXuatPanel extends JPanel {
         JLabel lblDateStart = new JLabel("Từ:");
         dateStart = new JDateChooser();
         dateStart.setPreferredSize(new Dimension(100, 30)); 
-        dateStart.setDateFormatString("dd-MM-yyyy");
-
+        
         JLabel lblDateEnd = new JLabel("Đến:");
         dateEnd = new JDateChooser();
         dateEnd.setPreferredSize(new Dimension(100, 30)); 
-        dateEnd.setDateFormatString("dd-MM-yyyy");
-
+        
         // Thêm vào toolBar_Right (Hàng 1)
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -216,6 +224,7 @@ public class PhieuXuatPanel extends JPanel {
             String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
             dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, px.getThoigiantao(), px.getTongTien(), trangThai});
         }
+        
         // Tạo renderer để căn giữa dữ liệu trong TableBook
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -244,6 +253,7 @@ public class PhieuXuatPanel extends JPanel {
 
         toolBar.add(toolBar_Left);
         toolBar.add(toolBar_Right);
+        
         PanelCenter = new JPanel();
         PanelCenter.setLayout(new GridLayout(1, 1));
         PanelCenter.add(SPPhieuXuat);
@@ -252,17 +262,35 @@ public class PhieuXuatPanel extends JPanel {
         add(toolBar, BorderLayout.NORTH);
         add(PanelCenter, BorderLayout.CENTER);
         
-
+        // Thêm ActionListener
         ActionListener action = new PhieuXuatController(this, Wf);
         btnAdd.addActionListener(action);
         btndetail.addActionListener(action);
         btndelete.addActionListener(action);
         btnexport.addActionListener(action);
         btnHome.addActionListener(action);
-        
-        
+        // Thêm ChangedListner
         tabbedPane = new JTabbedPane();
         tabbedPane.addChangeListener((ChangeListener)action);
+        
+        // Thêm DocumentListener cho Price và add Action cho 2cbbox và JdateChosser
+        txfPriceStart.getDocument().addDocumentListener((DocumentListener) action);
+        txfPriceEnd.getDocument().addDocumentListener((DocumentListener) action);
+        cbb_nv.addActionListener(action);
+        cbb_kh.addActionListener(action);
+        // Thêm PropertyChangeListener
+        dateStart.addPropertyChangeListener((PropertyChangeListener)action);
+        dateEnd.addPropertyChangeListener((PropertyChangeListener)action);
+        
+        // Sau khi thêm vào Panel set tham số kiểu in cho nó
+//        // Set định dạng in
+//        dateStart.setDateFormatString("dd-MM-yyyy");
+//        dateEnd.setDateFormatString("dd-MM-yyyy");
+        // Set ngày mặc định tìm kiếm
+        Calendar cal = Calendar.getInstance();
+        cal.set(2025, Calendar.JANUARY, 1);
+        dateStart.setDate(cal.getTime());
+
     }
     
     private JButton createToolBarButton(String text, String imageLink) {
@@ -328,6 +356,42 @@ public class PhieuXuatPanel extends JPanel {
     public JTextField getTxfPriceEnd() {
         return txfPriceEnd;
     }
+
+    public JComboBox<String> getCbb_nv() {
+        return cbb_nv;
+    }
+
+    public JComboBox<String> getCbb_kh() {
+        return cbb_kh;
+    }
+
+    public JButton getBtnAdd() {
+        return btnAdd;
+    }
+
+    public JButton getBtnHome() {
+        return btnHome;
+    }
+
+    public JButton getBtndetail() {
+        return btndetail;
+    }
+
+    public JButton getBtndelete() {
+        return btndelete;
+    }
+
+    public JButton getBtnexport() {
+        return btnexport;
+    }
+
+    public JPanel getToolBar_Right() {
+        return toolBar_Right;
+    }
+    
+    
+    
+    
     public ArrayList<String> getListNameNV(){
         nvBUS=new NhanVienBUS();
         ArrayList<NhanVienDTO> list_Nv=nvBUS.getNVAll();
@@ -349,5 +413,24 @@ public class PhieuXuatPanel extends JPanel {
             listCBB_KH.add(FullName);
         }
         return  listCBB_KH;
+    }
+    public void Filter(){
+        pxBUS=new PhieuXuatBUS();
+        String nameNV=cbb_nv.getSelectedItem().toString();
+        String nameKH=cbb_kh.getSelectedItem().toString();
+        Date dateS=dateStart.getDate();
+        Timestamp dateStart=new Timestamp(dateS.getTime());
+        Date dateE=dateEnd.getDate();
+        Timestamp dateEnd=new Timestamp(dateE.getTime());
+        String minPrice=txfPriceStart.getText().toString();
+        String maxPrice=txfPriceEnd.getText().toString();
+        ArrayList<PhieuXuatDTO> List_sort=pxBUS.Filter(nameNV, nameKH, dateStart, dateEnd, minPrice, maxPrice);
+        dataPhieuXuat.setRowCount(0);
+        for (PhieuXuatDTO px : List_sort) {  
+            String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
+            String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
+            String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, px.getThoigiantao(), px.getTongTien(), trangThai});
+        }
     }
 }

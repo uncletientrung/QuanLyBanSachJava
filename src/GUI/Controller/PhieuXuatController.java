@@ -54,24 +54,30 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
-
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.sql.Timestamp;
+import java.util.Date;
+import org.apache.poi.poifs.crypt.dsig.services.TimeStampHttpClient;
 /**
  *
  * @author DELL
  */
-public class PhieuXuatController implements ActionListener, ChangeListener {
+public class PhieuXuatController implements ActionListener, ChangeListener, DocumentListener,PropertyChangeListener{
     private PhieuXuatPanel PxP;
     private WorkFrame WF;
-    private PhieuXuatBUS pxBUS;
+    private PhieuXuatBUS pxBUS=new PhieuXuatBUS();
     private PhieuXuatDialogDelete PXDD;
     private PhieuXuatDialogDetail PXDDetail;
     private PhieuXuatDialogAdd currentPhieuXuatDialogAdd;
     private JScrollPane scrollPanePhieuXuatAdd;
     private int tabCount = 1;
     private boolean isRemoving = false;
-
+    private ArrayList<PhieuXuatDTO> listPX=pxBUS.getAll();
     public PhieuXuatController() {
     }
 
@@ -79,10 +85,16 @@ public class PhieuXuatController implements ActionListener, ChangeListener {
         this.PxP = PxP;
         this.WF = Wf;
     }
-
+// ActionListener
     public void actionPerformed(ActionEvent e) {
         String sukien = e.getActionCommand();
         if (sukien.equals("Trang chủ")) {
+            // Hiện lại các nút và Panel Tìm kiếm khi về trang chủ
+            PxP.getBtndelete().setVisible(true); 
+            PxP.getBtndelete().setVisible(true);
+            PxP.getBtndetail().setVisible(true);
+            PxP.getBtnexport().setVisible(true);
+            PxP.getToolBar_Right().setVisible(true);
             PxP.getPanelCenter().removeAll(); // Xóa ScrollPane hiện tại
             PxP.getScrollPanePhieuXuat().setViewportView(PxP.getTablePhieuXuat());
             PxP.getPanelCenter().setLayout(new GridLayout(1, 1));
@@ -90,7 +102,12 @@ public class PhieuXuatController implements ActionListener, ChangeListener {
             PxP.refreshTablePx();
         }
         if (sukien.equals("Thêm")) {
-             PxP.getPanelCenter().removeAll();// Xóa đi cái Table hiện tại
+            PxP.getBtndelete().setVisible(false); 
+            PxP.getBtndelete().setVisible(false);
+            PxP.getBtndetail().setVisible(false);
+            PxP.getBtnexport().setVisible(false);
+            PxP.getToolBar_Right().setVisible(false);
+            PxP.getPanelCenter().removeAll();// Xóa đi cái Table hiện tại
             if (PxP.getTabbedPane().getTabCount() == 0) { // Nếu chưa có tab nào thì mới tạo 
                 ThemTabAdd();
                 ThemTabPlus();
@@ -131,6 +148,13 @@ public class PhieuXuatController implements ActionListener, ChangeListener {
                 System.err.println("Lỗi đọc file Excel: " + ex.getMessage());
             }
         }
+        
+        // Thêm action cho tìm kiếm nâng cao CBB NhanVien và KhachHang
+        if(!PxP.getCbb_nv().getSelectedItem().equals("Tất cả")  || !PxP.getCbb_kh().getSelectedItem().equals("Tất cả")){
+            PxP.Filter();
+        }else if (PxP.getCbb_nv().getSelectedItem().equals("Tất cả")  || !PxP.getCbb_kh().getSelectedItem().equals("Tất cả")){
+            PxP.Filter();
+        }     
     }
 
     public void ThemTabAdd() { // Thêm tab hóa đơn
@@ -200,7 +224,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener {
         int totalTabs = tabbedPane.getTabCount();
         return totalTabs > 2;
     }
-
+// ChangedListener
     @Override
     public void stateChanged(ChangeEvent e) { // Action chuyển động các tab
         if (isRemoving) return;
@@ -353,6 +377,31 @@ public class PhieuXuatController implements ActionListener, ChangeListener {
                     JOptionPane.ERROR_MESSAGE);
         } finally {
             wb.close();
+        }
+    }
+    // DocumentListener
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        PxP.Filter();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        PxP.Filter();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        PxP.Filter();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        // Thêm action cho tìm kiếm nâng cao 2 cái datez
+        if(PxP.getDateStart().getDate()!=null){
+            PxP.Filter();
+        }else{
+            PxP.Filter();
         }
     }
 }
