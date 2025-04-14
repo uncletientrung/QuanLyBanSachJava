@@ -13,9 +13,6 @@ public class PhieuNhapDTO extends PhieuDTO {
         this.mancc = mancc;
     }
     
-    
-
-    
     public int getMancc() {
         return mancc;
     }
@@ -48,7 +45,7 @@ public class PhieuNhapDTO extends PhieuDTO {
         return "PhieuNhapDTO{" +
                 "maphieu=" + getMaphieu() +
                 ", manv=" + getManv() +
-                ", mancc=" + mancc +
+                ", mancc=" + getMancc() +
                 ", thoigiantao=" + getThoigiantao() +
                 ", tongTien=" + getTongTien() +
                 ", trangthai=" + getTrangthai() +

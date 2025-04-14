@@ -59,20 +59,21 @@ public class PhieuNhapDialogDetail extends JDialog{
         infoPanel.add(createLabel("Thời gian tạo"));
         infoPanel.add(createLabel("Tổng hóa đơn"));
         // Dòng 2: TextField
-        infoPanel.add(createTextField(pnDTO.getMaphieu()+""));
-        infoPanel.add(createTextField(pnDTO.getManv()+""));
-        infoPanel.add(createTextField(pnDTO.getMancc()+""));
-        infoPanel.add(createTextField(pnDTO.getThoiGian()+""));
-        infoPanel.add(createTextField(pnDTO.getTongTien()+""));
-        // ========== PHẦN NỘI DUNG ==========
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        contentPanel.setBackground(Color.WHITE);
-        contentPanel.setPreferredSize(new Dimension(600, 300));
+        txfMaPhieu=createTextField(pnDTO.getMaphieu()+"");
+        txfNV=createTextField(pnDTO.getManv()+"");
+        txfNCC=createTextField(pnDTO.getMancc()+"");
+        txfTime=createTextField(pnDTO.getThoiGian()+"");
+        txfTongHD=createTextField(pnDTO.getTongTien()+"");
+        infoPanel.add(txfMaPhieu);
+        infoPanel.add(txfNV);
+        infoPanel.add(txfNCC);
+        infoPanel.add(txfTime);
+        infoPanel.add(txfTongHD);
+        
         // Tạo bảng
+        list_ctpn=pnBUS.getListCTPNById(pnDTO.getMaphieu());
         String[] columnNames = {"Mã sách", "Tên sách", "Số lượng", "Đơn giá", "Thành tiền"};
-        DefaultTableModel dataCTPN = new DefaultTableModel(columnNames, 0);
-        JTable tableCTPN = new JTable(dataCTPN) {
+        dataCTPN = new DefaultTableModel(columnNames, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Không cho phép chỉnh sửa ô trong bảng
@@ -106,26 +107,19 @@ public class PhieuNhapDialogDetail extends JDialog{
         tableCTPN.getColumnModel().getColumn(2).setPreferredWidth(50); // Cột số lượng
         tableCTPN.getColumnModel().getColumn(3).setPreferredWidth(50); // Cột đơn giá
         tableCTPN.getColumnModel().getColumn(4).setPreferredWidth(50); // Cột thành tiền
-        tableCTPN.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (isSelected) {
-                    cell.setBackground(new Color(72, 118, 255)); // Màu xanh dương khi chọn
-                    cell.setForeground(Color.WHITE); // Màu chữ trắng khi chọn
-                } else {
-                    cell.setBackground(Color.WHITE); // Màu nền trắng khi không chọn
-                    cell.setForeground(Color.BLACK); // Màu chữ đen khi không chọn
-                }
-                return cell;
-            }
-        });
+        DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+        center.setHorizontalAlignment(JLabel.CENTER);
+        int[] columnsToCenter = {0,1,2,3,4};
+        for(int col : columnsToCenter){
+            tableCTPN.getColumnModel().getColumn(col).setCellRenderer(center);
+        }
+        tableCTPN.getTableHeader().setReorderingAllowed(false);
+        tableCTPN.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tableCTPN.getTableHeader().setForeground(Color.BLACK);
+        
+        JScrollPane tableScrollPane = new JScrollPane(tableCTPN);
+        tableScrollPane.setViewportView(tableCTPN);
 
-        JScrollPane scrollPane = new JScrollPane(tableCTPN);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Khoảng cách giữa bảng và viền
-        scrollPane.setPreferredSize(new Dimension(600, 200)); // Kích thước bảng
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
-        contentPanel.add(infoPanel, BorderLayout.NORTH); // Thêm panel thông tin vào phía trên bảng
         // ========== PHẦN NÚT BẤM ==========
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
@@ -138,18 +132,18 @@ public class PhieuNhapDialogDetail extends JDialog{
 
         // ========== GỘP BẢNG VÀ NÚT BẤM ==========
         JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.add(scrollPane, BorderLayout.CENTER);
+        tablePanel.add(tableScrollPane, BorderLayout.CENTER);
         tablePanel.add(buttonPanel, BorderLayout.SOUTH);
         
-        // ========== GỘP TIÊU ĐỀ, NỘI DUNG VÀ NÚT BẤM ==========
+        // ========== GỘP THÔNG TIN VÀ BẢNG ==========
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.add(infoPanel, BorderLayout.NORTH);
+        contentPanel.add(tablePanel, BorderLayout.CENTER);
+
+        // ========== Thêm vào mainPanel ==========
         mainPanel.add(titlePanel, BorderLayout.NORTH);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
-        mainPanel.add(tablePanel, BorderLayout.SOUTH);
-        // ========== THIẾT LẬP DIALOG ==========
-        setContentPane(mainPanel);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(800, 600); // Kích thước dialog
-
+        
         // ========== Thêm Action ==========
         ActionListener action=new PhieuNhapDialogDetail_Controller(this);
         cancelButton.addActionListener(action);
@@ -217,4 +211,105 @@ public class PhieuNhapDialogDetail extends JDialog{
 
         return button;
     }
+
+    public JTextField getTxfMaPhieu() {
+        return txfMaPhieu;
+    }
+
+    public void setTxfMaPhieu(JTextField txfMaPhieu) {
+        this.txfMaPhieu = txfMaPhieu;
+    }
+
+    public JTextField getTxfNV() {
+        return txfNV;
+    }
+
+    public void setTxfNV(JTextField txfNV) {
+        this.txfNV = txfNV;
+    }
+
+    public JTextField getTxfNCC() {
+        return txfNCC;
+    }
+
+    public void setTxfNCC(JTextField txfNCC) {
+        this.txfNCC = txfNCC;
+    }
+
+    public JTextField getTxfTime() {
+        return txfTime;
+    }
+
+    public void setTxfTime(JTextField txfTime) {
+        this.txfTime = txfTime;
+    }
+
+    public JTextField getTxfTongHD() {
+        return txfTongHD;
+    }
+
+    public void setTxfTongHD(JTextField txfTongHD) {
+        this.txfTongHD = txfTongHD;
+    }
+
+    public DefaultTableModel getDataCTPN() {
+        return dataCTPN;
+    }
+
+    public void setDataCTPN(DefaultTableModel dataCTPN) {
+        this.dataCTPN = dataCTPN;
+    }
+
+    public PhieuNhapBUS getPnBUS() {
+        return pnBUS;
+    }
+
+    public void setPnBUS(PhieuNhapBUS pnBUS) {
+        this.pnBUS = pnBUS;
+    }
+
+    public ArrayList<ChiTietPhieuNhapDTO> getList_ctpn() {
+        return list_ctpn;
+    }
+
+    public void setList_ctpn(ArrayList<ChiTietPhieuNhapDTO> list_ctpn) {
+        this.list_ctpn = list_ctpn;
+    }
+
+    public SachBUS getsBUS() {
+        return sBUS;
+    }
+
+    public void setsBUS(SachBUS sBUS) {
+        this.sBUS = sBUS;
+    }
+
+    public NhaCungCapBUS getNccBUS() {
+        return nccBUS;
+    }
+
+    public void setNccBUS(NhaCungCapBUS nccBUS) {
+        this.nccBUS = nccBUS;
+    }
+
+    public NhanVienBUS getNvBUS() {
+        return nvBUS;
+    }
+
+    public void setNvBUS(NhanVienBUS nvBUS) {
+        this.nvBUS = nvBUS;
+    }
+
+    public JTable getTableCTPN() {
+        return tableCTPN;
+    }
+
+    public void setTableCTPN(JTable tableCTPN) {
+        this.tableCTPN = tableCTPN;
+    }
+
+    
 }
+
+
+

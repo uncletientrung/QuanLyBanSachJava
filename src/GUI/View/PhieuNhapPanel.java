@@ -6,6 +6,7 @@ package GUI.View;
 import BUS.*;
 import DTO.PhieuNhapDTO;
 import GUI.Controller.PhieuNhapController;
+import GUI.Dialog.PhieuNhapDialog.AddPanel;
 import GUI.WorkFrame;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -105,7 +106,7 @@ public class PhieuNhapPanel extends JPanel{
         tablePhieuNhap.getColumnModel().getColumn(4).setPreferredWidth(65);
         tablePhieuNhap.getColumnModel().getColumn(5).setPreferredWidth(30);
          // Tạo ScrollPane cho Table để tên cột column hiện
-        JScrollPane SPPhieuNhap= new JScrollPane(tablePhieuNhap);
+        SPPhieuNhap= new JScrollPane(tablePhieuNhap);
         
         toolBar_Left.add(btnHome);
         toolBar_Left.add(btnAdd);
@@ -125,10 +126,10 @@ public class PhieuNhapPanel extends JPanel{
 
         setLayout(new BorderLayout());
         add(toolBar,BorderLayout.NORTH);
-        add(SPPhieuNhap,BorderLayout.CENTER);
+        add(PanelCenter,BorderLayout.CENTER);
         
         ActionListener action=new PhieuNhapController(this, wf);
-         btnAdd.addActionListener(action);
+        btnAdd.addActionListener(action);
         btndetail.addActionListener(action);
         btndelete.addActionListener(action);
         btnexport.addActionListener(action);
@@ -171,7 +172,7 @@ public class PhieuNhapPanel extends JPanel{
     public JScrollPane getScrollPanePhieuNhap(){
         return SPPhieuNhap;
     }
-
+    
     public JPanel getPanelCenter(){
         return PanelCenter;
     }

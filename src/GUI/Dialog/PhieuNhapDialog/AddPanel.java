@@ -4,8 +4,10 @@
  */
 package GUI.Dialog.PhieuNhapDialog;
 
-import javax.swing.JFrame;
+import java.awt.Color;
 import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 
 /**
  *
@@ -19,11 +21,6 @@ public class AddPanel extends JPanel{
     
     public AddPanel() {
         initComponents();
-        txfFind.setEditable(false);
-        txfMaPhieuNhap.setEditable(false);
-        txfNhanVien.setEditable(false);
-        txfTenSach.setEditable(false);
-        System.err.println("AddPanel da duoc mo");
     }
     
     
@@ -91,12 +88,31 @@ public class AddPanel extends JPanel{
         txfFind.setBackground(new java.awt.Color(255, 255, 255));
         txfFind.setForeground(new java.awt.Color(153, 153, 153));
         txfFind.setText("Tìm kiếm sản phẩm....");
+        txfFind.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txfFindFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txfFindFocusLost(evt);
+            }
+        });
+        txfFind.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txfFindMouseClicked(evt);
+            }
+        });
+        txfFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txfFindActionPerformed(evt);
+            }
+        });
 
-        btnThem.setBackground(new java.awt.Color(0, 204, 51));
+        btnThem.setBackground(new java.awt.Color(0, 204, 0));
         btnThem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnThem.setForeground(new java.awt.Color(255, 255, 255));
         btnThem.setText("Thêm");
         btnThem.setActionCommand("btnThem");
+        btnThem.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         btnThem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnThemActionPerformed(evt);
@@ -107,16 +123,38 @@ public class AddPanel extends JPanel{
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "STT", "Tên Sách", "Số lượng"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable2.setColumnSelectionAllowed(true);
         SPSach.setViewportView(jTable2);
+        jTable2.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(0).setResizable(false);
+            jTable2.getColumnModel().getColumn(1).setResizable(false);
+            jTable2.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -245,7 +283,7 @@ public class AddPanel extends JPanel{
                 .addComponent(lbSoLuong)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txfSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 33, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnXoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -265,10 +303,11 @@ public class AddPanel extends JPanel{
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 6, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -343,7 +382,7 @@ public class AddPanel extends JPanel{
                                 .addGap(18, 18, 18)
                                 .addComponent(lbThanhTien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(btnNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 34, Short.MAX_VALUE)))
+                        .addGap(0, 18, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -361,7 +400,7 @@ public class AddPanel extends JPanel{
                 .addComponent(lbNCC, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbboxNCC, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 294, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbTongTien, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbThanhTien, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -369,6 +408,8 @@ public class AddPanel extends JPanel{
                 .addComponent(btnNhap)
                 .addGap(19, 19, 19))
         );
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         SPSachThem.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -380,10 +421,24 @@ public class AddPanel extends JPanel{
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "STT", "Tên sách", "Số lượng nhập", "Thành tiền"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         SPSachThem.setViewportView(tableListThem);
+        if (tableListThem.getColumnModel().getColumnCount() > 0) {
+            tableListThem.getColumnModel().getColumn(0).setResizable(false);
+            tableListThem.getColumnModel().getColumn(1).setResizable(false);
+            tableListThem.getColumnModel().getColumn(2).setResizable(false);
+            tableListThem.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -393,7 +448,9 @@ public class AddPanel extends JPanel{
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(SPSachThem, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(SPSachThem, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -416,9 +473,10 @@ public class AddPanel extends JPanel{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -448,6 +506,29 @@ public class AddPanel extends JPanel{
         // TODO add your handling code here:
         
     }//GEN-LAST:event_txfMaSachActionPerformed
+
+    private void txfFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfFindActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txfFindActionPerformed
+
+    private void txfFindMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txfFindMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txfFindMouseClicked
+
+    private void txfFindFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txfFindFocusGained
+        // TODO add your handling code here:
+        txfFind.setText("");
+        txfFind.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txfFindFocusGained
+
+    private void txfFindFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txfFindFocusLost
+        // TODO add your handling code here:
+        if(txfFind.getText().trim().isEmpty()){
+            txfFind.setText("Tìm kiếm sản phẩm...");
+            txfFind.setForeground(Color.lightGray);
+        }
+    }//GEN-LAST:event_txfFindFocusLost
     
     
 
@@ -486,4 +567,5 @@ public class AddPanel extends JPanel{
     private javax.swing.JTextField txfTenSach;
     // End of variables declaration//GEN-END:variables
 }
+
 

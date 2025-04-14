@@ -13,6 +13,7 @@ import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDetail;
 import GUI.View.PhieuNhapPanel;
 import GUI.WorkFrame;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -31,10 +32,9 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
     private PhieuNhapDialogAdd PNDA;
     private PhieuNhapDialogDelete PNDD;
     private PhieuNhapDialogDetail PNDX;
-    private int tabCount = 1;
-    private boolean isRemoving = false;
     
-    public PhieuNhapController(){}
+    public PhieuNhapController(){
+    }
     
     public PhieuNhapController(PhieuNhapPanel pnp, WorkFrame wf){
         this.pnp = pnp;
@@ -43,43 +43,90 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        pnp.refreshTablePn();
         String evt = e.getActionCommand();
         switch (evt) {
-            case "Trang chủ":       
+            case "Trang chủ":    
+                pnp.getPanelCenter().removeAll(); // Xóa tất cả các thành phần hiện tại trong tab
+                pnp.getScrollPanePhieuNhap().setViewportView(pnp.getTablePhieuNhap());
+                pnp.getPanelCenter().setLayout(new GridLayout(1,1));
+                pnp.getPanelCenter().add(pnp.getScrollPanePhieuNhap());
                 pnp.refreshTablePn();
                 break;
             case "Thêm":
-                pnp.removeAll(); // Xóa tất cả các thành phần hiện tại trong tab
-                pnp.setLayout(new BorderLayout()); // Đặt layout cho tab
-                pnp.add(new AddPanel(), BorderLayout.CENTER); // Thêm AddPanel vào tab
-                pnp.revalidate(); // Làm mới giao diện
-                pnp.repaint(); // Vẽ lại giao diện
-                System.err.println("Đã thêm AddPanel vào tab Phiếu Nhập");
+                System.out.println("Nut them da duoc nhan chon");
+                pnp.getPanelCenter().removeAll(); // Xóa tất cả các thành phần hiện tại trong tab
+                pnp.getPanelCenter().setLayout(new BorderLayout()); // Đặt layout cho tab
+                
+                // Thêm AddPanel vào PanelCenter
+                AddPanel addPanel = new AddPanel();
+                pnp.getPanelCenter().add(addPanel, BorderLayout.CENTER);
+                
+                pnp.getPanelCenter().revalidate(); // Làm mới giao diện
+                pnp.getPanelCenter().repaint(); // Vẽ lại giao diện
                 break;
             case "Chi tiết":
                 JTable tablePN = pnp.getTablePhieuNhap();
-                if (tablePN.getSelectedRow() > -1) {
-                    int selectRow = tablePN.getSelectedRow();
-                    pnBUS = new PhieuNhapBUS();
-                    PhieuNhapDTO phieu = pnBUS.getPNById(Integer.parseInt(tablePN.getValueAt(selectRow, 0).toString()));
-                    PNDX = new PhieuNhapDialogDetail(wf, phieu);
-                } else {
-                JOptionPane.showMessageDialog(null, "Vui Lòng chọn phiếu nhập muốn xem", "Error", JOptionPane.ERROR_MESSAGE);
+                
+                // Kiểm tra bảng có dữ liệu hay không
+                if (tablePN.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(null, "Bảng không có dữ liệu để chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
+                
+                // Kiểm tra hàng được chọn
+                int selectedRow = tablePN.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một hàng trong bảng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                // Xử lý dữ liệu hàng được chọn
+                try {
+                    int id = Integer.parseInt(tablePN.getValueAt(selectedRow, 0).toString());
+                    pnBUS = new PhieuNhapBUS();
+                    PhieuNhapDTO phieu = pnBUS.getPNById(id);
+                    if (phieu != null) {
+                        PNDX = new PhieuNhapDialogDetail(wf, phieu);
+                        pnp.refreshTablePn();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Không tìm thấy phiếu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi khi xử lý dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
             case "Hủy bỏ":
                 JTable tablePNC = pnp.getTablePhieuNhap();
-                if (tablePNC.getSelectedRow() > -1) {
-                    int selectRow = tablePNC.getSelectedRow();
-                    pnBUS = new PhieuNhapBUS();
-                    PhieuNhapDTO phieu = pnBUS.getPNById(Integer.parseInt(tablePNC.getValueAt(selectRow, 0).toString()));
-                    PNDD = new PhieuNhapDialogDelete(wf, phieu);
-                    pnp.refreshTablePn();
-                } else {
-                JOptionPane.showMessageDialog(null, "Vui Lòng chọn phiếu nhập muốn xóa", "Error", JOptionPane.ERROR_MESSAGE);
+                
+                // Kiểm tra bảng có dữ liệu hay không
+                if (tablePNC.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(null, "Bảng không có dữ liệu để chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
+                
+                // Kiểm tra hàng được chọn
+                int selectedRow2 = tablePNC.getSelectedRow();
+                if (selectedRow2 == -1) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một hàng trong bảng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                try {
+                    int id = Integer.parseInt(tablePNC.getValueAt(selectedRow2, 0).toString());
+                    pnBUS = new PhieuNhapBUS();
+                    PhieuNhapDTO phieu = pnBUS.getPNById(id);
+                    if (phieu != null){
+                        PNDD = new PhieuNhapDialogDelete(wf, phieu);
+                        pnp.refreshTablePn();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Không tìm thấy phiếu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+                }   catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi khi xử lý dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+                    break;
             default:
-                pnp.refreshTablePn();
                 break;
         }
        
