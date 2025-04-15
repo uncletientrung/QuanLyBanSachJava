@@ -68,7 +68,7 @@ public class WorkFrame extends JFrame {
         textPanel.setMaximumSize(new Dimension(150, 80));
 
         // Tên và vai trò
-        JLabel nameLabel = new JLabel(taiKhoan.getUsername());
+        JLabel nameLabel = new JLabel(nvBUS.getHoTenNVById(taiKhoan.getManv()));
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         String tenNhomQuyen = PhanQuyenDAOo.getInstance().getTenNhomQuyen(taiKhoan.getManhomquyen());
         JLabel roleLabel = new JLabel(tenNhomQuyen);
