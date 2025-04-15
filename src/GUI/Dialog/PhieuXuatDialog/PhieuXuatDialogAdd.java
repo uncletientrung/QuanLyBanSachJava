@@ -713,19 +713,43 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         }
         thanhtoan = tongtien - giamgia;
        txfThanhToan.setText(thanhtoan + "");
-        
-        
     }
     
-    
-
-
-
     // Hàm kiểm tra nếu Table bên Danh sách bán =0 thì set các txf chỉnh sửa về rỗng
     public boolean CheckEmptyRow() {
         if (tableListBan.getRowCount() == 0) {
             return true;
         }
         return false;
+    }
+    // Hàm đưa tất cả về trạng thái ban đầu
+    public void setUpDefault(){
+        txfTimKhach.setText("");
+        txfKhachHang.setText("");
+        txfSDT.setText("");
+        txfTimSach.setText("");
+        txfDonGiaV2.setText("");
+        txfGiaBan.setText("");
+        txfSoLuong.setText("");
+        txfTenSachV2.setText("");
+        txfSoLuongV2.setText("");
+        txfDonGiaV2.setText("");
+        txfThanhTienV2.setText("");
+        txfTongTien.setText("");
+        txfGiamGia.setText("");
+        txfThanhToan.setText("");
+        dataBan.setRowCount(0);
+        tableChonSach.clearSelection();
+        jDateChooser1.setDate(new Date());
+    }
+    public void refreshTableChonSach(){
+        listSach=new SachBUS().getSachAll();
+        dataBook.setRowCount(0);
+        for (SachDTO s : listSach) {
+            String TG = "";
+            TacGiaDTO tg = tacgiaBUS.getTGById(s.getMatacgia());
+            TG = tg.getHotentacgia();
+            dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), TG, s.getSoluongton()});
+        }
     }
 }

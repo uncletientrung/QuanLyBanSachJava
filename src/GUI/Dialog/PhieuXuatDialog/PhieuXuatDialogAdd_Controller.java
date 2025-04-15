@@ -188,7 +188,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                // Chuyển JDateChosser sang Date rồi sang TimeStamp
                Date current_day_type_date= PXDA.getDateChooser1().getDate();
                Timestamp current_day=new Timestamp(current_day_type_date.getTime());
-                
 
                 // Gọi mã phiếu xuất auto tiếp theo 
                int maPhieuXuat = pxDAO.getAutoIncrement();
@@ -208,15 +207,18 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                // Sau khi chạy for xong đủ hết chi tiết phiếu nhập thì thêm vào database
                 phieuxuat= new PhieuXuatDTO(maPhieuXuat, maNV, maKH, current_day, (long)tongtien, trangthai);
                 pxBUS.insert(phieuxuat, ListCTPhieuXuat);
-
+                
                 
                JOptionPane.showMessageDialog(null, "Xuất hóa đơn thành công!", "Thông báo", JOptionPane.NO_OPTION);
-               
+               // Sau khi xuất xong thì set tất cả về trạng thái ban đầu
+                PXDA.setUpDefault();
+                PXDA.refreshTableChonSach();
            }else{
                JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để xuất hóa đơn", "Thông báo", JOptionPane.ERROR_MESSAGE);
            }
 
        }
     }
+    
     
 }
