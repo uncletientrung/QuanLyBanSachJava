@@ -29,6 +29,18 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import java.awt.Desktop;
 
 public class PhieuXuatDialogDetail_Controller implements ActionListener {
     private PhieuXuatBUS pxBUS;
@@ -54,6 +66,16 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
             } catch (IOException ex) {
                 ex.printStackTrace();
                 System.err.println("Lỗi đọc file Excel: " + ex.getMessage());
+            }
+        }if (sukien.equals("Xuất file PDF")) {
+            try {
+                WritePDF();
+            } catch (IOException ex2) {
+                ex2.printStackTrace();
+                JOptionPane.showMessageDialog(PXDD,
+                        "Lỗi khi xuất file PDF: " + ex2.getMessage(),
+                        "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -247,9 +269,12 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
             wb.write(fileOut);
             JOptionPane.showMessageDialog(PXDD,
-                    "Xuất file Excel thành công!\nĐường dẫn: " + filePath,
+                    "Xuất file Excel thành công!\nĐường dẫn: ",
                     "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(new File(filePath));// Mở file sau khi thêm
+                    }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(PXDD,
                     "Lỗi khi xuất file Excel: " + e.getMessage(),
@@ -302,5 +327,121 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         wb.close();
         file.close();
     }
+    public void WritePDF() throws IOException {
+    // Lấy thông tin từ dialog
+    String maPhieu = PXDD.getTxfMaPhieu().getText();
+    String nhanVien = PXDD.getTxfNV().getText();
+    String khachHang = PXDD.getTxfKhachHang().getText();
+    String thoiGian = PXDD.getTxfTime().getText();
+    String tongTien = PXDD.getTxfTongHD().getText();
+    JTable tableCTPX = PXDD.getTableCTPX();
+
+    // Tạo JFileChooser để chọn nơi lưu file
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Xuất hóa đơn PDF");
+    fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/Documents"));
+    fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+        @Override
+        public boolean accept(File f) {
+            return f.isDirectory() || f.getName().toLowerCase().endsWith(".pdf");
+        }
+
+        @Override
+        public String getDescription() {
+            return "PDF Files (*.pdf)";
+        }
+    });
+
+    // Thiết lập tên file mặc định
+    String defaultFileName = "PhieuXuat_" + maPhieu + ".pdf";
+    fileChooser.setSelectedFile(new File(defaultFileName));
+
+    // Hiển thị hộp thoại lưu file
+    int userSelection = fileChooser.showSaveDialog(PXDD);
+
+    // Nếu người dùng hủy thì thoát
+    if (userSelection != JFileChooser.APPROVE_OPTION) {
+        return;
+    }
+
+    // Lấy đường dẫn file
+    File fileToSave = fileChooser.getSelectedFile();
+    String filePath = fileToSave.getAbsolutePath();
+    if (!filePath.toLowerCase().endsWith(".pdf")) {
+        filePath += ".pdf";
+    }
+
+    // Tạo file PDF
+    Document document = new Document();
+    try {
+        FileOutputStream fos = new FileOutputStream(filePath);
+        PdfWriter.getInstance(document, fos);
+        document.open();
+
+        // Tạo font hỗ trợ tiếng Việt
+        BaseFont bf = BaseFont.createFont("c:/windows/fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font titleFont = new Font(bf, 16, Font.BOLD);
+        Font infoFont = new Font(bf, 12, Font.NORMAL);
+        Font headerFont = new Font(bf, 12, Font.BOLD);
+        Font cellFont = new Font(bf, 12, Font.NORMAL);
+        // set  Tiêu đề
+        Paragraph title = new Paragraph("HÓA ĐƠN BÁN HÀNG", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+        // Enter xuống dòng
+        document.add(new Paragraph("\n"));
+        // Thông tin phiếu
+        document.add(new Paragraph("Mã phiếu: " + maPhieu, infoFont));
+        document.add(new Paragraph("Khách hàng: " + khachHang, infoFont));
+        document.add(new Paragraph("Nhân viên thực hiện: " + nhanVien, infoFont));
+        document.add(new Paragraph("Thời gian tạo: " + thoiGian, infoFont));
+
+        // Enter xuống dòng
+        document.add(new Paragraph("\n"));
+
+        // Tạo bảng
+        String[] headers = {"STT", "Mã sách", "Tên sách", "Đơn giá", "Số lượng", "Thành tiền"};
+        PdfPTable table = new PdfPTable(headers.length);
+        table.setWidthPercentage(100);
+        table.setWidths(new float[]{10, 15, 35, 15, 10, 15});
+
+        // Thêm header cho bảng
+        for (String header : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+        }
+
+        // Thêm dữ liệu vào bảng
+        for (int i = 0; i < tableCTPX.getRowCount(); i++) {
+            for (int j = 0; j < headers.length; j++) {
+                PdfPCell cell = new PdfPCell(new Phrase(tableCTPX.getValueAt(i, j).toString(), cellFont));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
+            }
+        }
+
+        document.add(table);
+
+        // Tổng tiền (góc phải)
+        Paragraph total = new Paragraph("Tổng hóa đơn: " + tongTien, headerFont);
+        total.setAlignment(Element.ALIGN_RIGHT);
+        document.add(total);
+
+        document.close();
+        fos.close();
+
+        JOptionPane.showMessageDialog(PXDD,
+                "Xuất file PDF thành công!\nĐường dẫn:",
+                "Thông báo",
+                JOptionPane.INFORMATION_MESSAGE);
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(new File(filePath));// Mở file sau khi thêm
+        }
+        
+    } catch (DocumentException e) {
+        throw new IOException("Lỗi khi tạo PDF: " + e.getMessage());
+    }
+}
     
 }

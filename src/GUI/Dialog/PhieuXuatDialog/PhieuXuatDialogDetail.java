@@ -18,6 +18,7 @@ import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+
 /**
  *
  * @author DELL
@@ -115,7 +116,9 @@ public class PhieuXuatDialogDetail extends JDialog{
         JPanel buttonPanel = new JPanel();
         JButton exportButton = createButton("Xuất file Excel", new Color(76, 175, 80));  // Màu xanh lá
         JButton cancelButton = createButton("Đóng", new Color(244, 67, 54));   // Màu đỏ
+        JButton exportPDFButton=createButton("Xuất file PDF",new Color(220,20,60));
 
+        buttonPanel.add(exportPDFButton);
         buttonPanel.add(exportButton);
         buttonPanel.add(cancelButton);
 
@@ -137,6 +140,7 @@ public class PhieuXuatDialogDetail extends JDialog{
         ActionListener action=new PhieuXuatDialogDetail_Controller(this);
         cancelButton.addActionListener(action);
         exportButton.addActionListener(action);
+        exportPDFButton.addActionListener(action);
 
         add(mainPanel);
         setSize(900, 500);

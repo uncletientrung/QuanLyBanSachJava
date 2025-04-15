@@ -86,16 +86,9 @@ public boolean isTenTaiKhoanTrung(String tentk) {
     return false;
 }
 
-    
-    
     public boolean xoaTaiKhoan(int manv) {
         return tkDAO.delete(manv) > 0;
 }
-    
-    
-    
-    
-    
 
     // Thêm phương thức đăng nhập
     public TaiKhoanDTO dangNhap(String username, String matkhau) {

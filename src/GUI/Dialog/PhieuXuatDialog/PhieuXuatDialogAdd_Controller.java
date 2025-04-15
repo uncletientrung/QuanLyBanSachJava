@@ -162,7 +162,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
        }
        if(sukien.equals("Xóa tất cả")){
            if(PXDA.getDataBan().getRowCount()!=0){
-                JOptionPane.showMessageDialog(null, "** Viết 1 cái DiaLog cảnh báo Yes/No ở đây!", "Thông báo", JOptionPane.NO_OPTION);
                 PXDA.getDataBan().setRowCount(0);
                 // Gán các txf chỗ chỉnh sửa về rỗng sau khi update
                  PXDA.getTxfDonGiaV2().setText("");
@@ -189,13 +188,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                // Chuyển JDateChosser sang Date rồi sang TimeStamp
                Date current_day_type_date= PXDA.getDateChooser1().getDate();
                Timestamp current_day=new Timestamp(current_day_type_date.getTime());
-               
-               //Xài LocalDate để thay thế cho JDate bị lỗi
-//                LocalDate  current_day_type_date = LocalDate.now();
-               // Chuyển từ LocalDate sang LocalDateTime
-//                LocalDateTime current_day_type_datetime = current_day_type_date.atStartOfDay();
-                // Chuyển từ LocalDateTime sang Timestamp
-//                Timestamp current_day = Timestamp.valueOf(current_day_type_datetime);
+                
 
                 // Gọi mã phiếu xuất auto tiếp theo 
                int maPhieuXuat = pxDAO.getAutoIncrement();

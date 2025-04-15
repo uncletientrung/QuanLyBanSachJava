@@ -373,6 +373,9 @@ public void actionPerformed(ActionEvent e){
                 "Xuất file Excel thành công!\nĐường dẫn: " + filePath,
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE);
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(new File(filePath));// Mở file sau khi thêm
+                }
     } catch (Exception e) {
         JOptionPane.showMessageDialog(bf,
                 "Lỗi khi xuất file Excel: " + e.getMessage(),

@@ -290,6 +290,7 @@ public class PhieuXuatPanel extends JPanel {
         Calendar cal = Calendar.getInstance();
         cal.set(2025, Calendar.JANUARY, 1);
         dateStart.setDate(cal.getTime());
+        dateEnd.setDate(new Date());
 
     }
     

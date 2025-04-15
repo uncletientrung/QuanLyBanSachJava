@@ -52,6 +52,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
@@ -269,7 +270,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
         // Hiển thị hộp thoại lưu file
         int userSelection = fileChooser.showSaveDialog(PXDD);
 
-        if (userSelection != JFileChooser.APPROVE_OPTION) {
+        if (userSelection != JFileChooser.APPROVE_OPTION) { // Kiểm tra có ấn save không nếu canel thì return
             return;
         }
 
@@ -377,6 +378,9 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
                     "Xuất file Excel thành công!\nĐường dẫn: " + filePath,
                     "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(new File(filePath));// Mở file sau khi thêm
+                    }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(PXDD,
                     "Lỗi khi xuất file Excel: " + e.getMessage(),
