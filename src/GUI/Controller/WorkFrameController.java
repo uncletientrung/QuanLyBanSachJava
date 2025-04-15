@@ -52,6 +52,8 @@ public class WorkFrameController implements ActionListener {
             wk.cardLayout.show(wk.PanelCard, "Khách hàng");
         } else if (suKien.equals("Phiếu nhập")) {
             wk.cardLayout.show(wk.PanelCard, "Phiếu nhập");
+        } else if (suKien.equals("Khuyến mãi")) {
+            wk.cardLayout.show(wk.PanelCard, "Khuyến mãi");
         } else if (suKien.equals("Đăng xuất")) {
             DangNhapFrame khungDangNhap = new DangNhapFrame();
             khungDangNhap.setVisible(true);

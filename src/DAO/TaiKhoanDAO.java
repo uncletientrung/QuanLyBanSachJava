@@ -146,7 +146,7 @@ public int delete(String t) {
     public ArrayList<TaiKhoanDTO> selectAll(){
         ArrayList<TaiKhoanDTO> result= new ArrayList<>();
         try{
-            Connection con = (Connection) JDBCUtil.getConnection();
+            Connection con = JDBCUtil.getConnection();
             String sql=" Select * From taikhoan";
             PreparedStatement pst= (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs= (ResultSet) pst.executeQuery();
