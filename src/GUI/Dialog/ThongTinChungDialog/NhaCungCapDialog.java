@@ -49,7 +49,7 @@ public class NhaCungCapDialog extends JDialog{
 
     public NhaCungCapDialog(JFrame parent) {
         super(parent, "Quản lý Nhà Cung Cấp", true);
-        setSize(1300, 700);
+        setSize(1300, 800);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
@@ -168,6 +168,7 @@ public class NhaCungCapDialog extends JDialog{
         }
         // Điều chỉnh kích thước width và hieght của các cột tableBook 
         table.setRowHeight(30);
+        table.getTableHeader().setReorderingAllowed(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(80);
         table.getColumnModel().getColumn(1).setPreferredWidth(200);
         table.getColumnModel().getColumn(2).setPreferredWidth(250);

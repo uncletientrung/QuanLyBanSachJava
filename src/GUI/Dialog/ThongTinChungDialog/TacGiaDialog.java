@@ -44,7 +44,7 @@ public class TacGiaDialog extends JDialog {
 
     public TacGiaDialog(JFrame parent) {
         super(parent, "Quản lý Tác Giả", true);
-        setSize(1300, 700);
+        setSize(800, 600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
 
@@ -139,6 +139,7 @@ public class TacGiaDialog extends JDialog {
         // Căn giữa cột: Mã Tác Giả (0)
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        table.getTableHeader().setReorderingAllowed(false);
 
         // Căn trái cột: Tên Tác Giả (1)
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();

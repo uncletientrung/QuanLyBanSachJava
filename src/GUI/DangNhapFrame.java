@@ -78,6 +78,8 @@ public class DangNhapFrame extends JFrame {
         lbPassword.setForeground(Color.WHITE);
         lbPassword.setBounds(0, 120, 120, 30);
         inputPanel.add(lbPassword);
+        
+        
 
         txtPassword = new JPasswordField("12345");
         txtPassword.setFont(new Font("Arial", Font.PLAIN, 18));
