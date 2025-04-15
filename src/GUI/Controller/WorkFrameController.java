@@ -58,5 +58,6 @@ public class WorkFrameController implements ActionListener {
             wk.dispose();
             wk.setNutDangHoatDong(null);
         }
+
     }
 }

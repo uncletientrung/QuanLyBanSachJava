@@ -48,7 +48,7 @@ public class NhaXuatBanDialog extends JDialog{
 
     public NhaXuatBanDialog(JFrame parent) {
         super(parent, "Quản lý Nhà Xuất Bản", true);
-        setSize(1300, 700);
+        setSize(1300, 800);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
 
@@ -164,6 +164,7 @@ public class NhaXuatBanDialog extends JDialog{
         }
         // Điều chỉnh kích thước width và hieght của các cột tableBook 
         table.setRowHeight(30);
+        table.getTableHeader().setReorderingAllowed(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(80);
         table.getColumnModel().getColumn(1).setPreferredWidth(200);
         table.getColumnModel().getColumn(2).setPreferredWidth(250);

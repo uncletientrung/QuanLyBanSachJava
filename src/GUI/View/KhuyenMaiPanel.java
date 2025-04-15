@@ -3,10 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.View;
+
+import BUS.KhuyenMaiBUS;
 import BUS.PhanQuyenBUS;
-import BUS.TaiKhoanBUS;
-import DTO.TaiKhoanDTO;
-import GUI.Controller.TaiKhoanController;
+import DTO.KhuyenMaiDTO;
+import DTO.NhomQuyenDTO;
 import GUI.WorkFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,16 +32,16 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Hi
  */
-public class TaiKhoanPanel extends JPanel{
-    private DefaultTableModel tableTaiKhoan;
+public class KhuyenMaiPanel extends JPanel{
     private JTable table;
     private JTextField txfind;
     private Boolean checkTimkiem=false;
-    private WorkFrame workFrame;
-    public PhanQuyenBUS pqBUS;
+    private WorkFrame workFrame;    
+    private DefaultTableModel tableModelKhuyenMai;
+    //goi ham getnhomquyenall ben BUS de lay ra array list
+    public ArrayList<KhuyenMaiDTO> listkhuyenmai= new KhuyenMaiBUS().getAllKhuyenMai();
     
-    
-    public TaiKhoanPanel(){
+    public KhuyenMaiPanel(){
         JPanel toolBar= new JPanel(new GridLayout(1,2));
         
         JPanel toolBar_Left=new JPanel(new FlowLayout(FlowLayout.LEFT,10,20));
@@ -51,19 +52,20 @@ public class TaiKhoanPanel extends JPanel{
         JButton btnAdd= createToolBarButton("Thêm", "insert1.png");
         JButton btnUpdate= createToolBarButton("Sửa", "update1.png");
         JButton btndelete= createToolBarButton("Xóa", "trash.png");
-//        JButton btndetail= createToolBarButton("Chi tiết", "detail1.png");
+        
         btnAdd.setFont(font);
         //goi ham de thuc thi viec them
-        TaiKhoanController controller = new TaiKhoanController(this, workFrame);
-        btnAdd.addActionListener(controller);
-        btnUpdate.addActionListener(controller);
-        btndelete.addActionListener(controller);
+//        PhanQuyenController controller = new PhanQuyenController(this, workFrame);
+//        btnAdd.addActionListener(controller);
+//        btnUpdate.addActionListener(controller);
+//        btndelete.addActionListener(controller);
+        
 
 
 
         btnUpdate.setFont(font);
         btndelete.setFont(font);
-//        btndetail.setFont(font);
+        
          // Tạo phần tìm kiếm cho JPanel toolBar_Right
        
 
@@ -124,53 +126,59 @@ public class TaiKhoanPanel extends JPanel{
         
         
         //tạo table ở giữa
-        String[] columnTaiKhoan ={"Mã nhân viên","Tên đăng nhập","Mật khẩu","Mã nhóm quyền","Trạng thái"};
-        tableTaiKhoan = new DefaultTableModel(columnTaiKhoan, 0){
-        @Override
-        public boolean isCellEditable(int row, int column){
-             return false;// chặn chỉnh sửa các ô
-        
-        
-        }}; 
-        table = new JTable(tableTaiKhoan);
+        String[] columnKhuyenMai = {
+            "Mã khuyến mãi", 
+            "Tên chương trình", 
+            "Ngày bắt đầu", 
+            "Ngày kết thúc", 
+            "Hóa đơn tối thiểu", 
+            "% giảm giá"
+        };
+
+        tableModelKhuyenMai = new DefaultTableModel(columnKhuyenMai, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // chặn chỉnh sửa các ô
+            }
+        };
+
+        table = new JTable(tableModelKhuyenMai);
+        table.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
-        //them du lieu vao bang GUI
-        
-        pqBUS= new PhanQuyenBUS();
-        ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
-        for(TaiKhoanDTO tk: listTaiKhoan){
-            String trangthai="";
-            if(tk.getTrangthai()==0){
-                trangthai="Hết đát";
-            }else{
-                trangthai="Còn xài được";
-            }   
-            
-            String tenquyen;
-            tenquyen=pqBUS.getTenquyenbyid(tk.getManhomquyen());
-            
-            
-            tableTaiKhoan.addRow(new Object[]{tk.getManv(),tk.getUsername(),tk.getMatkhau(),tenquyen,trangthai});
-            
+
+        // Thêm dữ liệu vào bảng GUI
+        for (KhuyenMaiDTO km : listkhuyenmai) {
+            tableModelKhuyenMai.addRow(new Object[] {
+                km.getMaKM(),
+                km.getTenChuongTrinh(),
+                km.getNgayBatDau(),
+                km.getNgayKetThuc(),
+                km.getDieuKienToiThieu(),
+                km.getPhanTramGiam()
+            });
         }
-        
+
+        // Căn giữa các cột cần thiết
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter = {0,1,2,3,4}; 
- 
+        int[] columnsToCenter = {0, 1, 4, 5}; // Mã, Tên CT, Hóa đơn tối thiểu, % giảm
+
         for (int col : columnsToCenter) {
             table.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
-        // Điều chỉnh kích thước width và hieght của các cột tableBook 
+
+        // Điều chỉnh kích thước hàng
         table.setRowHeight(30);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        table.getColumnModel().getColumn(1).setPreferredWidth(250);
-        table.getColumnModel().getColumn(2).setPreferredWidth(250);
-        table.getColumnModel().getColumn(3).setPreferredWidth(50);
-        table.getColumnModel().getColumn(4).setPreferredWidth(100);
-        
+
+        // Điều chỉnh kích thước từng cột cho hợp lý
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);  // Mã khuyến mãi
+        table.getColumnModel().getColumn(1).setPreferredWidth(250);  // Tên chương trình
+        table.getColumnModel().getColumn(2).setPreferredWidth(130);  // Ngày bắt đầu
+        table.getColumnModel().getColumn(3).setPreferredWidth(130);  // Ngày kết thúc
+        table.getColumnModel().getColumn(4).setPreferredWidth(150);  // Hóa đơn tối thiểu
+        table.getColumnModel().getColumn(5).setPreferredWidth(120);  // % giảm giá
+
         
            
         JScrollPane scrollPane = new JScrollPane(table); 
@@ -179,7 +187,7 @@ public class TaiKhoanPanel extends JPanel{
         toolBar_Left.add(btnAdd);
         toolBar_Left.add(btnUpdate);
         toolBar_Left.add(btndelete);
-
+        
 
         
         toolBar_Right.add(txfind);
@@ -198,11 +206,11 @@ public class TaiKhoanPanel extends JPanel{
     private void timKiemKhiDangGo() {
         String keyword = txfind.getText().trim().toLowerCase();
 
-        ArrayList<TaiKhoanDTO> danhsachmoi;
+        ArrayList<KhuyenMaiDTO> danhsachmoi;
         if (keyword.isEmpty() || keyword.equals("tìm kiếm.....")) {
-                    danhsachmoi = new TaiKhoanBUS().getTaiKhoanAll();
+                    danhsachmoi = new KhuyenMaiBUS().getAllKhuyenMai();
         } else {
-                    danhsachmoi = new TaiKhoanBUS().timkiem(keyword);
+                    danhsachmoi = new KhuyenMaiBUS().timkiem(keyword);
         }
 
         capNhatBang(danhsachmoi);
@@ -226,69 +234,44 @@ public class TaiKhoanPanel extends JPanel{
         return button;
     }
     
-   public void capNhatBang(ArrayList<TaiKhoanDTO> danhSach) {
-    tableTaiKhoan.setRowCount(0); // Xóa bảng cũ
+   public void capNhatBang(ArrayList<KhuyenMaiDTO> danhSach) {
+    tableModelKhuyenMai.setRowCount(0); // Xóa bảng cũ
     
-    pqBUS= new PhanQuyenBUS();
-    ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
-        for(TaiKhoanDTO tk: listTaiKhoan){
-            String trangthai="";
-            if(tk.getTrangthai()==0){
-                trangthai="Hết đát";
-            }else{
-                trangthai="Còn xài được";
-            }   
-            
-            String tenquyen;
-            tenquyen=pqBUS.getTenquyenbyid(tk.getManhomquyen());
-            
-            
-            tableTaiKhoan.addRow(new Object[]{tk.getManv(),tk.getUsername(),tk.getMatkhau(),tenquyen,trangthai});
+    for (KhuyenMaiDTO km : danhSach) {
+        tableModelKhuyenMai.addRow(new Object[]{km.getMaKM(),km.getTenChuongTrinh(),km.getNgayBatDau(),km.getNgayKetThuc(),km.getDieuKienToiThieu(),km.getPhanTramGiam()});
     }
 }
 
 //load lai du lieu khi moi them vo
     public void loadData() {
-        ArrayList<TaiKhoanDTO> listTaiKhoan= new TaiKhoanBUS().getTaiKhoanAll();
-        
-        capNhatBang(listTaiKhoan); // Cập nhật lại bảng
+    listkhuyenmai = new KhuyenMaiBUS().getAllKhuyenMai(); // Lấy danh sách mới
+    capNhatBang(listkhuyenmai); // Cập nhật lại bảng
 }
     
     //hàm kiểm tra coi dòng trong bảng có được click chọn hay không để sửa
     public int getSelectedRow() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một tài khoản để sửa!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhóm quyền để sửa!");
         }
         return selectedRow;
     }
     
     
     //lấy đối tượng nhóm quyền đang được click để hàm update biết
-    public TaiKhoanDTO getSelectedTaiKhoan() {
-        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
-        if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
+   public KhuyenMaiDTO getSelectedKhuyenmai() {
+    int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
+    if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
 
-        int maNV = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhóm quyền
-        String username = (String) table.getValueAt(selectedRow, 1); // Lấy tên nhóm quyền
-        String mk = (String) table.getValueAt(selectedRow,2);
-        String tenQuyen = (String) table.getValueAt(selectedRow, 3);
-        int manhomquyen = pqBUS.getIdquyenbyTen(tenQuyen);
-        String trangthaistring= (String) table.getValueAt(selectedRow, 4);
-        if(trangthaistring.equals("Còn xài được")){
-            int trangthai=1;
-            return new TaiKhoanDTO(maNV, username,mk,manhomquyen,trangthai); // Tạo đối tượng NhomQuyenDTO
-        }else{
-            int trangthai=0;
-            return new TaiKhoanDTO(maNV, username,mk,manhomquyen,trangthai); // Tạo đối tượng NhomQuyenDTO
-        }
-        
+    int maKhuyenmai = (int) table.getValueAt(selectedRow, 0);
+    String tenChuongtrinh = (String) table.getValueAt(selectedRow, 1);
+    String ngayBatDau = (String) table.getValueAt(selectedRow, 2); // <-- lấy kiểu String
+    String ngayKetThuc = (String) table.getValueAt(selectedRow, 3); // <-- lấy kiểu String
+    double hoaDontoithieu = (double) table.getValueAt(selectedRow, 4);
+    double phantramgiam = (double) table.getValueAt(selectedRow, 5);
 
-        
+    return new KhuyenMaiDTO(maKhuyenmai, tenChuongtrinh, ngayBatDau, ngayKetThuc, hoaDontoithieu, phantramgiam);
 }
 
-
-        
-}
     
-
+}

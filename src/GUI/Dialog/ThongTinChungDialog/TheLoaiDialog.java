@@ -6,7 +6,6 @@ package GUI.Dialog.ThongTinChungDialog;
 
 import BUS.TheLoaiBUS;
 import DTO.TheLoaiDTO;
-import GUI.Controller.TacGiaController;
 import GUI.Controller.TheLoaiController;
 import GUI.WorkFrame;
 import java.awt.BorderLayout;
@@ -49,7 +48,7 @@ public class TheLoaiDialog extends JDialog {
 
     public TheLoaiDialog(JFrame parent) {
         super(parent, "Quản lý Thể Loại", true);
-        setSize(1300, 700);
+        setSize(800, 600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
 
@@ -131,6 +130,7 @@ public class TheLoaiDialog extends JDialog {
         };
         
         table = new JTable(tableTheLoai);
+        table.getTableHeader().setReorderingAllowed(false);
         // Làm tiêu đề đậm hơn
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen

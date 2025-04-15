@@ -83,6 +83,7 @@ public class NhanVienPanel extends JPanel{
         
         // Điều chỉnh kích thước width và hieght của các cột tableBook 
         tableNV.setRowHeight(30);
+        tableNV.getTableHeader().setReorderingAllowed(false);
         tableNV.getColumnModel().getColumn(0).setPreferredWidth(30);
         tableNV.getColumnModel().getColumn(1).setPreferredWidth(200);
         tableNV.getColumnModel().getColumn(2).setPreferredWidth(150);

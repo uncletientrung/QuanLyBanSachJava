@@ -10,12 +10,17 @@ import DTO.SachDTO;
 import DTO.TacGiaDTO;
 import DTO.KhachHangDTO;
 import BUS.KhachHangBUS;
+import BUS.KhuyenMaiBUS;
+import DTO.KhuyenMaiDTO;
 import GUI.WorkFrame;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -83,6 +88,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     private ArrayList<KhachHangDTO> listkh;
     private HashMap<String, String> hashMapKh;
     private DefaultTableModel dataBan;
+    
 
     /**
      * Creates new form test1
@@ -525,6 +531,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         btnThemPhieu.addActionListener(action);
         System.err.println(getDateChooser1().getToolTipText());
     }
+    
 
     private void btnThemPhieuActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
@@ -690,23 +697,30 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         }
     }
     // Update tiền cần thanh toán
-    public void CalcBill() {
+   public void CalcBill() {
         int tongtien = 0;
         int giamgia;
         int thanhtoan = 0;
         int columnTong = 3;
         for (int i = 0; i < tableListBan.getRowCount(); i++) {
-            tongtien += Integer.parseInt(tableListBan.getValueAt(i, columnTong).toString());
-        }
-        txfTongTien.setText(String.valueOf(tongtien));
-        if (txfGiamGia.getText().isEmpty()) {
-            giamgia = 0;
-        } else {
+           tongtien += Integer.parseInt(tableListBan.getValueAt(i, columnTong).toString());
+       }
+       txfTongTien.setText(String.valueOf(tongtien));
+       if (txfGiamGia.getText().isEmpty()) {
+           giamgia = 0;
+       } else {
             giamgia = Integer.parseInt(txfGiamGia.getText().toString());
         }
         thanhtoan = tongtien - giamgia;
-        txfThanhToan.setText(thanhtoan + "");
+       txfThanhToan.setText(thanhtoan + "");
+        
+        
     }
+    
+    
+
+
+
     // Hàm kiểm tra nếu Table bên Danh sách bán =0 thì set các txf chỉnh sửa về rỗng
     public boolean CheckEmptyRow() {
         if (tableListBan.getRowCount() == 0) {
