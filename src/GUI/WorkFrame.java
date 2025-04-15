@@ -24,11 +24,14 @@ public class WorkFrame extends JFrame {
     private TaiKhoanDTO taiKhoan;
     private NhanVienBUS nvBUS=new NhanVienBUS();
     private JButton btnTaiKhoan, btnPhanQuyen, btnThongKe, btnNhanVien,btnPhieuXuat,btnPhieuNhap,btnKhachHang;
+    private JButton btnKhuyenMai,btnSach,btnTrangChu,btnThongTinChung;
+   private JButton nutDangHoatDong; // Để theo dõi nút đang được chọn
 
     public WorkFrame(TaiKhoanDTO taiKhoan) {
         this.taiKhoan = taiKhoan;
         this.init();
         this.setVisible(true);
+        this.nutDangHoatDong = null; // Ban đầu không có nút nào được chọn
     }
 
     public void init() {
@@ -92,19 +95,18 @@ public class WorkFrame extends JFrame {
         sidebar.add(userInfoPanel, gbc);
 
         // Menu items
-        JButton btnTrangChu = createMenuButton("Trang chủ");
-        JButton btnSach = createMenuButton("Sách");
-        btnPhieuXuat = createMenuButton("Phiếu xuất");
-        btnPhieuNhap = createMenuButton("Phiếu nhập");
-        btnKhachHang = createMenuButton("Khách hàng");
-        btnNhanVien = createMenuButton("Nhân viên");
-        JButton btnThongTinChung = createMenuButton("Thông tin chung");
-        btnTaiKhoan = createMenuButton("Tài khoản");
-        btnThongKe = createMenuButton("Thống kê");
-        btnPhanQuyen = createMenuButton("Phân quyền");
-        JButton btnKhuyenMai = createMenuButton("Khuyến mãi");
-        JButton btnDangXuat = createMenuButton("Đăng xuất");
-        JButton btnDong = createMenuButton("Đóng");
+        btnTrangChu = createMenuButton("Trang chủ","home1.png");
+        btnSach = createMenuButton("Sách","book1.png");
+        btnPhieuXuat = createMenuButton("Phiếu xuất","bill1.png");
+        btnPhieuNhap = createMenuButton("Phiếu nhập","nhap1.png");
+        btnKhachHang = createMenuButton("Khách hàng","customer1.png");
+        btnNhanVien = createMenuButton("Nhân viên","staff1.png");
+        btnThongTinChung = createMenuButton("Thông tin chung","ttc1.png");
+        btnTaiKhoan = createMenuButton("Tài khoản","account1.png");
+        btnThongKe = createMenuButton("Thống kê","analysis1.png");
+        btnPhanQuyen = createMenuButton("Phân quyền","phanquyen1.png");
+        btnKhuyenMai = createMenuButton("Khuyến mãi","sale1.png");
+        JButton btnDangXuat = createMenuButton("Đăng xuất","logout1.png");
 
         // Thêm các nút vào sidebar với GridBagLayout
         gbc.insets = new Insets(3, 0, 3, 0);
@@ -156,9 +158,6 @@ public class WorkFrame extends JFrame {
         gbc.ipady = 6;
         sidebar.add(btnDangXuat, gbc);
 
-        gbc.gridy = 13;
-        gbc.ipady = 6;
-        sidebar.add(btnDong, gbc);
 
         // Thêm một thành phần "dãn" (glue) ở dưới cùng để đẩy các thành phần lên trên
         gbc.gridy = 14;
@@ -189,21 +188,18 @@ public class WorkFrame extends JFrame {
         btnTrangChu.addActionListener(action);
         btnNhanVien.addActionListener(action);
         btnPhanQuyen.addActionListener(action);
-        btnDong.addActionListener(action);
         btnThongTinChung.addActionListener(action);
         btnPhieuXuat.addActionListener(action);
         btnPhieuNhap.addActionListener(action);
         btnTaiKhoan.addActionListener(action);
         btnKhachHang.addActionListener(action);
+        btnDangXuat.addActionListener(action);
 
         applyPermission();
     }
-
       private void applyPermission() {
         if (taiKhoan == null) return;
-
         List<Integer> chucNangDuocCap = ChiTietQuyenDAO.getInstance().getDanhSachChucNang(taiKhoan.getManhomquyen());
-
         // Ẩn hết trước
         //trang chu,sach,khuyenmai,dang xuat, dong ai cx tuong tac dc
         btnTaiKhoan.setVisible(false);
@@ -243,28 +239,99 @@ public class WorkFrame extends JFrame {
 }
 
     // Phương thức tạo nút menu với kích thước và căn chỉnh phù hợp
-    private JButton createMenuButton(String text) {
+   private JButton createMenuButton(String text, String iconPath) {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setPreferredSize(new Dimension(220, 80)); // 
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100)); // Tăng chiều cao 
-        button.setFont(new Font("Arial", Font.PLAIN, 16)); // Tăng cỡ chữ 
+        button.setPreferredSize(new Dimension(220, 40)); // Giảm chiều cao từ 80 xuống 40
+        button.setFont(new Font("Arial", Font.BOLD, 20)); 
         button.setBackground(new Color(240, 240, 240));
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        // Thêm padding trái 15px để dịch icon và text sang phải
+        button.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 0)); // Tăng padding trái từ 0 lên 15
         button.setFocusPainted(false);
         button.setBorderPainted(false);
+
+        // Tải và điều chỉnh kích thước icon
+        if (iconPath != null && !iconPath.isEmpty()) {
+            ImageIcon icon = new ImageIcon(getClass().getResource("/GUI/Image/" + iconPath));
+            Image scaledImage = icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH); // Giảm icon từ 40x40 xuống 24x24
+            button.setIcon(new ImageIcon(scaledImage));
+
+            // Đặt vị trí icon sát mép trái, text căn giữa
+            button.setHorizontalAlignment(SwingConstants.LEFT); // Icon sát mép trái
+            button.setHorizontalTextPosition(SwingConstants.RIGHT); // Text bên phải icon
+            button.setVerticalTextPosition(SwingConstants.CENTER); // Text căn giữa theo chiều dọc
+            button.setIconTextGap(20); // Khoảng cách 10px giữa icon và text
+        }
 
         // Hover effect
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(200, 220, 240));
+                if (button != nutDangHoatDong) {
+                    button.setBackground(new Color(211,211,211));
+                }
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(240, 240, 240));
+                if (button != nutDangHoatDong) { // Chỉ đặt lại màu nếu không phải nút đang hoạt động
+                    button.setBackground(new Color(240, 240, 240));
+                }
             }
         });
 
         return button;
     }
+
+    public JButton getNutDangHoatDong() {
+        return nutDangHoatDong;
+    }
+
+    public void setNutDangHoatDong(JButton nutDangHoatDong) {
+        this.nutDangHoatDong = nutDangHoatDong;
+    }
+    
+   
+    public JButton getBtnKhachHang() {
+        return btnKhachHang;
+    }
+
+    public JButton getBtnThongKe() {
+        return btnThongKe;
+    }
+
+    public JButton getBtnNhanVien() {
+        return btnNhanVien;
+    }
+
+    public JButton getBtnTaiKhoan() {
+        return btnTaiKhoan;
+    }
+
+    public JButton getBtnPhanQuyen() {
+        return btnPhanQuyen;
+    }
+
+    public JButton getBtnPhieuNhap() {
+        return btnPhieuNhap;
+    }
+
+    public JButton getBtnPhieuXuat() {
+        return btnPhieuXuat;
+    }
+
+    public JButton getBtnSach() {
+        return btnSach;
+    }
+
+    public JButton getBtnTrangChu() {
+        return btnTrangChu;
+    }
+
+    public JButton getBtnKhuyenMai() {
+        return btnKhuyenMai;
+    }
+
+    public JButton getBtnThongTinChung() {
+        return btnThongTinChung;
+    }
+
 }
 

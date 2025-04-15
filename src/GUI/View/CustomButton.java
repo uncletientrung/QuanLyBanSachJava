@@ -24,7 +24,7 @@ import javax.swing.border.Border;
  * @author Hi
  */
 
-class CustomButton extends JButton {
+public class CustomButton extends JButton {
     private JPanel textPanel;
     private Color originalTextBgColor = new Color(230, 230, 230);
     private Color iconBgColor;

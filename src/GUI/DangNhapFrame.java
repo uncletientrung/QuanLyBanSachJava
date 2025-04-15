@@ -1,112 +1,133 @@
-
 package GUI;
+
 import BUS.TaiKhoanBUS;
 import DTO.TaiKhoanDTO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 
 public class DangNhapFrame extends JFrame {
     private JTextField txtUsername;
     private JPasswordField txtPassword;
-    private JButton btnDangNhap, btnReset;
+    private JButton btnDangNhap;
     private TaiKhoanBUS tkBUS;
 
     public DangNhapFrame() {
         tkBUS = new TaiKhoanBUS();
-        initComponents();
         setSystemLookAndFeel();
+        initComponents();
     }
-        // Phương thức thiết lập System Look and Feel
+
     private void setSystemLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void initComponents() {
-        setTitle("Đăng Nhập");
-        setSize(1100, 700);
+        setTitle("Đăng Nhập - Quản Lý Bán Sách");
+        setSize(800, 452);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null); // Sử dụng null layout
+        setResizable(false);
 
-        // Panel chính để chứa background
-        JPanel mainPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                // Vẽ hình ảnh background
-                ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/GUI/Image/backgroundlogin.jpg"));
-                g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
-            }
-        };
-        mainPanel.setLayout(null);
-        mainPanel.setBounds(0, 0, getWidth(), getHeight());
-        add(mainPanel);
+        // Panel chính với background
+        JPanel mainPanel = new BackgroundPanel();
+        mainPanel.setLayout(new BorderLayout());
+        setContentPane(mainPanel);
 
-        // Tiêu đề - Giữ nguyên vị trí làm điểm tham chiếu
-        JLabel lbTitle = new JLabel("ĐĂNG NHẬP HỆ THỐNG", JLabel.CENTER);
-        lbTitle.setFont(new Font("Arial", Font.BOLD, 22));
-        lbTitle.setOpaque(true);
-        lbTitle.setBackground(new Color(128,128,128));
-        lbTitle.setBounds(550, 160, 400, 50);
-        mainPanel.add(lbTitle);
+        // Panel trung tâm chứa form đăng nhập
+        JPanel centerPanel = new JPanel();
+        centerPanel.setOpaque(false);
+        centerPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Panel nhập liệu - Điều chỉnh vị trí để căn chỉnh với tiêu đề
-        JPanel inputPanel = new JPanel(null);
-        inputPanel.setOpaque(false);
-        inputPanel.setBounds(550, 230, 400, 160);
-        mainPanel.add(inputPanel);
 
-        // Tạo các JLabel và JTextField - Điều chỉnh vị trí trong inputPanel
-        JLabel lbUsername = new JLabel("Tài khoản:");
-        lbUsername.setFont(new Font("Arial", Font.BOLD, 18));
-        lbUsername.setForeground(Color.WHITE);
-        lbUsername.setBounds(0, 60, 120, 30);
-        inputPanel.add(lbUsername);
 
-        txtUsername = new JTextField("admin");
-        txtUsername.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtUsername.setBounds(160, 60, 250, 40);
-        inputPanel.add(txtUsername);
+        // Panel form đăng nhập
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setOpaque(true);
+        formPanel.setBackground(new Color(255, 255, 255, 130));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        formPanel.setPreferredSize(new Dimension(400, 300));
 
+        // Username
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10); // Reset insets cho các thành phần khác
+        JLabel lbUsername = new JLabel("Tên đăng nhập:");
+        lbUsername.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        formPanel.add(lbUsername, gbc);
+
+        gbc.gridy = 1;
+        txtUsername = new JTextField(20);
+        txtUsername.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        txtUsername.setText("admin");
+        txtUsername.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        formPanel.add(txtUsername, gbc);
+
+        // Password
+        gbc.gridy = 2;
         JLabel lbPassword = new JLabel("Mật khẩu:");
-        lbPassword.setFont(new Font("Arial", Font.BOLD, 18));
-        lbPassword.setForeground(Color.WHITE);
-        lbPassword.setBounds(0, 120, 120, 30);
-        inputPanel.add(lbPassword);
+        lbPassword.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        formPanel.add(lbPassword, gbc);
 
-        txtPassword = new JPasswordField("12345");
-        txtPassword.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtPassword.setBounds(160, 120, 250, 40);
-        inputPanel.add(txtPassword);
+        gbc.gridy = 3;
+        txtPassword = new JPasswordField(20);
+        txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        txtPassword.setText("12345");
+        txtPassword.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        formPanel.add(txtPassword, gbc);
 
-        // Panel nút - Điều chỉnh để căn giữa với panel nhập liệu và tiêu đề
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(null);
-        buttonPanel.setOpaque(false);
-        buttonPanel.setBounds(550, 400, 400, 100);
-        mainPanel.add(buttonPanel);
-
-        // Điều chỉnh vị trí các nút để căn đều trong buttonPanel
+        // Nút đăng nhập
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(20, 10, 10, 10);
         btnDangNhap = new JButton("Đăng Nhập");
-        btnDangNhap.setFont(new Font("Arial", Font.BOLD, 16));
-        btnDangNhap.setBackground(new Color(0,128,0));
+        btnDangNhap.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btnDangNhap.setBackground(new Color(44, 62, 80));
         btnDangNhap.setForeground(Color.WHITE);
-        btnDangNhap.setBounds(50, 40, 140, 45);
-        btnDangNhap.addActionListener((ActionEvent e) -> xuLyDangNhap());
-        buttonPanel.add(btnDangNhap);
+        btnDangNhap.setFocusPainted(false);
+        btnDangNhap.setBorderPainted(false);
+        btnDangNhap.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        // Hiệu ứng hover cho nút
+        btnDangNhap.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnDangNhap.setBackground(new Color(33, 150, 243));
+            }
 
-        btnReset = new JButton("Reset");
-        btnReset.setFont(new Font("Arial", Font.BOLD, 16));
-        btnReset.setBackground(new Color(220, 20, 60));
-        btnReset.setForeground(Color.WHITE);
-        btnReset.setBounds(210, 40, 140, 45);
-        btnReset.addActionListener((ActionEvent e) -> xuLyReset());
-        buttonPanel.add(btnReset);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnDangNhap.setBackground(new Color(44, 62, 80));
+            }
+        });
+
+        btnDangNhap.addActionListener(e -> xuLyDangNhap());
+        formPanel.add(btnDangNhap, gbc);
+
+        // Thêm formPanel vào centerPanel với dịch chuyển sang phải
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(10, 350, 10, 10);
+        centerPanel.add(formPanel, gbc);
+        
+        // Thêm các panel vào mainPanel
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
     }
 
     private void xuLyDangNhap() {
@@ -114,30 +135,49 @@ public class DangNhapFrame extends JFrame {
         String matkhau = new String(txtPassword.getPassword()).trim();
 
         if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên tài khoản!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Vui lòng nhập tên tài khoản!");
             return;
-        } else if (matkhau.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+        if (matkhau.isEmpty()) {
+            showErrorMessage("Vui lòng nhập mật khẩu!");
             return;
         }
 
         TaiKhoanDTO taiKhoan = tkBUS.dangNhap(username, matkhau);
         if (taiKhoan != null) {
-            WorkFrame workFrame = new WorkFrame(taiKhoan);
-            workFrame.setVisible(true);
+            new WorkFrame(taiKhoan).setVisible(true);
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu sai, hoặc tài khoản bị khóa!");
+            showErrorMessage("Tài khoản hoặc mật khẩu không đúng!");
         }
     }
 
-    private void xuLyReset() {
-        txtUsername.setText("");
-        txtPassword.setText("");
+    private void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+    }
+
+    // Lớp panel tùy chỉnh cho background
+    private class BackgroundPanel extends JPanel {
+        private Image backgroundImage;
+
+        public BackgroundPanel() {
+            try {
+                backgroundImage = new ImageIcon(getClass().getResource("/GUI/Image/backgroundlogin.jpg")).getImage();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new DangNhapFrame().setVisible(true));
     }
 }
-

@@ -406,6 +406,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
         PxP.Filter();
     }
 
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // Thêm action cho tìm kiếm nâng cao 2 cái datez
