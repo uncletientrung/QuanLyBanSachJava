@@ -11,7 +11,9 @@ import DTO.TacGiaDTO;
 import DTO.KhachHangDTO;
 import BUS.KhachHangBUS;
 import BUS.KhuyenMaiBUS;
+import BUS.NhanVienBUS;
 import DTO.KhuyenMaiDTO;
+import DTO.TaiKhoanDTO;
 import GUI.WorkFrame;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
@@ -27,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JList;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
+import GUI.Format.NumberFormatter;
 
 /**
  *
@@ -83,17 +86,20 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     private ArrayList<SachDTO> listSach;
     private TacGiaBUS tacgiaBUS = new TacGiaBUS();
     private DefaultListModel<String> dataSDT;
+    private DefaultListModel<String> dataFullNameKH;
     private JList<String> listSDT;
     private JPopupMenu popupMenuSDT;
+    private JPopupMenu popupMenuNameKH;
     private ArrayList<KhachHangDTO> listkh;
     private HashMap<String, String> hashMapKh;
     private DefaultTableModel dataBan;
-    
-
+    private TaiKhoanDTO taikhoan;
+    private NhanVienBUS nvBUS=new NhanVienBUS();
     /**
      * Creates new form test1
      */
-    public PhieuXuatDialogAdd() { 
+    public PhieuXuatDialogAdd( ) { 
+
         initComponents();
     }
 
@@ -151,15 +157,10 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfSDT = new javax.swing.JTextField();
 
         lbNgayTao.setText("Ngày tạo:");
-
+        
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         lbTimKhach.setText("Tìm khách:");
-
-        txfTimKhach.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfTimKhachActionPerformed(evt);
-            }
-        });
+         // Gọi hàm lấy full SDT khách
         dataSDT = new DefaultListModel<>();
         listSDT = new JList<>(dataSDT);
         popupMenuSDT = new JPopupMenu();
@@ -167,24 +168,26 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         for (String sdt : dsSDT) {
             dataSDT.addElement(sdt);
         }
+        ArrayList<String> dsNameFull = new KhachHangBUS().getFullNameKH();
+        for(String namekh: dsNameFull){
+            dataSDT.addElement(namekh);
+        }
 
+        
         lbNhanVien.setText("Nhân viên:");
 
         txfNhanVien.setEditable(false);
         txfNhanVien.setToolTipText("");
-        txfNhanVien.setText("Nguyễn Tiến Trung");
-        txfNhanVien.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfNhanVienActionPerformed(evt);
-            }
-        });
-
+        txfNhanVien.setText(nvBUS.getHoTenNVById(WorkFrame.taiKhoan.getManv()));
+        
         lbKhachHang.setText("Khách hàng:");
         txfKhachHang.setEditable(false);
+        // Dùng HasMap để hiện ra các MenuItems ở txf tìm khách
         listkh = new KhachHangBUS().getKhachHangAll();
         hashMapKh = new HashMap<String, String>();
         for (KhachHangDTO kh : listkh) {
             hashMapKh.put(kh.getSdt(), kh.getHokh() + " " + kh.getTenkh());
+            hashMapKh.put(kh.getHokh() + " " + kh.getTenkh(), kh.getSdt());
         }
 
         lbTimSach.setText("Tìm sách:");
@@ -210,7 +213,8 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
             String TG = "";
             TacGiaDTO tg = tacgiaBUS.getTGById(s.getMatacgia());
             TG = tg.getHotentacgia();
-            dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), TG, s.getSoluongton()});
+            dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), TG, 
+                NumberFormatter.format(s.getSoluongton())});
         }
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -529,7 +533,12 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         btnXoaV2.addActionListener(action);
         BtnXoaAllV2.addActionListener(action);
         btnThemPhieu.addActionListener(action);
-        System.err.println(getDateChooser1().getToolTipText());
+        // Cài đặt định dạng
+        jDateChooser1.setDateFormatString("dd/MM/yyyy");
+        jDateChooser1.setDate(new Date()); // lý do set lại là vì datechosser phải đổi ngày mới chuyển định dạng nên set như này
+        
+        
+        
     }
     
 
@@ -677,14 +686,28 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
             }
         }
     } 
-    // Nhập SDT xong nó hiện thông tin
+    // Nhập SDT hoặc Tên xong nó hiện thông tin
     public void showNameKhandSDT() {
-        String sdt = txfTimKhach.getText().trim();
-        if (hashMapKh.containsKey(sdt)) {
-            txfKhachHang.setText(hashMapKh.get(sdt));
-            txfSDT.setText(sdt);
+        String input = txfTimKhach.getText().trim();
+        boolean check=false; // Nếu nó là sdt thì set khách hàng rồi set sdt
+        if (hashMapKh.containsKey(input)) {
+            for (char c: input.toCharArray()){
+                if(!Character.isDigit(c)){
+                    break;
+                }
+                check=true; // Nếu là True set 1 kiểu dữ liệu trong hashmap và nược lại
+            }
+            if(check){
+                txfKhachHang.setText(hashMapKh.get(input));
+                txfSDT.setText(input);
+            }else{
+                txfKhachHang.setText(input);
+                txfSDT.setText(hashMapKh.get(input));
+            }
+            
         }
     }
+        
     // Tìm sách bằng Document
     public void FindBook(String text) {
         listSach = new SachBUS().search(text);
@@ -703,16 +726,16 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         int thanhtoan = 0;
         int columnTong = 3;
         for (int i = 0; i < tableListBan.getRowCount(); i++) {
-           tongtien += Integer.parseInt(tableListBan.getValueAt(i, columnTong).toString());
+           tongtien+=Integer.parseInt(NumberFormatter.formatReverse(tableListBan.getValueAt(i, columnTong).toString()));
        }
-       txfTongTien.setText(String.valueOf(tongtien));
+       txfTongTien.setText(NumberFormatter.format(tongtien));
        if (txfGiamGia.getText().isEmpty()) {
            giamgia = 0;
        } else {
             giamgia = Integer.parseInt(txfGiamGia.getText().toString());
         }
         thanhtoan = tongtien - giamgia;
-       txfThanhToan.setText(thanhtoan + "");
+       txfThanhToan.setText(NumberFormatter.format(thanhtoan));
     }
     
     // Hàm kiểm tra nếu Table bên Danh sách bán =0 thì set các txf chỉnh sửa về rỗng

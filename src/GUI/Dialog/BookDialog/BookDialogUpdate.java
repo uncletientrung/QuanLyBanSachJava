@@ -9,6 +9,7 @@ import DTO.TheLoaiDTO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import GUI.Format.NumberFormatter;
 
 public class BookDialogUpdate extends JDialog {
     private JTextField txfMasach, txfTensach, txfSoluong, txfNamxuatban, txfDongia;
@@ -187,7 +188,7 @@ public class BookDialogUpdate extends JDialog {
         txfTensach.setText(TenSach);
         txfSoluong.setText(soluong);
         txfNamxuatban.setText(NamXB);
-        txfDongia.setText(dongia);
+        txfDongia.setText(NumberFormatter.formatReverse(dongia));
         cbb_NXB.setSelectedItem(NXB);
         cbb_TG.setSelectedItem(TG);
         cbb_TL.setSelectedItem(TL);

@@ -16,6 +16,7 @@ import DTO.TacGiaDTO;
 import BUS.TacGiaBUS;
 import DTO.TheLoaiDTO;
 import BUS.TheLoaiBUS;
+import GUI.Format.NumberFormatter;
 
 public class BookPanel extends JPanel {
     private JTable tableBook;
@@ -95,7 +96,9 @@ public class BookPanel extends JPanel {
             tenTl = TLFind.getTentheloai();
 
             dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), tenNxb, tenTg, tenTl,
-                    s.getSoluongton(), s.getNamxuatban(), s.getDongia()});
+                    NumberFormatter.format(s.getSoluongton()), 
+                    s.getNamxuatban(), NumberFormatter.format(s.getDongia())
+                    });
         }
 
         // Tạo renderer để căn giữa dữ liệu trong TableBook
@@ -108,8 +111,9 @@ public class BookPanel extends JPanel {
             tableBook.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
 
+
         // Điều chỉnh kích thước width và height của các cột tableBook
-        tableBook.setRowHeight(30);
+        tableBook.setRowHeight(40);
         tableBook.getColumnModel().getColumn(0).setPreferredWidth(30);
         tableBook.getColumnModel().getColumn(1).setPreferredWidth(200);
         tableBook.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -192,86 +196,68 @@ public class BookPanel extends JPanel {
     public void refreshTableData() {
         listSach = new SachBUS().getSachAll();
         dataBook.setRowCount(0);
-        for (SachDTO sach : listSach) {
+        for (SachDTO s : listSach) {
             // Tìm tên nhà xuất bản
             String tenNxb = "";
-            NhaXuatBanDTO NxbFind = NxbBUS.getNXBById(sach.getManxb());
+            NhaXuatBanDTO NxbFind = NxbBUS.getNXBById(s.getManxb());
             tenNxb = NxbFind.getTennxb();
             // Tìm tên tác giả
             String tenTg = "";
-            TacGiaDTO TgFind = TgBUS.getTGById(sach.getMatacgia());
+            TacGiaDTO TgFind = TgBUS.getTGById(s.getMatacgia());
             tenTg = TgFind.getHotentacgia();
             // Tìm tên thể loại
             String tenTl = "";
-            TheLoaiDTO TLFind = TlBUS.getTlbyId(sach.getMatheloai());
+            TheLoaiDTO TLFind = TlBUS.getTlbyId(s.getMatheloai());
             tenTl = TLFind.getTentheloai();
-            dataBook.addRow(new Object[]{
-                    sach.getMasach(),
-                    sach.getTensach(),
-                    tenNxb,
-                    tenTg,
-                    tenTl,
-                    sach.getSoluongton(),
-                    sach.getNamxuatban(),
-                    sach.getDongia()
-            });
+            dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), tenNxb, tenTg, tenTl,
+                    NumberFormatter.format(s.getSoluongton()), 
+                    s.getNamxuatban(), NumberFormatter.format(s.getDongia())
+                    });
         }
     }
 
     public void FindTableData(String text) {
         listSach = new SachBUS().search(text);
         dataBook.setRowCount(0);
-        for (SachDTO sach : listSach) {
+        for (SachDTO s : listSach) {
             // Tìm tên nhà xuất bản
             String tenNxb = "";
-            NhaXuatBanDTO NxbFind = NxbBUS.getNXBById(sach.getManxb());
+            NhaXuatBanDTO NxbFind = NxbBUS.getNXBById(s.getManxb());
             tenNxb = NxbFind.getTennxb();
             // Tìm tên tác giả
             String tenTg = "";
-            TacGiaDTO TgFind = TgBUS.getTGById(sach.getMatacgia());
+            TacGiaDTO TgFind = TgBUS.getTGById(s.getMatacgia());
             tenTg = TgFind.getHotentacgia();
             // Tìm tên thể loại
             String tenTl = "";
-            TheLoaiDTO TLFind = TlBUS.getTlbyId(sach.getMatheloai());
+            TheLoaiDTO TLFind = TlBUS.getTlbyId(s.getMatheloai());
             tenTl = TLFind.getTentheloai();
-            dataBook.addRow(new Object[]{
-                    sach.getMasach(),
-                    sach.getTensach(),
-                    tenNxb,
-                    tenTg,
-                    tenTl,
-                    sach.getSoluongton(),
-                    sach.getNamxuatban(),
-                    sach.getDongia()
-            });
+            dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), tenNxb, tenTg, tenTl,
+                    NumberFormatter.format(s.getSoluongton()), 
+                    s.getNamxuatban(), NumberFormatter.format(s.getDongia())
+                    });
         }
     }
 
     public void FilterTableData(ArrayList<SachDTO> list_Sort) {
         dataBook.setRowCount(0);
-        for (SachDTO sach : list_Sort) {
+        for (SachDTO s : list_Sort) {
             // Tìm tên nhà xuất bản
             String tenNxb = "";
-            NhaXuatBanDTO NxbFind = NxbBUS.getNXBById(sach.getManxb());
+            NhaXuatBanDTO NxbFind = NxbBUS.getNXBById(s.getManxb());
             tenNxb = NxbFind.getTennxb();
             // Tìm tên tác giả
             String tenTg = "";
-            TacGiaDTO TgFind = TgBUS.getTGById(sach.getMatacgia());
+            TacGiaDTO TgFind = TgBUS.getTGById(s.getMatacgia());
             tenTg = TgFind.getHotentacgia();
             // Tìm tên thể loại
             String tenTl = "";
-            TheLoaiDTO TLFind = TlBUS.getTlbyId(sach.getMatheloai());
+            TheLoaiDTO TLFind = TlBUS.getTlbyId(s.getMatheloai());
             tenTl = TLFind.getTentheloai();
-            dataBook.addRow(new Object[]{
-                    sach.getMasach(),
-                    sach.getTensach(),
-                    tenNxb,
-                    tenTg,
-                    tenTl,
-                    sach.getSoluongton(),
-                    sach.getNamxuatban(),
-                    sach.getDongia()
-            });
+            dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), tenNxb, tenTg, tenTl,
+                    NumberFormatter.format(s.getSoluongton()), 
+                    s.getNamxuatban(), NumberFormatter.format(s.getDongia())
+                    });
         }
     }
 }

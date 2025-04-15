@@ -143,6 +143,14 @@ public static boolean checksdt(String sdt){
         }
         return result;
     }
+    public ArrayList<String> getFullNameKH(){
+        ArrayList<String> result=new ArrayList<>();
+        for(KhachHangDTO kh: listkh){
+            String FullName=kh.getHokh() + " "+ kh.getTenkh();
+            result.add(FullName);
+        }
+        return result;
+    }
 
 
 

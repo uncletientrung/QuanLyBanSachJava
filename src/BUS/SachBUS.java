@@ -104,6 +104,17 @@ public class SachBUS {
         }
         return result;
     }
+    public int getSoLuongById(String maSach){
+        int idSach=Integer.parseInt(maSach);
+        int result=0;
+        for (SachDTO s: listSach){
+            if(s.getMasach() == idSach){
+                result =s.getSoluongton();
+                return result;
+            }
+        }
+        return result;
+    }
     
     
 

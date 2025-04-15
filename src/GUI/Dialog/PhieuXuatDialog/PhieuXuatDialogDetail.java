@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import GUI.Format.*;
 
 
 /**
@@ -64,8 +65,8 @@ public class PhieuXuatDialogDetail extends JDialog{
         txfMaPhieu=createTextField(pxDTO.getMaphieu()+"");
         txfNV=createTextField(nvBUS.getHoTenNVById(pxDTO.getManv()));
         txfKhachHang=createTextField(khBUS.getFullNameKHById(pxDTO.getMakh()));
-        txfTime=createTextField(pxDTO.getThoigiantao()+"");
-        txfTongHD=createTextField(pxDTO.getTongTien()+"");
+        txfTime=createTextField(DateFormat.fomat(pxDTO.getThoigiantao()+""));
+        txfTongHD=createTextField(NumberFormatter.format(pxDTO.getTongTien()));
         infoPanel.add(txfMaPhieu);
         infoPanel.add(txfNV);
         infoPanel.add(txfKhachHang);
@@ -87,9 +88,9 @@ public class PhieuXuatDialogDetail extends JDialog{
             String STT=String.valueOf(i+1);
             String maSach=String.valueOf(list_ctpx.get(i).getMasach());
             String tenSach=sBUS.getSachById(list_ctpx.get(i).getMasach()).getTensach();
-            String donGia=String.valueOf(list_ctpx.get(i).getDongia());
+            String donGia=NumberFormatter.format(list_ctpx.get(i).getDongia());
             String soLuong=String.valueOf(list_ctpx.get(i).getSoluong());
-            String thanhTien=String.valueOf(list_ctpx.get(i).getSoluong()*list_ctpx.get(i).getDongia());
+            String thanhTien=NumberFormatter.format(list_ctpx.get(i).getSoluong()*list_ctpx.get(i).getDongia());
             dataCTPX.addRow(new Object[]{STT,maSach,tenSach,donGia,soLuong,thanhTien});
         }
         tableCTPX.setRowHeight(30);

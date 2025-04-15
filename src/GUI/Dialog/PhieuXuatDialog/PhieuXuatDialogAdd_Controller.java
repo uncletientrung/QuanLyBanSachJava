@@ -31,6 +31,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.util.Date;
+import GUI.Format.NumberFormatter;
 
 /**
  *
@@ -93,7 +94,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
             String maSach=tableSach.getValueAt(selectRow, 0).toString();
             SachDTO sach=new SachBUS().getSachById(Integer.parseInt(maSach));
             if (sach != null) {
-                PXDA.setTxfDonGia(String.valueOf(sach.getDongia())); // Lấy giá sách từ mã sách
+                PXDA.setTxfDonGia((NumberFormatter.format(sach.getDongia()))); // Lấy giá sách từ mã sách
         }
         }
         if(tableChiTiet.getSelectedRow()!=-1){
@@ -120,11 +121,17 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                 && !PXDA.gettTxfDonGia().getText().trim().isEmpty()
                 && tableSach.getSelectedRow() != -1){
                     String tenSach=tableSach.getValueAt(tableSach.getSelectedRow(), 1).toString();
-                    String soluong=PXDA.getTxtSoLuong().getText();
-                    String dongia=PXDA.gettTxfDonGia().getText();
-                    String tong = String.valueOf(Integer.parseInt(soluong) * Integer.parseInt(dongia));
-                    PXDA.getDataBan().addRow(new Object[]{tenSach,soluong,dongia,tong});
-                    PXDA.CalcBill();
+                    String soluong=PXDA.getTxtSoLuong().getText().toString();
+                    String dongia=NumberFormatter.formatReverse((PXDA.gettTxfDonGia().getText()));
+                    String tong = NumberFormatter.format(Integer.parseInt(soluong) * Integer.parseInt(dongia));
+                    if(sBUS.getSoLuongById(tableSach.getValueAt(tableSach.getSelectedRow(), 0).toString()) < Integer.parseInt(soluong)){
+                        JOptionPane.showMessageDialog(null, "Số lượng vượt quá mức", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                    }else{
+                        PXDA.getDataBan().addRow(new Object[]{tenSach,soluong,
+                                                NumberFormatter.format(Integer.parseInt(dongia)),tong});
+                         PXDA.CalcBill();
+                    }
+                    
            }else{
            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!", "Thông báo", JOptionPane.ERROR_MESSAGE);
        }
@@ -133,10 +140,10 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
            if(tableChiTiet.getSelectedRow()!=-1){
                int selectRowV2=tableChiTiet.getSelectedRow();
                String soLuongNew= PXDA.getTxfSoLuongV2().getText().toString();
-               String dongiaNew=PXDA.getTxfDonGiaV2().getText().toString();
-               String tong = String.valueOf(Integer.parseInt(soLuongNew) * Integer.parseInt(dongiaNew));
-               tableChiTiet.setValueAt(soLuongNew, selectRowV2, 1);
-               tableChiTiet.setValueAt(dongiaNew, selectRowV2, 2);
+               String dongiaNew=NumberFormatter.formatReverse(PXDA.getTxfDonGiaV2().getText().toString());
+               String tong = NumberFormatter.format(Integer.parseInt(soLuongNew) * Integer.parseInt(dongiaNew));
+               tableChiTiet.setValueAt(Integer.parseInt(soLuongNew), selectRowV2, 1);
+               tableChiTiet.setValueAt(NumberFormatter.format(Integer.parseInt(dongiaNew)), selectRowV2, 2);
                tableChiTiet.setValueAt(tong, selectRowV2, 3);
                PXDA.getTxfDonGiaV2().setText(dongiaNew);
                PXDA.getTxfThanhTienV2().setText(tong);
@@ -192,12 +199,12 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                 // Gọi mã phiếu xuất auto tiếp theo 
                int maPhieuXuat = pxDAO.getAutoIncrement();
                 // Gọi tổng tiền và trạng thái auto là 1
-                int tongtien=Integer.parseInt(PXDA.getTxfThanhToan().getText().toString().trim());
+                int tongtien=Integer.parseInt(NumberFormatter.formatReverse(PXDA.getTxfThanhToan().getText().toString().trim()));
                 int trangthai=1;
                for(int i=0;i<PXDA.getDataBan().getRowCount();i++){
                    String tensach=PXDA.getDataBan().getValueAt(i, 0).toString();
                    int soluong=Integer.parseInt(PXDA.getDataBan().getValueAt(i, 1).toString());
-                   int dongia=Integer.parseInt(PXDA.getDataBan().getValueAt(i, 2).toString());
+                   int dongia=Integer.parseInt(NumberFormatter.formatReverse(PXDA.getDataBan().getValueAt(i, 2).toString()));
                    // Chuyển đổi tên sách thành mã sách từ hàm BUS
                    int masach=sBUS.getIdSachByNameSach(tensach);
                    // Tạo chi tiết phiếu sách mới

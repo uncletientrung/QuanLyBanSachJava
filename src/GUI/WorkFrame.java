@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 public class WorkFrame extends JFrame {
     public CardLayout cardLayout = new CardLayout();
     public JPanel PanelCard = new JPanel(cardLayout);
-    private TaiKhoanDTO taiKhoan;
+    public static TaiKhoanDTO taiKhoan;
     private NhanVienBUS nvBUS=new NhanVienBUS();
     private JButton btnTaiKhoan, btnPhanQuyen, btnThongKe, btnNhanVien,btnPhieuXuat,btnPhieuNhap,btnKhachHang;
     private JButton btnKhuyenMai,btnSach,btnTrangChu,btnThongTinChung;
@@ -171,7 +171,7 @@ public class WorkFrame extends JFrame {
         PanelCard.add(new NhanVienPanel(), "Nhân viên");
         PanelCard.add(new PhanQuyenPanel(), "Phân quyền");
         PanelCard.add(new ThongTinChungPanel(this,ChiTietQuyenDAO.getInstance().getDanhSachChucNang(taiKhoan.getManhomquyen())), "Thông tin chung");
-        PanelCard.add(new PhieuXuatPanel(), "Phiếu xuất");
+        PanelCard.add(new PhieuXuatPanel(), "Phiếu xuất");  // Truyền tai khaorn vào để hiện tên người dùng
         PanelCard.add(new PhieuNhapPanel(), "Phiếu nhập");
         PanelCard.add(new TaiKhoanPanel(), "Tài khoản");
         PanelCard.add(new KhachhangPanel(), "Khách hàng");

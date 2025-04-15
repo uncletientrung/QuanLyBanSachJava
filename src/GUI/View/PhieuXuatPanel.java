@@ -13,6 +13,7 @@ import DTO.KhachHangDTO;
 import DTO.NhanVienDTO;
 import DTO.PhieuXuatDTO;
 import GUI.Controller.PhieuXuatController;
+import DTO.TaiKhoanDTO;
 import GUI.WorkFrame;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentListener;
-
+import GUI.Format.*;
 
 /**
  *
@@ -57,8 +58,10 @@ public class PhieuXuatPanel extends JPanel {
     private JButton btndetail;
     private JButton btnexport;
     private  JPanel toolBar_Right;
+    private TaiKhoanDTO taikhoan;
     
     public PhieuXuatPanel() {
+        this.taikhoan=taikhoan;
         // Tạo Panel toolBar cho thanh công cụ trên cùng
         JPanel toolBar = new JPanel(new GridLayout(1, 2));
         JPanel toolBar_Left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
@@ -222,7 +225,9 @@ public class PhieuXuatPanel extends JPanel {
             String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
             String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
             String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, px.getThoigiantao(), px.getTongTien(), trangThai});
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, 
+                    DateFormat.fomat(px.getThoigiantao().toString()), 
+                    NumberFormatter.format(px.getTongTien()), trangThai});
         }
         
         // Tạo renderer để căn giữa dữ liệu trong TableBook
@@ -281,12 +286,10 @@ public class PhieuXuatPanel extends JPanel {
         // Thêm PropertyChangeListener
         dateStart.addPropertyChangeListener((PropertyChangeListener)action);
         dateEnd.addPropertyChangeListener((PropertyChangeListener)action);
-        
-        // Sau khi thêm vào Panel set tham số kiểu in cho nó
-//        // Set định dạng in
-//        dateStart.setDateFormatString("dd-MM-yyyy");
-//        dateEnd.setDateFormatString("dd-MM-yyyy");
+
         // Set ngày mặc định tìm kiếm
+         dateStart.setDateFormatString("dd-MM-yyyy");
+        dateEnd.setDateFormatString("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.set(2025, Calendar.JANUARY, 1);
         dateStart.setDate(cal.getTime());
@@ -314,10 +317,13 @@ public class PhieuXuatPanel extends JPanel {
             String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
             String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
             String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, px.getThoigiantao(), px.getTongTien(), trangThai});
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, 
+                    DateFormat.fomat(px.getThoigiantao().toString()), 
+                    NumberFormatter.format(px.getTongTien()), trangThai});
         }
     }
 
+    
     public JTable getTablePhieuXuat() {
         return tablePhieuXuat;
     }
@@ -429,7 +435,9 @@ public class PhieuXuatPanel extends JPanel {
             String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
             String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
             String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, px.getThoigiantao(), px.getTongTien(), trangThai});
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, 
+                    DateFormat.fomat(px.getThoigiantao().toString()), 
+                    NumberFormatter.format(px.getTongTien()), trangThai});
         }
     }
 }

@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
+import GUI.Format.NumberFormatter;
 
 /**
  *
@@ -57,7 +58,7 @@ public class PhieuXuatDialogDelete extends JDialog{
         JPanel maPhieuPanel = createInfoPanel("Mã phiếu",  pxDTO.getMaphieu()+"");
         
         // Tổng giá trị
-        JPanel tongGiaTriPanel = createInfoPanel("Tổng giá trị", pxDTO.getTongTien()+"");
+        JPanel tongGiaTriPanel = createInfoPanel("Tổng giá trị", NumberFormatter.format(pxDTO.getTongTien()));
         
         infoPanel.add(maPhieuPanel);
         infoPanel.add(tongGiaTriPanel);
