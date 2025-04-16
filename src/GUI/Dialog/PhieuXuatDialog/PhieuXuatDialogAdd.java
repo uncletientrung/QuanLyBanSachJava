@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -719,24 +720,132 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
             dataBook.addRow(new Object[]{s.getMasach(), s.getTensach(), tentg, s.getSoluongton()});
         }
     }
-    // Update tiền cần thanh toán
-   public void CalcBill() {
-        int tongtien = 0;
-        int giamgia;
-        int thanhtoan = 0;
-        int columnTong = 3;
-        for (int i = 0; i < tableListBan.getRowCount(); i++) {
-           tongtien+=Integer.parseInt(NumberFormatter.formatReverse(tableListBan.getValueAt(i, columnTong).toString()));
-       }
-       txfTongTien.setText(NumberFormatter.format(tongtien));
-       if (txfGiamGia.getText().isEmpty()) {
-           giamgia = 0;
-       } else {
-            giamgia = Integer.parseInt(txfGiamGia.getText().toString());
-        }
-        thanhtoan = tongtien - giamgia;
-       txfThanhToan.setText(NumberFormatter.format(thanhtoan));
+//     Update tiền cần thanh toán
+//   public void CalcBill() {
+//        int tongtien = 0;
+//        int giamgia;
+//        int thanhtoan = 0;
+//        int columnTong = 3;
+//        for (int i = 0; i < tableListBan.getRowCount(); i++) {
+//           tongtien+=Integer.parseInt(NumberFormatter.formatReverse(tableListBan.getValueAt(i, columnTong).toString()));
+//       }
+//       txfTongTien.setText(NumberFormatter.format(tongtien));
+//       
+//       
+//       if (txfGiamGia.getText().isEmpty()) {
+//           giamgia = 0;
+//       } else {
+//            giamgia = Integer.parseInt(txfGiamGia.getText().toString());
+//        }
+//        thanhtoan = tongtien - giamgia;
+//       txfThanhToan.setText(NumberFormatter.format(thanhtoan));
+//    }
+    
+    
+     // Biến cho cache khuyến mãi và debounce
+    private List<KhuyenMaiDTO> cachedKhuyenMai = null;
+    private Date lastCachedDate = null;
+    private long lastCalcBillTime = 0;
+    private static final long DEBOUNCE_DELAY = 200; // 200ms
+
+    // Hàm kiểm tra ngày giống nhau
+    private boolean isSameDay(Date date1, Date date2) {
+        if (date1 == null || date2 == null) return false;
+        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate1.equals(localDate2);
     }
+
+    // Hàm làm mới cache khuyến mãi
+    private void refreshKhuyenMaiCache(Date selectedDate) {
+        if (cachedKhuyenMai == null || lastCachedDate == null || !isSameDay(selectedDate, lastCachedDate)) {
+            KhuyenMaiBUS kmBus = new KhuyenMaiBUS();
+            cachedKhuyenMai = kmBus.getAllKhuyenMai();
+            lastCachedDate = selectedDate;
+           
+        }
+    }
+
+    // Hàm lấy danh sách khuyến mãi còn hiệu lực
+    private List<KhuyenMaiDTO> getActiveKhuyenMai(Date selectedDate, double tongTien) {
+        refreshKhuyenMaiCache(selectedDate);
+        List<KhuyenMaiDTO> activeKM = new ArrayList<>();
+        for (KhuyenMaiDTO km : cachedKhuyenMai) {
+            if (!selectedDate.before(km.getNgayBatDau()) &&
+                !selectedDate.after(km.getNgayKetThuc()) &&
+                tongTien >= km.getDieuKienToiThieu()) {
+                activeKM.add(km);
+            }
+        }
+       
+        return activeKM;
+    }
+
+    public void CalcBill() {
+        // Debounce để tránh gọi liên tục
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastCalcBillTime < DEBOUNCE_DELAY) {
+           
+            return;
+        }
+        lastCalcBillTime = currentTime;
+
+        long startTime = System.currentTimeMillis();
+        int tongTien = 0;
+        int giamGia = 0;
+        int thanhToan = 0;
+        int columnTong = 3;
+
+        // Tính tổng tiền
+        for (int i = 0; i < tableListBan.getRowCount(); i++) {
+            String value = tableListBan.getValueAt(i, columnTong).toString().trim();
+            if (!value.isEmpty()) {
+                try {
+                    tongTien += Integer.parseInt(NumberFormatter.formatReverse(value));
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+            }
+        }
+
+        // Kiểm tra giảm giá thủ công
+        if (!txfGiamGia.getText().isEmpty()) {
+            try {
+                giamGia = Integer.parseInt(NumberFormatter.formatReverse(txfGiamGia.getText()));
+            } catch (NumberFormatException e) {
+                giamGia = 0;
+            }
+        }
+
+        // Kiểm tra khuyến mãi nếu chưa có giảm giá thủ công hoặc giảm giá nhỏ
+        Date selectedDate = jDateChooser1.getDate();
+        if (selectedDate != null && tongTien > 0 && giamGia == 0) {
+            List<KhuyenMaiDTO> danhSachKM = getActiveKhuyenMai(selectedDate, tongTien);
+            if (!danhSachKM.isEmpty()) {
+                KhuyenMaiDTO km = danhSachKM.get(0); // Lấy khuyến mãi đầu tiên
+                giamGia = (int) (tongTien * km.getPhanTramGiam() / 100.0);
+            }
+        }
+
+        thanhToan = tongTien - giamGia;
+
+        // Cập nhật giao diện an toàn
+        final int finalTongTien = tongTien;
+        final int finalGiamGia = giamGia;
+        final int finalThanhToan = thanhToan;
+        SwingUtilities.invokeLater(() -> {
+            txfTongTien.setText(NumberFormatter.format(finalTongTien));
+            txfGiamGia.setText(NumberFormatter.format(finalGiamGia));
+            txfThanhToan.setText(NumberFormatter.format(finalThanhToan));
+        });
+
+        
+    }
+
+
+
+
+
     
     // Hàm kiểm tra nếu Table bên Danh sách bán =0 thì set các txf chỉnh sửa về rỗng
     public boolean CheckEmptyRow() {
@@ -746,24 +855,53 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         return false;
     }
     // Hàm đưa tất cả về trạng thái ban đầu
-    public void setUpDefault(){
-        txfTimKhach.setText("");
-        txfKhachHang.setText("");
-        txfSDT.setText("");
-        txfTimSach.setText("");
-        txfDonGiaV2.setText("");
-        txfGiaBan.setText("");
-        txfSoLuong.setText("");
-        txfTenSachV2.setText("");
-        txfSoLuongV2.setText("");
-        txfDonGiaV2.setText("");
-        txfThanhTienV2.setText("");
-        txfTongTien.setText("");
-        txfGiamGia.setText("");
-        txfThanhToan.setText("");
-        dataBan.setRowCount(0);
-        tableChonSach.clearSelection();
-        jDateChooser1.setDate(new Date());
+//    public void setUpDefault(){
+//        txfTimKhach.setText("");
+//        txfKhachHang.setText("");
+//        txfSDT.setText("");
+//        txfTimSach.setText("");
+//        txfDonGiaV2.setText("");
+//        txfGiaBan.setText("");
+//        txfSoLuong.setText("");
+//        txfTenSachV2.setText("");
+//        txfSoLuongV2.setText("");
+//        txfDonGiaV2.setText("");
+//        txfThanhTienV2.setText("");
+//        txfTongTien.setText("");
+//        txfGiamGia.setText("");
+//        txfThanhToan.setText("");
+//        dataBan.setRowCount(0);
+//        tableChonSach.clearSelection();
+//        jDateChooser1.setDate(new Date());
+//    }
+    public void setUpDefault() {
+        long startTime = System.currentTimeMillis();
+        SwingUtilities.invokeLater(() -> {
+            // Đặt lại tất cả JTextField
+            txfTongTien.setText("");
+            txfGiamGia.setText("");
+            txfThanhToan.setText("");
+            txfKhachHang.setText("");
+            txfSDT.setText("");
+            txfTimKhach.setText("");
+            txfTimSach.setText("");
+            
+            txfSoLuong.setText("");
+            txfTenSachV2.setText("");
+            txfSoLuongV2.setText("");
+            txfDonGiaV2.setText("");
+            txfThanhTienV2.setText("");
+
+            // Xóa bảng tableListBan
+            dataBan.setRowCount(0);
+
+            // Đặt lại ngày mặc định (tùy chọn)
+            jDateChooser1.setDate(new Date());
+
+            // Gọi CalcBill để đảm bảo giao diện nhất quán
+            CalcBill();
+        });
+       
     }
     public void refreshTableChonSach(){
         listSach=new SachBUS().getSachAll();

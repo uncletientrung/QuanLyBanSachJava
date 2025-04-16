@@ -1,12 +1,13 @@
 package DTO;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class KhuyenMaiDTO {
     private int maKM;
     private String TenChuongTrinh;
-    private String NgayBatDau;
-    private String NgayKetThuc;
+    private Date NgayBatDau;
+    private Date NgayKetThuc;
     private double dieuKienToiThieu;
     private double phanTramGiam;
 
@@ -14,7 +15,7 @@ public class KhuyenMaiDTO {
     }
 
     public KhuyenMaiDTO(int maKM, String TenChuongTrinh,
-                        String NgayBatDau, String NgayKetThuc,
+                        Date NgayBatDau, Date NgayKetThuc,
                         double dieuKienToiThieu, double phanTramGiam) {
         this.maKM = maKM;
         this.TenChuongTrinh = TenChuongTrinh;
@@ -40,19 +41,19 @@ public class KhuyenMaiDTO {
         this.TenChuongTrinh = TenChuongTrinh;
     }
 
-    public String getNgayBatDau() {
+    public Date getNgayBatDau() {
         return NgayBatDau;
     }
 
-    public void setNgayBatDau(String NgayBatDau) {
+    public void setNgayBatDau(Date NgayBatDau) {
         this.NgayBatDau = NgayBatDau;
     }
 
-    public String getNgayKetThuc() {
+    public Date getNgayKetThuc() {
         return NgayKetThuc;
     }
 
-    public void setNgayKetThuc(String NgayKetThuc) {
+    public void setNgayKetThuc(Date NgayKetThuc) {
         this.NgayKetThuc = NgayKetThuc;
     }
 

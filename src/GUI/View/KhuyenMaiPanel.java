@@ -8,6 +8,7 @@ import BUS.KhuyenMaiBUS;
 import BUS.PhanQuyenBUS;
 import DTO.KhuyenMaiDTO;
 import DTO.NhomQuyenDTO;
+import GUI.Controller.KhuyenMaiController;
 import GUI.WorkFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,7 +16,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -55,10 +59,10 @@ public class KhuyenMaiPanel extends JPanel{
         
         btnAdd.setFont(font);
         //goi ham de thuc thi viec them
-//        PhanQuyenController controller = new PhanQuyenController(this, workFrame);
-//        btnAdd.addActionListener(controller);
-//        btnUpdate.addActionListener(controller);
-//        btndelete.addActionListener(controller);
+        KhuyenMaiController controller = new KhuyenMaiController(this, workFrame);
+        btnAdd.addActionListener(controller);
+        btnUpdate.addActionListener(controller);
+        btndelete.addActionListener(controller);
         
 
 
@@ -259,19 +263,40 @@ public class KhuyenMaiPanel extends JPanel{
     
     
     //lấy đối tượng nhóm quyền đang được click để hàm update biết
-   public KhuyenMaiDTO getSelectedKhuyenmai() {
-    int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
-    if (selectedRow == -1) return null; // Nếu không chọn gì, trả về null
+  public KhuyenMaiDTO getSelectedKhuyenmai() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) return null;
 
-    int maKhuyenmai = (int) table.getValueAt(selectedRow, 0);
-    String tenChuongtrinh = (String) table.getValueAt(selectedRow, 1);
-    String ngayBatDau = (String) table.getValueAt(selectedRow, 2); // <-- lấy kiểu String
-    String ngayKetThuc = (String) table.getValueAt(selectedRow, 3); // <-- lấy kiểu String
-    double hoaDontoithieu = (double) table.getValueAt(selectedRow, 4);
-    double phantramgiam = (double) table.getValueAt(selectedRow, 5);
+        int maKhuyenmai = (int) table.getValueAt(selectedRow, 0);
+        String tenChuongtrinh = (String) table.getValueAt(selectedRow, 1);
 
-    return new KhuyenMaiDTO(maKhuyenmai, tenChuongtrinh, ngayBatDau, ngayKetThuc, hoaDontoithieu, phantramgiam);
-}
+        Object valNgayBatDau = table.getValueAt(selectedRow, 2);
+        Object valNgayKetThuc = table.getValueAt(selectedRow, 3);
+
+        Date ngayBatDau = null;
+        Date ngayKetThuc = null;
+
+        // Nếu table đang lưu String, bạn cần parse:
+        if (valNgayBatDau instanceof String) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // hoặc "yyyy-MM-dd HH:mm:ss" tùy bạn
+                ngayBatDau = sdf.parse((String) valNgayBatDau);
+                ngayKetThuc = sdf.parse((String) valNgayKetThuc);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null; // hoặc xử lý lỗi khác
+            }
+        } else if (valNgayBatDau instanceof Date) {
+            ngayBatDau = (Date) valNgayBatDau;
+            ngayKetThuc = (Date) valNgayKetThuc;
+        }
+
+        double hoaDontoithieu = (double) table.getValueAt(selectedRow, 4);
+        double phantramgiam = (double) table.getValueAt(selectedRow, 5);
+
+        return new KhuyenMaiDTO(maKhuyenmai, tenChuongtrinh, ngayBatDau, ngayKetThuc, hoaDontoithieu, phantramgiam);
+    }
+
 
     
 }
