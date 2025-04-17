@@ -130,6 +130,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                         PXDA.getDataBan().addRow(new Object[]{tenSach,soluong,
                                                 NumberFormatter.format(Integer.parseInt(dongia)),tong});
                          PXDA.CalcBill();
+                         
                     }
                     
            }else{
@@ -218,7 +219,13 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                 
                JOptionPane.showMessageDialog(null, "Xuất hóa đơn thành công!", "Thông báo", JOptionPane.NO_OPTION);
                // Sau khi xuất xong thì set tất cả về trạng thái ban đầu
+                PXDA.setTxfTongTien("");
+                PXDA.setTxfGiamGia("");
+                PXDA.setTxfThanhToan("");
+                PXDA.setTxfTenKhuyenMai("");
+                PXDA.setTxfPhanTramGiam("0");
                 PXDA.setUpDefault();
+                
                 PXDA.refreshTableChonSach();
            }else{
                JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để xuất hóa đơn", "Thông báo", JOptionPane.ERROR_MESSAGE);
