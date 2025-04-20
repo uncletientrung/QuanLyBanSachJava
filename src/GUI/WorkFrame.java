@@ -176,6 +176,7 @@ public class WorkFrame extends JFrame {
         PanelCard.add(new TaiKhoanPanel(), "Tài khoản");
         PanelCard.add(new KhachhangPanel(), "Khách hàng");
         PanelCard.add(new KhuyenMaiPanel(), "Khuyến mãi");
+        PanelCard.add(new ThongKepanel(this,ChiTietQuyenDAO.getInstance().getDanhSachChucNang(taiKhoan.getManhomquyen())), "Thống kê");
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);
@@ -196,7 +197,7 @@ public class WorkFrame extends JFrame {
         btnKhachHang.addActionListener(action);
         btnKhuyenMai.addActionListener(action);
         btnDangXuat.addActionListener(action);
-
+        btnThongKe.addActionListener(action);
         applyPermission();
     }
       private void applyPermission() {
@@ -206,7 +207,7 @@ public class WorkFrame extends JFrame {
         //trang chu,sach,khuyenmai,dang xuat, dong ai cx tuong tac dc
         btnTaiKhoan.setVisible(false);
         btnPhanQuyen.setVisible(false);
-        btnThongKe.setVisible(false);
+        btnThongKe.setVisible(true);
         btnNhanVien.setVisible(false);  
         btnPhieuXuat.setVisible(false);
         btnPhieuNhap.setVisible(false);

@@ -106,11 +106,14 @@ public class NhanVienController implements ActionListener, ListSelectionListener
             }
         }
         
-        if(evtCbbox.equals("Tất cả")){
-            nvbus = new NhanVienBUS();
-            ArrayList<NhanVienDTO> List_OLD = nvbus.getNVAll();
-            np.FilterTableData(List_OLD);
+        if(evtCbbox.equals("Tất cả")){  // Nếu chọn lại cbb thì refresh
+            np.refreshTableData();
+        }else if(evtCbbox.equals("Họ tên")){
+             np.refreshTableData();
+        }else if(evtCbbox.equals("Số điện thoại")){
+             np.refreshTableData();
         }
+        
     }
 
     @Override
@@ -119,16 +122,29 @@ public class NhanVienController implements ActionListener, ListSelectionListener
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        np.FindTableData(np.getTxtFind().getText());
+        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
+            np.FindAll(np.getTxtFind().getText());
+        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
+            np.FindSDT(np.getTxtFind().getText());
+        }
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        np.FindTableData(np.getTxtFind().getText());
+        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
+            np.FindAll(np.getTxtFind().getText());
+        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
+            np.FindSDT(np.getTxtFind().getText());
+        }
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
+        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
+            np.FindAll(np.getTxtFind().getText());
+        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
+            np.FindSDT(np.getTxtFind().getText());
+        }
     }
     
 }

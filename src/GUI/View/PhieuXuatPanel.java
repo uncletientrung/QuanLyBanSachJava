@@ -105,7 +105,6 @@ public class PhieuXuatPanel extends JPanel {
         
         JLabel lblDateEnd = new JLabel("Đến:");
         dateEnd = new JDateChooser();
-//        dateEnd.setDate(new Date());
         dateEnd.setPreferredSize(new Dimension(100, 30)); 
         
         // Thêm vào toolBar_Right (Hàng 1)
