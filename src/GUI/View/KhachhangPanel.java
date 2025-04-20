@@ -51,7 +51,7 @@ public class KhachhangPanel extends JPanel {
         btnImport.setFont(font);
 
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
-        String[] List_Combobox = {"Tất cả", "Giá thấp đến cao ⬆", "Giá cao đến thấp ⬇", "NXB thấp đến cao ⬆", "NXB cao đến thấp ⬇"};
+        String[] List_Combobox = {"Tất cả", "Mã khách hàng","Tên khách hàng", "Số điện thoại", "Email"};
         cbbox = new JComboBox<String>(List_Combobox);
         cbbox.setPreferredSize(new Dimension(150, 35));
 
@@ -179,9 +179,19 @@ public class KhachhangPanel extends JPanel {
             });
         }
     }
-
-    public void FindTableData(String text) {
-        listkh = new KhachHangBUS().search(text);
+ 
+    public void FindKhach(String text,String choice_cbb) { // Tìm theo mã
+        if (choice_cbb.equals("Tất cả") || choice_cbb.equals("Tên khách hàng"))
+            listkh=new KhachHangBUS().searchName(text);
+        else if( choice_cbb.equals("Mã khách hàng")){
+            listkh = new KhachHangBUS().search(text);
+        }
+        else if(choice_cbb.equals("Email")){
+            listkh=new KhachHangBUS().searchEmail(text);
+        }
+        else if(choice_cbb.equals("Số điện thoại")){
+            listkh=new KhachHangBUS().searchSDTKh(text);
+        }
         datakh.setRowCount(0);
         for (KhachHangDTO kh : listkh) {
             datakh.addRow(new Object[]{
@@ -194,18 +204,5 @@ public class KhachhangPanel extends JPanel {
             });
         }
     }
-
-    public void FilterTableData(ArrayList<KhachHangDTO> list_Sort) {
-        datakh.setRowCount(0);
-        for (KhachHangDTO kh : list_Sort) {
-            datakh.addRow(new Object[]{
-                    kh.getMakh(),
-                    kh.getHokh(),
-                    kh.getTenkh(),
-                    kh.getemail(),
-                    kh.getNgaysinh(),
-                    kh.getSdt(),
-            });
-        }
-    }
+    
 }

@@ -113,31 +113,9 @@ public void actionPerformed(ActionEvent e){
         }
     }
     
-//    if(sukienCombobox.equals("Giá thấp đến cao ⬆")){
-//        khBUS=new KhachHangBUS();
-//        ArrayList<KhachHangDTO> List_Sort=khBUS.LowToHighofPrice(khf.getListKhachHang());
-//        bf.FilterTableData(List_Sort);
-//    }
-//    if(sukienCombobox.equals("Giá cao đến thấp ⬇")){
-//        sachBUS=new SachBUS();
-//        ArrayList<SachDTO> List_Sort=sachBUS.HighToLowofPrice(bf.getListSach());
-//        bf.FilterTableData(List_Sort);
-//    }
-//    if(sukienCombobox.equals("NXB thấp đến cao ⬆")){
-//        sachBUS=new SachBUS();
-//        ArrayList<SachDTO> List_Sort=sachBUS.LowToHighofNXB(bf.getListSach());
-//        bf.FilterTableData(List_Sort);
-//    }
-//    if(sukienCombobox.equals("NXB cao đến thấp ⬇")){
-//        sachBUS=new SachBUS();
-//        ArrayList<SachDTO> List_Sort=sachBUS.HighToLowofNXB(bf.getListSach());
-//        bf.FilterTableData(List_Sort);
-//    }
-//    if(sukienCombobox.equals("Tất cả")){
-//        sachBUS=new SachBUS();
-//        ArrayList<SachDTO> List_OLD=sachBUS.getSachAll();
-//        bf.FilterTableData(List_OLD);
-//    }
+    if(!sukienCombobox.equals("")){
+        khf.refreshTableData();
+    }
 }
 
     @Override
@@ -145,17 +123,17 @@ public void actionPerformed(ActionEvent e){
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        khf.FindTableData(khf.getTxfFind().getText());
+        khf.FindKhach(khf.getTxfFind().getText(), khf.getCbbox().getSelectedItem().toString());
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        khf.FindTableData(khf.getTxfFind().getText());
+         khf.FindKhach(khf.getTxfFind().getText(), khf.getCbbox().getSelectedItem().toString());
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+         khf.FindKhach(khf.getTxfFind().getText(), khf.getCbbox().getSelectedItem().toString());
     }
         
 

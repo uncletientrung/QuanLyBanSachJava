@@ -288,7 +288,7 @@ public class PhieuXuatPanel extends JPanel {
         dateEnd.addPropertyChangeListener((PropertyChangeListener)action);
 
         // Set ngày mặc định tìm kiếm
-         dateStart.setDateFormatString("dd-MM-yyyy");
+        dateStart.setDateFormatString("dd-MM-yyyy");
         dateEnd.setDateFormatString("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.set(2025, Calendar.JANUARY, 1);
