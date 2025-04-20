@@ -89,6 +89,15 @@ public class NhanVienBUS {
        }
        return  result;
    }
+    public ArrayList<NhanVienDTO> searchSDTNv(String text){
+        ArrayList<NhanVienDTO> result= new ArrayList<>();
+        for (NhanVienDTO nv : listNV){
+            if(nv.getSdt().contains(text)){
+                result.add(nv);
+            }
+        }
+        return result;
+    }
    public int getIdNvByNameNv(String tenNv) {
    for (NhanVienDTO nv : listNV) {
        String fullName = (nv.getHonv() + " " + nv.getTennv()).trim();

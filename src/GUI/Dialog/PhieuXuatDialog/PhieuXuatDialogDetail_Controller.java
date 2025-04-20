@@ -40,6 +40,7 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.DocumentException;
 import java.awt.Desktop;
 
 public class PhieuXuatDialogDetail_Controller implements ActionListener {
