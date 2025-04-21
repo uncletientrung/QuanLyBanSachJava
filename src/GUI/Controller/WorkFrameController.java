@@ -60,7 +60,7 @@ public class WorkFrameController implements ActionListener {
             wk.dispose();
             wk.setNutDangHoatDong(null);
         }
-        else if (suKien.equals("Thá»‘ng kÃª")) {
+        else if (suKien.equals("Thống kê")) {
             wk.cardLayout.show(wk.PanelCard, "Thống kê");
         }
 
