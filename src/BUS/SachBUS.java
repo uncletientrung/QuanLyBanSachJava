@@ -32,10 +32,10 @@ public class SachBUS {
     }
 
 
-    public SachDTO getSachById(int maSach){ // Update sách trong List
+    public SachDTO getSachById(String maSach){ // Update sách trong List
         SachDTO result=new SachDTO();
         for(SachDTO sach: listSach){
-            if(sach.getMasach() == maSach){
+            if(sach.getMasach().equals(maSach)){
                 
                 result=sach;
                 return result;
@@ -47,14 +47,14 @@ public class SachBUS {
         boolean result=sDAO.update(sach) !=0;
         if(result){ // Nếu update đc database sẽ update lên mảng Array
             for(int i=0;i<listSach.size()-1;i++){
-                if(listSach.get(i).getMasach()==sach.getMasach()){
+                if(listSach.get(i).getMasach().equals(sach.getMasach())){
                     listSach.set(i,sach);
                 }
             }
         }
         return result;
     }
-    public Boolean deleteById(int masach){ // Xóa trong List lẫn trong Database
+    public Boolean deleteById(String masach){ // Xóa trong List lẫn trong Database
         SachDTO sachXoa=getSachById(masach);
         Boolean result=sDAO.delete(masach+"") !=0;
         if(result){
@@ -71,7 +71,7 @@ public class SachBUS {
         text=text.toLowerCase();
         ArrayList<SachDTO> result=new ArrayList<>();
         for(SachDTO sach:listSach){
-            if(Integer.toString(sach.getMasach()).toLowerCase().contains(text) || sach.getTensach().toLowerCase().contains(text)){
+            if(sach.getMasach().toLowerCase().contains(text) || sach.getTensach().toLowerCase().contains(text)){
                 result.add(sach);
             }
         }
@@ -97,8 +97,8 @@ public class SachBUS {
         result.sort(Comparator.comparing(SachDTO::getNamxuatban).reversed());
         return result;
     }
-    public int getIdSachByNameSach(String tenSach){
-        int result=0;
+    public String getIdSachByNameSach(String tenSach){
+        String result="";
         for(SachDTO sach: listSach){
             if(sach.getTensach().equals(tenSach)){
                 result=sach.getMasach();
@@ -107,10 +107,9 @@ public class SachBUS {
         return result;
     }
     public int getSoLuongById(String maSach){
-        int idSach=Integer.parseInt(maSach);
         int result=0;
         for (SachDTO s: listSach){
-            if(s.getMasach() == idSach){
+            if(s.getMasach().equals(maSach)){
                 result =s.getSoluongton();
                 return result;
             }
@@ -119,15 +118,26 @@ public class SachBUS {
     }
     
     public int getDongGiaById(String maSach){
-        int idSach=Integer.parseInt(maSach);
         int result=0;
         for (SachDTO s: listSach){
-            if(s.getMasach() == idSach){
+            if(s.getMasach().equals(maSach)){
                 result =s.getDongia();
                 return result;
             }
         }
         return result;
+    }
+    public boolean KtraMaSachTrung(String maSach){
+        boolean result=true;
+        for(SachDTO sach: listSach){
+            if(sach.getMasach().equals(maSach)){
+                return false;
+            }
+        }
+        return  result;
+    }
+    public boolean KtraDinhDangMaSach(String maSach){
+        return maSach.matches("S\\d+"); // Kiểm tra định dạnh S + Number
     }
 
 }

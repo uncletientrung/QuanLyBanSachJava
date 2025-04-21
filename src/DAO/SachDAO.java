@@ -30,7 +30,7 @@ public class SachDAO implements  DAOInterface<SachDTO>{
              Connection con= (Connection) JDBCUtil.getConnection();
              String sql= "Insert into sach(masach,tensach,manxb,matacgia,matheloai,soluongton,namxuatban,dongia)  values ( ? , ? , ? ,  ? ,  ? ,  ? ,  ? ,  ? )";
              PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
-             pst.setInt(1, sach.getMasach());
+             pst.setString(1, sach.getMasach());
              pst.setString(2, sach.getTensach());
              pst.setInt(3, sach.getManxb());
              pst.setInt(4, sach.getMatacgia());
@@ -58,7 +58,7 @@ public class SachDAO implements  DAOInterface<SachDTO>{
             pst.setInt(4, sach.getMatheloai());
             pst.setString(5, sach.getNamxuatban());
             pst.setInt(6, sach.getDongia());
-            pst.setInt(7, sach.getMasach());
+            pst.setString(7, sach.getMasach());
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch(Exception e){
@@ -74,7 +74,7 @@ public class SachDAO implements  DAOInterface<SachDTO>{
             Connection con= (Connection) JDBCUtil.getConnection();
             String sql=" Delete From sach Where masach= ? ";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, Integer.parseInt(sach));
+            pst.setString(1,sach);
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch(Exception e){
@@ -91,7 +91,7 @@ public class SachDAO implements  DAOInterface<SachDTO>{
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
             ResultSet rs=(ResultSet) pst.executeQuery();
             while(rs.next()){
-                int masach=rs.getInt("masach");
+                String masach=rs.getString("masach");
                 String tensach=rs.getString("tensach");
                 int manxb=rs.getInt("manxb");
                 int matacgia=rs.getInt("matacgia");
@@ -116,10 +116,10 @@ public class SachDAO implements  DAOInterface<SachDTO>{
             Connection con=(Connection) JDBCUtil.getConnection();
             String sql=" SELECT *  FROM sach  Where masach=  ? ";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, Integer.parseInt(maSach));
+            pst.setString(1, maSach);
             ResultSet rs=(ResultSet) pst.executeQuery();
             while(rs.next()){
-                int masach=rs.getInt("masach");
+                String masach=rs.getString("masach");
                 String tensach=rs.getString("tensach");
                 int manxb=rs.getInt("manxb");
                 int matacgia=rs.getInt("matacgia");
@@ -164,13 +164,13 @@ public class SachDAO implements  DAOInterface<SachDTO>{
         }
         return  result;
     }
-    public int getSoLuongById(int masach){ // Hàm lấy số lượng sách từ mã sách 
+    public int getSoLuongById(String masach){ // Hàm lấy số lượng sách từ mã sách 
         int result=0;
         try{
             Connection con=(Connection) JDBCUtil.getConnection();
             String sql="Select soluongton From sach Where masach= ? ";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, masach);
+            pst.setString(1, masach);
             ResultSet rs=pst.executeQuery();
             while(rs.next()){
                 result=rs.getInt("soluongton");
@@ -181,14 +181,14 @@ public class SachDAO implements  DAOInterface<SachDTO>{
         }
         return result;
     }
-    public int UpdateSoLuong(int masach, int soluong){ // Update số lượng sách từ các chi tiết phiếu xuất và nhập
+    public int UpdateSoLuong(String masach, int soluong){ // Update số lượng sách từ các chi tiết phiếu xuất và nhập
         int result=0;
         try{
             Connection con=(Connection) JDBCUtil.getConnection();
             String sql="Update sach Set soluongton = soluongton + ? Where masach= ? ";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, soluong);
-            pst.setInt(2, masach);
+            pst.setString(2, masach);
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch(Exception e){

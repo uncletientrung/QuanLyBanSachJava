@@ -92,7 +92,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
         if (tableSach.getSelectedRow()!=-1){
             int selectRow= tableSach.getSelectedRow();
             String maSach=tableSach.getValueAt(selectRow, 0).toString();
-            SachDTO sach=new SachBUS().getSachById(Integer.parseInt(maSach));
+            SachDTO sach=new SachBUS().getSachById(maSach);
             if (sach != null) {
                 PXDA.setTxfDonGia((NumberFormatter.format(sach.getDongia()))); // Lấy giá sách từ mã sách
         }
@@ -207,7 +207,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                    int soluong=Integer.parseInt(PXDA.getDataBan().getValueAt(i, 1).toString());
                    int dongia=Integer.parseInt(NumberFormatter.formatReverse(PXDA.getDataBan().getValueAt(i, 2).toString()));
                    // Chuyển đổi tên sách thành mã sách từ hàm BUS
-                   int masach=sBUS.getIdSachByNameSach(tensach);
+                   String masach=sBUS.getIdSachByNameSach(tensach);
                    // Tạo chi tiết phiếu sách mới
                    ChiTietPhieuXuatDTO ctpxNew=new ChiTietPhieuXuatDTO(maPhieuXuat, masach, soluong, dongia);
                    ListCTPhieuXuat.add(ctpxNew);

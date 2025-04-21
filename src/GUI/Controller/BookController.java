@@ -74,7 +74,6 @@ public void actionPerformed(ActionEvent e){
     String sukienCombobox=(String) bf.getCbbox().getSelectedItem(); // Lắng nghe sự kiện khi chọn Combobox
     if (sukien.equals("Thêm")) {
         new BookDialogAdd(wk);
-        bf.refreshTableData();
     } 
     if (sukien.equals("Sửa")) {
         JTable tableB = bf.getTable();
@@ -94,7 +93,6 @@ public void actionPerformed(ActionEvent e){
             bdu = new BookDialogUpdate(wk);
             bdu.ShowInfo(maSach, tenSach, maNxb, maTacgia, matheloai, soluongton, namxuatban, dongia); // Cập nhật dữ liệu trước
             bdu.setVisible(true); // Hiển thị hộp thoại sau
-            bf.refreshTableData();
             
         } else {
             JOptionPane.showMessageDialog(null, "Hãy chọn một cuốn sách!", "Thông báo", JOptionPane.ERROR_MESSAGE);
@@ -109,8 +107,7 @@ public void actionPerformed(ActionEvent e){
             JOptionPane.showMessageDialog(null, "Hãy chọn một cuốn sách!", "Thông báo", JOptionPane.ERROR_MESSAGE);
         }else{
             String maSach = tableB.getValueAt(selectRow, 0).toString();
-            bddelete=new BookDialogDelete(wk,sachBUS.getSachById(Integer.parseInt(maSach)));
-            bf.refreshTableData();
+            bddelete=new BookDialogDelete(wk,sachBUS.getSachById(maSach));
         }
     }
     if(sukien.equals("Chi tiết")){
@@ -141,7 +138,6 @@ public void actionPerformed(ActionEvent e){
             bdd = new BookDialogDetail(wk);
             bdd.ShowInfo(maSach, tenSach, maNxb, maTacgia, matheloai, soluongton, namxuatban, dongia); // Cập nhật dữ liệu trước
             bdd.setVisible(true); // Hiển thị hộp thoại sau
-            
         } else {
             JOptionPane.showMessageDialog(null, "Hãy chọn một cuốn sách! ","Thông báo", JOptionPane.ERROR_MESSAGE);
         }
@@ -153,6 +149,7 @@ public void actionPerformed(ActionEvent e){
             }catch (IOException ex) {
                 System.err.println("Lỗi đọc file Excel: " + ex.getMessage());
             }
+            
     }
     if(sukien.equals("Nhập Excel")){
         try{
@@ -160,6 +157,7 @@ public void actionPerformed(ActionEvent e){
         }catch(Exception ex){
             System.err.println("Lỗi đọc file Excel: " + ex.getMessage());
         }
+        
     }
     
     if(sukienCombobox.equals("Giá thấp đến cao ⬆")){
@@ -187,6 +185,7 @@ public void actionPerformed(ActionEvent e){
         ArrayList<SachDTO> List_OLD=sachBUS.getSachAll();
         bf.FilterTableData(List_OLD);
     }
+    bf.refreshTableData();
 }
 
     @Override
@@ -443,17 +442,18 @@ public void actionPerformed(ActionEvent e){
             }
 
             // Lấy dữ liệu từ các cột
-            String tenSach = row.getCell(0).getStringCellValue(); // Tên sách
-            int maNXB = (int) row.getCell(1).getNumericCellValue(); // Mã nhà xuất bản
-            int maTG = (int) row.getCell(2).getNumericCellValue(); // Mã tác giả
-            int maTL = (int) row.getCell(3).getNumericCellValue(); // Mã thể loại
-            int soluong = (int) row.getCell(4).getNumericCellValue(); // Số lượng tồn
-            String namXuatBan = String.valueOf((int) row.getCell(5).getNumericCellValue()); // Năm xuất bản
-            int donGia = (int) row.getCell(6).getNumericCellValue(); // Đơn giá
+            String masach=row.getCell(0).getStringCellValue();  // Mã sách
+            String tenSach = row.getCell(1).getStringCellValue(); // Tên sách
+            int maNXB = (int) row.getCell(2).getNumericCellValue(); // Mã nhà xuất bản
+            int maTG = (int) row.getCell(3).getNumericCellValue(); // Mã tác giả
+            int maTL = (int) row.getCell(4).getNumericCellValue(); // Mã thể loại
+            int soluong = (int) row.getCell(5).getNumericCellValue(); // Số lượng tồn
+            String namXuatBan = String.valueOf((int) row.getCell(6).getNumericCellValue()); // Năm xuất bản
+            int donGia = (int) row.getCell(7).getNumericCellValue(); // Đơn giá
             // Tạo mã sách tự động
             int maSachAuto = SachDAO.getInstance().getAutoIncrement();
             // Tạo đối tượng SachDTO
-            SachDTO sachNew = new SachDTO(maSachAuto, tenSach, maNXB, maTG, maTL, soluong, namXuatBan, donGia);
+            SachDTO sachNew = new SachDTO(masach, tenSach, maNXB, maTG, maTL, soluong, namXuatBan, donGia);
 
             // Thêm sách vào hệ thống
             boolean result = sachBUS.addSach(sachNew);

@@ -14,14 +14,14 @@ import java.util.ArrayList;
  *
  * @author DELL
  * 
-
  */
 public class BookDialogAdd extends JDialog {
-    private JTextField txfTensach,txfSoluong,txfNamxuatban,txfDongia;
-    private JComboBox<String> cbb_NXB,cbb_TG,cbb_TL;
-    private NhaXuatBanBUS nxbBUS=new NhaXuatBanBUS();
-    private TacGiaBUS tgBUS=new TacGiaBUS();
-    private TheLoaiBUS tlBUS=new TheLoaiBUS();
+    private JTextField txfMasach, txfTensach, txfSoluong, txfNamxuatban, txfDongia;
+    private JComboBox<String> cbb_NXB, cbb_TG, cbb_TL;
+    private NhaXuatBanBUS nxbBUS = new NhaXuatBanBUS();
+    private TacGiaBUS tgBUS = new TacGiaBUS();
+    private TheLoaiBUS tlBUS = new TheLoaiBUS();
+    
     public BookDialogAdd(JFrame parent) {
         super(parent, "Danh mục thêm sách", true);
 
@@ -54,29 +54,32 @@ public class BookDialogAdd extends JDialog {
         Font labelFont = new Font("Arial", Font.BOLD, 14);
         Font fieldFont = new Font("Arial", Font.PLAIN, 14);
 
-        // Các Label và TextField (giữ nguyên tên biến)
-        JLabel lbTensach = new JLabel("Tên sách:");        lbTensach.setFont(labelFont);
-        JLabel lbManxb = new JLabel("Nhà xuất bản:");            lbManxb.setFont(labelFont);
-        JLabel lbMatacgia = new JLabel("Tác giả:");     lbMatacgia.setFont(labelFont);
-        JLabel lbMatheloai = new JLabel("Thể loại:");  lbMatheloai.setFont(labelFont);
-        JLabel lbSoluong = new JLabel("Số lượng:");        lbSoluong.setFont(labelFont);
+        // Các Label và TextField
+        JLabel lbMasach = new JLabel("Mã sách:"); lbMasach.setFont(labelFont);
+        JLabel lbTensach = new JLabel("Tên sách:"); lbTensach.setFont(labelFont);
+        JLabel lbManxb = new JLabel("Nhà xuất bản:"); lbManxb.setFont(labelFont);
+        JLabel lbMatacgia = new JLabel("Tác giả:"); lbMatacgia.setFont(labelFont);
+        JLabel lbMatheloai = new JLabel("Thể loại:"); lbMatheloai.setFont(labelFont);
+        JLabel lbSoluong = new JLabel("Số lượng:"); lbSoluong.setFont(labelFont);
         JLabel lbNamxuatban = new JLabel("Năm xuất bản:"); lbNamxuatban.setFont(labelFont);
-        JLabel lbDongia = new JLabel("Đơn giá:");          lbDongia.setFont(labelFont);
+        JLabel lbDongia = new JLabel("Đơn giá:"); lbDongia.setFont(labelFont);
 
+        txfMasach = createTextField(fieldFont);
         txfTensach = createTextField(fieldFont);
         txfSoluong = createTextField(fieldFont);
         txfNamxuatban = createTextField(fieldFont);
         txfDongia = createTextField(fieldFont);
         
         // Tạo các Combox nxb
-        cbb_NXB=createComboBox(fieldFont, nxbBUS.getAllNameNXB().toArray(new String[0]));
-        cbb_TG=createComboBox(fieldFont, tgBUS.getAllNameTG().toArray(new String[0]));
-        cbb_TL=createComboBox(fieldFont, tlBUS.getAllNameTL().toArray(new String[0]));
+        cbb_NXB = createComboBox(fieldFont, nxbBUS.getAllNameNXB().toArray(new String[0]));
+        cbb_TG = createComboBox(fieldFont, tgBUS.getAllNameTG().toArray(new String[0]));
+        cbb_TL = createComboBox(fieldFont, tlBUS.getAllNameTL().toArray(new String[0]));
         
 
         // Cột 1 - Labels
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;
-        formPanel.add(lbTensach, gbc);
+        formPanel.add(lbMasach, gbc);
+        gbc.gridy++; formPanel.add(lbTensach, gbc);
         gbc.gridy++; formPanel.add(lbManxb, gbc);
         gbc.gridy++; formPanel.add(lbMatacgia, gbc);
         gbc.gridy++; formPanel.add(lbMatheloai, gbc);
@@ -86,7 +89,8 @@ public class BookDialogAdd extends JDialog {
 
         // Cột 2 - TextFields
         gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.7; gbc.fill = GridBagConstraints.HORIZONTAL;
-        formPanel.add(txfTensach, gbc);
+        formPanel.add(txfMasach, gbc);
+        gbc.gridy++; formPanel.add(txfTensach, gbc);
         gbc.gridy++; formPanel.add(cbb_NXB, gbc);
         gbc.gridy++; formPanel.add(cbb_TG, gbc);
         gbc.gridy++; formPanel.add(cbb_TL, gbc);
@@ -105,20 +109,21 @@ public class BookDialogAdd extends JDialog {
         JButton deleteButton = createButton("Xóa", new Color(244, 67, 54));
 
         buttonPanel.add(addButton);
-        buttonPanel.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa 2 nút
+        buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(deleteButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
         // Thêm sự kiện cho 2 nút
-        ActionListener action= new BookDiaLogAdd_Controller(this);
+        ActionListener action = new BookDiaLogAdd_Controller(this);
         addButton.addActionListener(action);
         deleteButton.addActionListener(action);
 
         
-        pack(); // Điều chỉnh kích thước tự động dựa trên nội dung
-        setLocationRelativeTo(parent); // Hiển thị giữa màn hình
+        pack();
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
+    
     private JTextField createTextField(Font font) {
         JTextField textField = new JTextField(20);
         textField.setFont(font);
@@ -127,15 +132,16 @@ public class BookDialogAdd extends JDialog {
             BorderFactory.createEmptyBorder(5, 10, 5, 10)));
         return textField;
     }
+    
     private JComboBox<String> createComboBox(Font font, String[] items) {
-    JComboBox<String> comboBox = new JComboBox<>(items);
-    comboBox.setFont(font);
-    comboBox.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(new Color(180, 180, 180)),
-        BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-    comboBox.setBackground(Color.WHITE);
-    return comboBox;
-}
+        JComboBox<String> comboBox = new JComboBox<>(items);
+        comboBox.setFont(font);
+        comboBox.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(180, 180, 180)),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        comboBox.setBackground(Color.WHITE);
+        return comboBox;
+    }
 
     private JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text) {
@@ -144,16 +150,14 @@ public class BookDialogAdd extends JDialog {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Xác định màu nền dựa trên trạng thái của button
                 Color actualBgColor = bgColor;
                 if (getModel().isPressed()) {
-                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                    actualBgColor = bgColor.darker();
                 } else if (getModel().isRollover()) {
-                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                    actualBgColor = bgColor.brighter();
                 }
-                // Vẽ hình tròn làm nền
                 g2.setColor(actualBgColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
 
                 super.paintComponent(g2);
                 g2.dispose();
@@ -169,16 +173,18 @@ public class BookDialogAdd extends JDialog {
 
         return button;
     }
-    public JTextField getTxfTensach() {return txfTensach;}
-    public JTextField getTxfSoluong() { return txfSoluong;}
-    public JTextField getTxfNamxuatban() { return txfNamxuatban; }
-    public JTextField getTxfDongia() {return txfDongia;}
-    public JComboBox<String> getCbb_TG() {return cbb_TG;}
-    public JComboBox<String> getCbb_TL() {return cbb_TL;}
-    public JComboBox<String> getCbb_NXB() {return cbb_NXB; }
-
     
-    public void ClearTextField(){
+    public JTextField getTxfMasach() { return txfMasach; }
+    public JTextField getTxfTensach() { return txfTensach; }
+    public JTextField getTxfSoluong() { return txfSoluong; }
+    public JTextField getTxfNamxuatban() { return txfNamxuatban; }
+    public JTextField getTxfDongia() { return txfDongia; }
+    public JComboBox<String> getCbb_TG() { return cbb_TG; }
+    public JComboBox<String> getCbb_TL() { return cbb_TL; }
+    public JComboBox<String> getCbb_NXB() { return cbb_NXB; }
+
+    public void ClearTextField() {
+        txfMasach.setText("");
         txfTensach.setText("");
         cbb_NXB.setSelectedIndex(0);
         cbb_TG.setSelectedIndex(0);
@@ -187,8 +193,4 @@ public class BookDialogAdd extends JDialog {
         txfNamxuatban.setText("");
         txfDongia.setText(""); 
     }
-
-
 }
-
-

@@ -31,7 +31,7 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
             PreparedStatement pst = con.prepareStatement(sql);
             for(ChiTietPhieuNhapDTO chitiet : t){
                 pst.setInt(1, chitiet.getMaphieu());
-                pst.setInt(2, chitiet.getMasach());
+                pst.setString(2, chitiet.getMasach());
                 pst.setInt(3, chitiet.getSoluong());
                 pst.setInt(4, chitiet.getDongia());
                 result += pst.executeUpdate();
@@ -77,7 +77,7 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
             ResultSet rs=pst.executeQuery();
             while(rs.next()){
                 int maphieuxuat=rs.getInt("maphieunhap");
-                int masach=rs.getInt("masach");
+                String masach=rs.getString("masach");
                 int soluong=rs.getInt("soluong");
                 int dongia=rs.getInt("dongia");
                 ChiTietPhieuNhapDTO ctPhieuNhap = new ChiTietPhieuNhapDTO(maphieuxuat, masach, soluong, dongia);

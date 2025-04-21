@@ -2,7 +2,7 @@ package DTO;
 import java.util.Objects;
 
 public class SachDTO {
-    private int masach;
+    private String masach;
     private String tensach;
     private int manxb;
     private int matacgia;
@@ -13,7 +13,7 @@ public class SachDTO {
 
     public SachDTO() {}
 
-    public SachDTO(int masach, String tensach, int manxb, int matacgia, int matheloai, int soluongton, String namxuatban, int dongia) {
+    public SachDTO(String masach, String tensach, int manxb, int matacgia, int matheloai, int soluongton, String namxuatban, int dongia) {
         this.masach = masach;
         this.tensach = tensach;
         this.manxb = manxb;
@@ -24,7 +24,7 @@ public class SachDTO {
         this.dongia = dongia;
     }
 
-    public int getMasach() {
+    public String getMasach() {
         return masach;
     }
 
@@ -64,7 +64,7 @@ public class SachDTO {
         this.manxb = manxb;
     }
 
-    public void setMasach(int masach) {
+    public void setMasach(String masach) {
         this.masach = masach;
     }
 

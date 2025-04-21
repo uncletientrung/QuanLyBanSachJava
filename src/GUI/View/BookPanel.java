@@ -17,6 +17,7 @@ import BUS.TacGiaBUS;
 import DTO.TheLoaiDTO;
 import BUS.TheLoaiBUS;
 import GUI.Format.NumberFormatter;
+import java.util.Comparator;
 
 public class BookPanel extends JPanel {
     private JTable tableBook;
@@ -195,6 +196,7 @@ public class BookPanel extends JPanel {
 
     public void refreshTableData() {
         listSach = new SachBUS().getSachAll();
+        listSach.sort(Comparator.comparingInt(s -> Integer.parseInt(s.getMasach().substring(1)))); // Sắp xếp thự tự mã
         dataBook.setRowCount(0);
         for (SachDTO s : listSach) {
             // Tìm tên nhà xuất bản

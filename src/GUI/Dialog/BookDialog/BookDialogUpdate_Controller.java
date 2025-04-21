@@ -41,7 +41,7 @@ public class BookDialogUpdate_Controller implements  ActionListener{
             } else {
                 try {
                     // Thực hiện sửa sách khi tất cả các trường đều có dữ liệu
-                    int maSach=Integer.parseInt(BDU.getTxfMasach().getText());
+                    String maSach=BDU.getTxfMasach().getText();
                     String tenSach = BDU.getTxfTensach().getText();
                     String nameNXB=BDU.getCbb_NXB().getSelectedItem().toString();
                     String nameTG=BDU.getCbb_TG().getSelectedItem().toString();

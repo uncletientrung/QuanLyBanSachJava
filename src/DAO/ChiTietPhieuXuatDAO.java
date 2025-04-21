@@ -35,7 +35,7 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuXuatDTO
         
         for (ChiTietPhieuXuatDTO chiTiet : t) {
             pst.setInt(1, chiTiet.getMaphieu());
-            pst.setInt(2, chiTiet.getMasach());
+            pst.setString(2, chiTiet.getMasach());
             pst.setInt(3, chiTiet.getSoluong());
             pst.setInt(4, chiTiet.getDongia());
             result += pst.executeUpdate();
@@ -83,7 +83,7 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuXuatDTO
             ResultSet rs=pst.executeQuery();
             while(rs.next()){
                 int maphieuxuat=rs.getInt("maphieuxuat");
-                int masach=rs.getInt("masach");
+                String masach=rs.getString("masach");
                 int soluong=rs.getInt("soluong");
                 int dongia=rs.getInt("dongia");
                 ChiTietPhieuXuatDTO ctPhieuXuat=new ChiTietPhieuXuatDTO(maphieuxuat, masach, soluong, dongia);
@@ -105,7 +105,7 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuXuatDTO
             ResultSet rs=pst.executeQuery();
             while(rs.next()){
                 int maphieuxuat=rs.getInt("maphieuxuat");
-                int masach=rs.getInt("masach");
+                String masach=rs.getString("masach");
                 int soluong=rs.getInt("soluong");
                 int dongia=rs.getInt("dongia");
                 ChiTietPhieuXuatDTO ctPhieuXuat=new ChiTietPhieuXuatDTO(maphieuxuat, masach, soluong, dongia);

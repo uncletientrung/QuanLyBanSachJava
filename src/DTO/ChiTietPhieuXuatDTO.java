@@ -3,12 +3,13 @@ package DTO;
 import java.util.Objects;
 
 public class ChiTietPhieuXuatDTO {
-    private int maphieu, masach;
+    private int maphieu;
+    private String masach;
     private int soluong, dongia;
     
     public ChiTietPhieuXuatDTO() {}
 
-    public ChiTietPhieuXuatDTO(int maphieu, int masach, int soluong, int dongia) {
+    public ChiTietPhieuXuatDTO(int maphieu, String masach, int soluong, int dongia) {
         this.maphieu = maphieu;
         this.masach = masach;
         this.soluong = soluong;
@@ -23,7 +24,7 @@ public class ChiTietPhieuXuatDTO {
         return maphieu;
     }
 
-    public int getMasach() {
+    public String getMasach() {
         return masach;
     }
 
@@ -39,7 +40,7 @@ public class ChiTietPhieuXuatDTO {
         this.maphieu = maphieu;
     }
 
-    public void setMasach(int masach) {
+    public void setMasach(String masach) {
         this.masach = masach;
     }
 
