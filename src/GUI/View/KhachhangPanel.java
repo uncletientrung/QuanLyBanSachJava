@@ -42,13 +42,11 @@ public class KhachhangPanel extends JPanel {
         JButton btndelete = createToolBarButton("Xóa", "trash.png");
         JButton btndetail = createToolBarButton("Chi tiết", "detail1.png");
         JButton btnExport = createToolBarButton("Xuất Excel", "export_excel.png");
-        JButton btnImport = createToolBarButton("Nhập Excel", "import_excel.png");
         btnAdd.setFont(font);
         btnUpdate.setFont(font);
         btndelete.setFont(font);
         btndetail.setFont(font);
         btnExport.setFont(font);
-        btnImport.setFont(font);
 
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
         String[] List_Combobox = {"Tất cả", "Mã khách hàng","Tên khách hàng", "Số điện thoại", "Email"};
@@ -104,7 +102,6 @@ public class KhachhangPanel extends JPanel {
         toolBar_Left.add(btndelete);
         toolBar_Left.add(btndetail);
         toolBar_Left.add(btnExport);
-        toolBar_Left.add(btnImport);
 
         // Thêm các thành phần vào toolBar_Right
         toolBar_Right.add(cbbox);
@@ -130,7 +127,6 @@ public class KhachhangPanel extends JPanel {
         btndelete.addActionListener(action);
         btndetail.addActionListener(action);
         btnExport.addActionListener(action);
-        btnImport.addActionListener(action); // Thêm sự kiện cho nút Import
         cbbox.addActionListener(action);
         // Thêm sự kiện DocumentListener
         DocumentListener document = new KhachhangController(this, workFrame);

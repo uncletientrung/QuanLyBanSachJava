@@ -108,7 +108,7 @@ public class NhanVienBUS {
    return -1;
    }
    
-   public String searchSDTNv(String text){
+   public String searchSDTNv2(String text){
        for(NhanVienDTO nv : listNV){
            if(nv.getTennv().equals(text)){
                return nv.getSdt();

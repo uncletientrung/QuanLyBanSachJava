@@ -19,12 +19,20 @@ import GUI.Dialog.KhachHangDialog.KhachHangDialogDelete;
 import GUI.View.KhachhangPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * @author DELL
@@ -116,6 +124,14 @@ public void actionPerformed(ActionEvent e){
     if(!sukienCombobox.equals("")){
         khf.refreshTableData();
     }
+    if(sukien.equals("Xuất Excel")){
+        try {
+                ExportExcel();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.err.println("Lỗi đọc file Excel: " + ex.getMessage());
+            }
+    }
 }
 
     @Override
@@ -135,6 +151,92 @@ public void actionPerformed(ActionEvent e){
     public void changedUpdate(DocumentEvent e) {
          khf.FindKhach(khf.getTxfFind().getText(), khf.getCbbox().getSelectedItem().toString());
     }
+        public void ExportExcel() throws Exception{
+        JFileChooser fileChooser=new JFileChooser();
+        fileChooser.setDialogTitle("Xuất Excel khách hàng");
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")+"/Documents"));
+        fileChooser.setFileFilter(new FileFilter(){
+            @Override
+            public boolean accept(File f) {
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".xlsx");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Excel Files (*.xlsx)";
+            }
+        });
+        String defaultFileName= "KhachHang.xlsx";
+        fileChooser.setSelectedFile(new File(defaultFileName));
         
+        int userchosser=fileChooser.showDialog(khf,"Save");
+        if(userchosser!=fileChooser.APPROVE_OPTION){
+            return;
+        }
+        File fileToSave=fileChooser.getSelectedFile();
+        String filePath=fileToSave.getAbsolutePath();
+        if (!filePath.toLowerCase().endsWith(".xlsx")){
+            filePath+=".xlsx";
+        }       
+        XSSFWorkbook wb=new XSSFWorkbook();
+        XSSFSheet sheet=wb.createSheet("Khách hàng");
+        JTable tableB = khf.getTable();
+        XSSFRow headerRow=sheet.createRow(1);
+        String[] header={"Mã","Họ","Tên","Email","Ngày sinh","Số điện thoại"};
+        for (int i=0;i<header.length;i++){
+            XSSFCell cell1=headerRow.createCell(i);
+            cell1.setCellValue(header[i]);
+        }
+        int numrowdata=2;
+        for (int i=0; i<tableB.getRowCount();i++){
+            XSSFRow rowdata=sheet.createRow(numrowdata);
+            XSSFCell cell1=rowdata.createCell(0);
+            cell1.setCellValue(tableB.getValueAt(i, 0).toString());
+            
+            XSSFCell cell2=rowdata.createCell(1);
+            cell2.setCellValue(tableB.getValueAt(i, 1).toString());
+            
+            XSSFCell cell3=rowdata.createCell(2);
+            cell3.setCellValue(tableB.getValueAt(i, 2).toString());
+            
+            XSSFCell cell4=rowdata.createCell(3);
+            cell4.setCellValue(tableB.getValueAt(i, 3).toString());
+            
+            XSSFCell cell5=rowdata.createCell(4);
+            cell5.setCellValue(tableB.getValueAt(i, 4).toString());
+            
+            XSSFCell cell6=rowdata.createCell(5);
+            cell6.setCellValue(tableB.getValueAt(i, 5).toString());
+            numrowdata+=1;
+        }
+        for (int i=0;i<header.length;i++){
+            sheet.autoSizeColumn(i);
+        }
+        
+        
+        try(FileOutputStream fileOut=new FileOutputStream(filePath)) {
+                wb.write(fileOut);
+                 JOptionPane.showMessageDialog(khf,
+                    "Xuất file Excel thành công!\nĐường dẫn: ",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(new File(filePath));// Mở file sau khi thêm
+                    }
+                if(Desktop.isDesktopSupported()){
+                    Desktop.getDesktop().open(new File(filePath));// Mở file bằng đường dẫn sau khi thêm
+            }
+        } catch (Exception e) {
+                JOptionPane.showMessageDialog(khf,
+                    "Lỗi khi xuất file Excel: " + e.getMessage(),
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
+            }finally {
+            wb.close();
+        }
+        
+        
+    
+    }    
 
 }
