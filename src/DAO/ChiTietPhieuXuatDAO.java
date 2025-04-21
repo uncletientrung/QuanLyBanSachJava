@@ -95,5 +95,28 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuXuatDTO
         }
         return result;
     }
+
+     public ArrayList<ChiTietPhieuXuatDTO> selectAll2() {
+        ArrayList<ChiTietPhieuXuatDTO> result= new ArrayList<>();
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql="Select * From ctphieuxuat";
+            PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            while(rs.next()){
+                int maphieuxuat=rs.getInt("maphieuxuat");
+                int masach=rs.getInt("masach");
+                int soluong=rs.getInt("soluong");
+                int dongia=rs.getInt("dongia");
+                ChiTietPhieuXuatDTO ctPhieuXuat=new ChiTietPhieuXuatDTO(maphieuxuat, masach, soluong, dongia);
+                result.add(ctPhieuXuat);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+            Logger.getLogger(ChiTietPhieuXuatDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return result;
+    }
+    
     
 }
