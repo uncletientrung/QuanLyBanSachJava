@@ -28,6 +28,7 @@ import java.util.Date;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentListener;
 import GUI.Format.*;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -42,11 +43,14 @@ public class PhieuXuatPanel extends JPanel {
     private JTextField txfPriceEnd;   // Giá kết thúc
     private DefaultTableModel dataPhieuXuat;
     private JTable tablePhieuXuat;
+    private DefaultTableModel dataBookDetails;
+    private JTable tableBookDetails;
     private WorkFrame Wf;
     private NhanVienBUS nvBUS;
     private KhachHangBUS khBUS;
     private JPanel PanelCenter;
     private JScrollPane SPPhieuXuat;
+    private JScrollPane SPBookDetails;
     private JTabbedPane tabbedPane;
     private ArrayList<String> listCBB_NV;
     private ArrayList<String> listCBB_KH;
@@ -57,11 +61,15 @@ public class PhieuXuatPanel extends JPanel {
     private JButton btndelete;
     private JButton btndetail;
     private JButton btnexport;
-    private  JPanel toolBar_Right;
+    private JPanel toolBar_Right;
     private TaiKhoanDTO taikhoan;
-    
+    private JPanel topPanel;
+    private JPanel bottomPanel;
+    private JPanel titlePanel;
+    private JPanel tongTienPanel;
+    private JTextField txfTongTien;
     public PhieuXuatPanel() {
-        this.taikhoan=taikhoan;
+        this.taikhoan = taikhoan;
         // Tạo Panel toolBar cho thanh công cụ trên cùng
         JPanel toolBar = new JPanel(new GridLayout(1, 2));
         JPanel toolBar_Left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
@@ -96,7 +104,7 @@ public class PhieuXuatPanel extends JPanel {
 
         // Hàng 1: Nhân viên, Ngày bắt đầu, Ngày kết thúc
         JLabel lblEmployee = new JLabel("Nhân viên:");
-        cbb_nv=new JComboBox<String>(getListNameNV().toArray(new String[0]));   // Jcombobox không nhân ArrayList chỉ nhận kiểu String[]
+        cbb_nv = new JComboBox<String>(getListNameNV().toArray(new String[0]));   // Jcombobox không nhân ArrayList chỉ nhận kiểu String[]
         cbb_nv.setPreferredSize(new Dimension(120, 30)); 
         
         JLabel lblDateStart = new JLabel("Từ:");
@@ -151,7 +159,7 @@ public class PhieuXuatPanel extends JPanel {
 
         // Hàng 2: Khách hàng, Tổng tiền từ, Đến
         JLabel lblCustomer = new JLabel("Khách hàng:");
-        cbb_kh=new JComboBox<>(getListNameKH().toArray(new String[0]));
+        cbb_kh = new JComboBox<>(getListNameKH().toArray(new String[0]));
         cbb_kh.setPreferredSize(new Dimension(120, 30)); // Tăng kích thước để tận dụng không gian
 
         JLabel lblPriceStart = new JLabel("Giá từ:");
@@ -204,7 +212,7 @@ public class PhieuXuatPanel extends JPanel {
         gbc.weightx = 1.0;
         toolBar_Right.add(txfPriceEnd, gbc);
 
-        // Tạo JTable cho BookPanel
+        // Tạo JTable cho PhieuXuat (Table 1)
         listPx = new PhieuXuatBUS().getAll();
         String[] columnPhieuXuat = {"Mã phiếu xuất", "Nhân viên", "Khách hàng", "Thời gian", "Tổng tiền", "Trạng thái"};
         dataPhieuXuat = new DefaultTableModel(columnPhieuXuat, 0) {
@@ -230,7 +238,7 @@ public class PhieuXuatPanel extends JPanel {
                     NumberFormatter.format(px.getTongTien()), trangThai});
         }
         
-        // Tạo renderer để căn giữa dữ liệu trong TableBook
+        // Tạo renderer để căn giữa dữ liệu trong TablePhieuXuat
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         int[] columnsToCenter = {0, 1, 2, 3, 4, 5}; // Căn giữa tất cả trừ tên sách và tên nbx
@@ -238,7 +246,7 @@ public class PhieuXuatPanel extends JPanel {
             tablePhieuXuat.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
         
-        // Điều chỉnh kích thước width và height của các cột tableBook 
+        // Điều chỉnh kích thước width và height của các cột tablePhieuXuat 
         tablePhieuXuat.setRowHeight(30);
         tablePhieuXuat.getColumnModel().getColumn(0).setPreferredWidth(30);
         tablePhieuXuat.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -246,9 +254,89 @@ public class PhieuXuatPanel extends JPanel {
         tablePhieuXuat.getColumnModel().getColumn(3).setPreferredWidth(165);
         tablePhieuXuat.getColumnModel().getColumn(4).setPreferredWidth(65);
         tablePhieuXuat.getColumnModel().getColumn(5).setPreferredWidth(30);
-        
-        // Tạo ScrollPane cho Table để tên cột column hiện
+
+        // Tạo ScrollPane tối da 11 dòng
         SPPhieuXuat = new JScrollPane(tablePhieuXuat);
+        int SizeRowHeight = tablePhieuXuat.getRowHeight();
+        int MaxRow = SizeRowHeight * 11 + tablePhieuXuat.getTableHeader().getPreferredSize().height; // Tối da 11 dòng
+        SPPhieuXuat.setPreferredSize(new Dimension(0, MaxRow));
+
+        // Table2
+        String[] columnBookDetails = {"STT", "Mã sách", "Tên sách", "Đơn giá", "Số lượng", "Thành tiền"};
+        dataBookDetails = new DefaultTableModel(columnBookDetails, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa tất cả các ô
+            }
+        };
+        tableBookDetails = new JTable(dataBookDetails);
+        tableBookDetails.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tableBookDetails.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
+        tableBookDetails.getTableHeader().setReorderingAllowed(false); // Ngăn kéo các cột
+        tableBookDetails.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Ngăn chọn nhiều row cùng 1 lúc
+
+        // Căn giữa
+        for (int col : new int[]{0, 1, 3, 4, 5}) {
+            tableBookDetails.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
+        }
+
+        // Điều chỉnh kích thước cột cho TableBookDetails
+        tableBookDetails.setRowHeight(30);
+        tableBookDetails.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tableBookDetails.getColumnModel().getColumn(1).setPreferredWidth(20);
+        tableBookDetails.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tableBookDetails.getColumnModel().getColumn(3).setPreferredWidth(70);
+        tableBookDetails.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tableBookDetails.getColumnModel().getColumn(5).setPreferredWidth(70);
+
+        // Tạo ScrollPane cho TableBookDetails
+        SPBookDetails = new JScrollPane(tableBookDetails);
+        int SizeRowHeight2 = tableBookDetails.getRowHeight();
+        int MaxRow2 = SizeRowHeight2 * 5 + tableBookDetails.getTableHeader().getPreferredSize().height; // Tối da 5 dòng
+        SPBookDetails.setPreferredSize(new Dimension(0, MaxRow2));
+        
+        // Thiết kế PanelCenter
+        PanelCenter = new JPanel(new BorderLayout());
+
+        // thêm table phiếu xuất
+        topPanel = new JPanel(new BorderLayout());
+        topPanel.add(SPPhieuXuat, BorderLayout.CENTER);
+
+        // table chi tiết
+        bottomPanel = new JPanel(new BorderLayout());
+
+        // Tiêu đề ngăn
+        JLabel titleLabel = new JLabel("THÔNG TIN PHIẾU XUẤT", SwingConstants.CENTER);
+        Font titleFont = new Font("Arial", Font.BOLD, 20);
+        titleLabel.setFont(titleFont);
+        titleLabel.setForeground(Color.WHITE);
+        
+        titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setBackground(new Color(72, 118, 255));
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        
+        //Tạo Panel thêm các  Thêm label và txf tổng tiền
+        JLabel lbTongTien=new JLabel("Tổng tiền hóa đơn: ");
+        lbTongTien.setFont(new Font("Arial", Font.PLAIN, 14));
+        lbTongTien.setHorizontalAlignment(SwingConstants.CENTER);
+        txfTongTien=new JTextField();
+        txfTongTien.setEditable(false);
+        txfTongTien.setFont(new Font("Arial", Font.PLAIN, 14));
+        txfTongTien.setPreferredSize(new Dimension(100,20));
+        
+        tongTienPanel=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        tongTienPanel.add(lbTongTien);
+        tongTienPanel.add(txfTongTien);
+        
+        // Thêm các Panel  vào bottomPanel
+        bottomPanel.add(titlePanel, BorderLayout.NORTH);
+        bottomPanel.add(SPBookDetails, BorderLayout.CENTER);
+        bottomPanel.add(tongTienPanel,BorderLayout.SOUTH);
+        
+        // Thêm vào PanelCenter
+        PanelCenter.add(topPanel, BorderLayout.NORTH);
+        PanelCenter.add(bottomPanel, BorderLayout.CENTER);
 
         toolBar_Left.add(btnHome);
         toolBar_Left.add(btnAdd);
@@ -258,10 +346,6 @@ public class PhieuXuatPanel extends JPanel {
 
         toolBar.add(toolBar_Left);
         toolBar.add(toolBar_Right);
-        
-        PanelCenter = new JPanel();
-        PanelCenter.setLayout(new GridLayout(1, 1));
-        PanelCenter.add(SPPhieuXuat);
         
         setLayout(new BorderLayout());
         add(toolBar, BorderLayout.NORTH);
@@ -283,10 +367,14 @@ public class PhieuXuatPanel extends JPanel {
         txfPriceEnd.getDocument().addDocumentListener((DocumentListener) action);
         cbb_nv.addActionListener(action);
         cbb_kh.addActionListener(action);
+        
         // Thêm PropertyChangeListener
         dateStart.addPropertyChangeListener((PropertyChangeListener)action);
         dateEnd.addPropertyChangeListener((PropertyChangeListener)action);
-
+        
+        // Thêm ListSelectionListner
+        tablePhieuXuat.getSelectionModel().addListSelectionListener((ListSelectionListener) action);
+        
         // Set ngày mặc định tìm kiếm
         dateStart.setDateFormatString("dd-MM-yyyy");
         dateEnd.setDateFormatString("dd-MM-yyyy");
@@ -294,7 +382,6 @@ public class PhieuXuatPanel extends JPanel {
         cal.set(2025, Calendar.JANUARY, 1);
         dateStart.setDate(cal.getTime());
         dateEnd.setDate(new Date());
-
     }
     
     private JButton createToolBarButton(String text, String imageLink) {
@@ -311,6 +398,8 @@ public class PhieuXuatPanel extends JPanel {
     public void refreshTablePx() {
         listPx = new PhieuXuatBUS().getAll();
         dataPhieuXuat.setRowCount(0);
+        dataBookDetails.setRowCount(0);
+        txfTongTien.setText("");
         nvBUS = new NhanVienBUS();
         khBUS = new KhachHangBUS();
         for (PhieuXuatDTO px : listPx) {  
@@ -321,11 +410,40 @@ public class PhieuXuatPanel extends JPanel {
                     DateFormat.fomat(px.getThoigiantao().toString()), 
                     NumberFormatter.format(px.getTongTien()), trangThai});
         }
+        
+        
     }
 
+    public JTextField getTxfTongTien() {
+        return txfTongTien;
+    }
     
+    public JPanel getTongTienPanel() {
+        return tongTienPanel;
+    }
+    
+    public JPanel getTitlePanel() {
+        return titlePanel;
+    }
+    
+    public JPanel getTopPanel() {
+        return topPanel;
+    }
+
+    public JPanel getBottomPanel() {
+        return bottomPanel;
+    }
+
     public JTable getTablePhieuXuat() {
         return tablePhieuXuat;
+    }
+
+    public JTable getTableBookDetails() {
+        return tableBookDetails;
+    }
+
+    public DefaultTableModel getDataBookDetails() {
+        return dataBookDetails;
     }
 
     public JPanel getPanelCenter() {
@@ -338,6 +456,14 @@ public class PhieuXuatPanel extends JPanel {
 
     public void setSPPhieuXuat(JScrollPane SPPhieuXuat) {
         this.SPPhieuXuat = SPPhieuXuat;
+    }
+
+    public JScrollPane getScrollPaneBookDetails() {
+        return SPBookDetails;
+    }
+
+    public void setSPBookDetails(JScrollPane SPBookDetails) {
+        this.SPBookDetails = SPBookDetails;
     }
 
     public JTabbedPane getTabbedPane() {
@@ -396,44 +522,45 @@ public class PhieuXuatPanel extends JPanel {
         return toolBar_Right;
     }
     
-    
-    public ArrayList<String> getListNameNV(){
-        nvBUS=new NhanVienBUS();
-        ArrayList<NhanVienDTO> list_Nv=nvBUS.getNVAll();
-        listCBB_NV=new ArrayList<>();
+    public ArrayList<String> getListNameNV() {
+        nvBUS = new NhanVienBUS();
+        ArrayList<NhanVienDTO> list_Nv = nvBUS.getNVAll();
+        listCBB_NV = new ArrayList<>();
         listCBB_NV.add("Tất cả");
-        for(NhanVienDTO nv:list_Nv){
-            String FullName=nvBUS.getHoTenNVById(nv.getManv());
+        for (NhanVienDTO nv : list_Nv) {
+            String FullName = nvBUS.getHoTenNVById(nv.getManv());
             listCBB_NV.add(FullName);
         }
-        return  listCBB_NV;
+        return listCBB_NV;
     }
-    public ArrayList<String> getListNameKH(){
-        khBUS=new KhachHangBUS();
-        ArrayList<KhachHangDTO> list_Kh=khBUS.getKhachHangAll();
-        listCBB_KH=new ArrayList<>();
+
+    public ArrayList<String> getListNameKH() {
+        khBUS = new KhachHangBUS();
+        ArrayList<KhachHangDTO> list_Kh = khBUS.getKhachHangAll();
+        listCBB_KH = new ArrayList<>();
         listCBB_KH.add("Tất cả");
-        for(KhachHangDTO kh: list_Kh){
-            String FullName=khBUS.getFullNameKHById(kh.getMakh());
+        for (KhachHangDTO kh : list_Kh) {
+            String FullName = khBUS.getFullNameKHById(kh.getMakh());
             listCBB_KH.add(FullName);
         }
-        return  listCBB_KH;
+        return listCBB_KH;
     }
-    public void Filter(){
-        pxBUS=new PhieuXuatBUS();
-        String nameNV=cbb_nv.getSelectedItem().toString();
-        String nameKH=cbb_kh.getSelectedItem().toString();
-        Date dateS=dateStart.getDate();
-        Timestamp dateStart=new Timestamp(dateS.getTime());
-        Date dateE=dateEnd.getDate();
-        if(dateEnd.getDate()==null){
+
+    public void Filter() {
+        pxBUS = new PhieuXuatBUS();
+        String nameNV = cbb_nv.getSelectedItem().toString();
+        String nameKH = cbb_kh.getSelectedItem().toString();
+        Date dateS = dateStart.getDate();
+        Timestamp dateStart = new Timestamp(dateS.getTime());
+        Date dateE = dateEnd.getDate();
+        if (dateEnd.getDate() == null) {
             System.out.println("dong 429 phieuxuatpanel dateEnd bi null ");
-            dateE=new Date(1000);
+            dateE = new Date(1000);
         }
-        Timestamp dateEnd=new Timestamp(dateE.getTime());
-        String minPrice=txfPriceStart.getText().toString();
-        String maxPrice=txfPriceEnd.getText().toString();
-        ArrayList<PhieuXuatDTO> List_sort=pxBUS.Filter(nameNV, nameKH, dateStart, dateEnd, minPrice, maxPrice);
+        Timestamp dateEnd = new Timestamp(dateE.getTime());
+        String minPrice = txfPriceStart.getText().toString();
+        String maxPrice = txfPriceEnd.getText().toString();
+        ArrayList<PhieuXuatDTO> List_sort = pxBUS.Filter(nameNV, nameKH, dateStart, dateEnd, minPrice, maxPrice);
         dataPhieuXuat.setRowCount(0);
         for (PhieuXuatDTO px : List_sort) {  
             String hoTenNv = nvBUS.getHoTenNVById(px.getManv());

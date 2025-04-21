@@ -5,6 +5,8 @@
 package GUI.Controller;
 
 import BUS.PhieuXuatBUS;
+import BUS.SachBUS;
+import DTO.ChiTietPhieuXuatDTO;
 import DTO.PhieuXuatDTO;
 import java.awt.event.ActionListener;
 import GUI.WorkFrame;
@@ -54,6 +56,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -63,12 +66,15 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.sql.Timestamp;
 import java.util.Date;
+import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.apache.poi.poifs.crypt.dsig.services.TimeStampHttpClient;
 /**
  *
  * @author DELL
  */
-public class PhieuXuatController implements ActionListener, ChangeListener, DocumentListener,PropertyChangeListener{
+public class PhieuXuatController implements ActionListener, ChangeListener, DocumentListener,PropertyChangeListener,ListSelectionListener{
     private PhieuXuatPanel PxP;
     private WorkFrame WF;
     private PhieuXuatBUS pxBUS=new PhieuXuatBUS();
@@ -79,8 +85,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
     private int tabCount = 1;
     private boolean isRemoving = false;
     private ArrayList<PhieuXuatDTO> listPX=pxBUS.getAll();
-    public PhieuXuatController() {
-    }
+    private SachBUS sBUS;
 
     public PhieuXuatController(PhieuXuatPanel PxP, WorkFrame Wf) {
         this.PxP = PxP;
@@ -99,8 +104,24 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
             
             PxP.getPanelCenter().removeAll(); // Xóa ScrollPane hiện tại
             PxP.getScrollPanePhieuXuat().setViewportView(PxP.getTablePhieuXuat());
-            PxP.getPanelCenter().setLayout(new GridLayout(1, 1));
-            PxP.getPanelCenter().add(PxP.getScrollPanePhieuXuat());
+            
+            PxP.getPanelCenter().setLayout(new BorderLayout());
+            // Thêm lại cái label không biết sao khi thêm bằng cách gọi Panel không hiển thị cái này
+            JLabel titleLabel = new JLabel("THÔNG TIN PHIẾU XUẤT", SwingConstants.CENTER);
+            Font titleFont = new Font("Arial", Font.BOLD, 20);
+            titleLabel.setFont(titleFont);
+            titleLabel.setForeground(Color.WHITE);
+            JPanel titlePanel = new JPanel(new BorderLayout());
+            titlePanel.setBackground(new Color(72, 118, 255));
+            titlePanel.add(titleLabel, BorderLayout.CENTER);
+            titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+            PxP.getBottomPanel().setLayout(new BorderLayout());
+            PxP.getBottomPanel().add(titlePanel,BorderLayout.NORTH);
+            PxP.getBottomPanel().add(PxP.getScrollPaneBookDetails(),BorderLayout.CENTER);
+            
+            PxP.getPanelCenter().add(PxP.getBottomPanel(),BorderLayout.CENTER);
+            PxP.getPanelCenter().add(PxP.getTopPanel(),BorderLayout.NORTH);
+            PxP.getPanelCenter().add(PxP.getTongTienPanel(),BorderLayout.SOUTH);
             PxP.refreshTablePx();
         }
         if (sukien.equals("Thêm")) {
@@ -406,7 +427,6 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
         PxP.Filter();
     }
 
-
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // Thêm action cho tìm kiếm nâng cao 2 cái datez
@@ -414,6 +434,32 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
             PxP.Filter();
         }else{
             PxP.Filter();
+        }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(!e.getValueIsAdjusting()){
+            PxP.getDataBookDetails().setRowCount(0);
+            pxBUS=new PhieuXuatBUS();
+            sBUS=new SachBUS();
+            int SelectRow=PxP.getTablePhieuXuat().getSelectedRow();
+            if(SelectRow !=-1){
+                int mapx=Integer.parseInt(PxP.getTablePhieuXuat().getValueAt(SelectRow, 0).toString());
+                ArrayList<ChiTietPhieuXuatDTO> ListCTPX=pxBUS.getListCTPXById(mapx);
+                PxP.getTxfTongTien().setText(PxP.getTablePhieuXuat().getValueAt(SelectRow, 4).toString());
+                int STT=1;
+                for(ChiTietPhieuXuatDTO ctpx: ListCTPX){
+                    String maSach=ctpx.getMasach().toString();
+                    String tenSach= sBUS.getSachById(ctpx.getMasach()).getTensach();
+                    String donGia=String.valueOf(ctpx.getDongia());
+                    String soLuong=String.valueOf(ctpx.getSoluong());
+                    String thanhTien=String.valueOf(ctpx.getDongia()*ctpx.getSoluong());
+                    PxP.getDataBookDetails().addRow(new Object[]{STT,maSach,tenSach,donGia,soLuong,thanhTien});
+                    STT+=1;
+                }
+                
+            }
         }
     }
 }
