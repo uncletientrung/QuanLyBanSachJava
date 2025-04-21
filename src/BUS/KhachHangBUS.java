@@ -65,32 +65,42 @@ public class KhachHangBUS {
         text=text.toLowerCase();
         ArrayList<KhachHangDTO> result=new ArrayList<>();
         for(KhachHangDTO kh:listkh){
-            if(Integer.toString(kh.getMakh()).toLowerCase().contains(text) || kh.getTenkh().toLowerCase().contains(text)){
+            if(Integer.toString(kh.getMakh()).toLowerCase().contains(text)){
                 result.add(kh);
             }
         }
         return  result;
     }
-//    public ArrayList<KhachHangDTO> LowToHighofPrice(ArrayList<SachDTO> sach){
-//        ArrayList<SachDTO> ListSort=new ArrayList<>(sach); // Sao chép ListSach cu
-//        ListSort.sort(Comparator.comparingInt(SachDTO::getDongia));
-//        return  ListSort;
-//    }
-//    public ArrayList<SachDTO> HighToLowofPrice(ArrayList<SachDTO> sach){
-//        ArrayList<SachDTO> ListSort=new ArrayList<>(sach); // Sao chép ListSach cu
-//        ListSort.sort(Comparator.comparingInt(SachDTO::getDongia).reversed()); // Đảo ngược cao đến thấp
-//        return  ListSort;
-//    }
-//    public ArrayList<SachDTO> LowToHighofNXB(ArrayList<SachDTO> sach){
-//        ArrayList<SachDTO> result=new ArrayList<>(listSach);
-//        result.sort(Comparator.comparing(SachDTO::getNamxuatban));
-//        return  result;
-//    }
-//    public ArrayList<SachDTO> HighToLowofNXB(ArrayList<SachDTO> sach){
-//        ArrayList<SachDTO> result=new ArrayList<>(listSach);
-//        result.sort(Comparator.comparing(SachDTO::getNamxuatban).reversed());
-//        return result;
-//    }
+    public ArrayList<KhachHangDTO> searchName(String text){
+        text=text.toLowerCase();
+        ArrayList<KhachHangDTO> result=new ArrayList<>();
+        for(KhachHangDTO kh:listkh){
+            String FullName=getFullNameKHById(kh.getMakh());
+            if(FullName.toLowerCase().contains(text)){
+                result.add(kh);
+            }
+        }
+        return  result;
+    }
+    public ArrayList<KhachHangDTO> searchEmail(String text){
+        text=text.toLowerCase();
+        ArrayList<KhachHangDTO> result=new ArrayList<>();
+        for(KhachHangDTO kh:listkh){
+            if(kh.getemail().toLowerCase().contains(text)){
+                result.add(kh);
+            }
+        }
+        return  result;
+    }
+    public ArrayList<KhachHangDTO> searchSDTKh(String text){
+        ArrayList<KhachHangDTO> result=new ArrayList<>();
+        for(KhachHangDTO kh:listkh){
+            if(kh.getSdt().contains(text)){
+                result.add(kh);
+            }
+        }
+        return  result;
+    }
     
     public KhachHangDTO getKHBySDT(String sdt){
         KhachHangDTO result= new KhachHangDTO();

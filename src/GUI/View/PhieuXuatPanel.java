@@ -288,7 +288,7 @@ public class PhieuXuatPanel extends JPanel {
         dateEnd.addPropertyChangeListener((PropertyChangeListener)action);
 
         // Set ngày mặc định tìm kiếm
-         dateStart.setDateFormatString("dd-MM-yyyy");
+        dateStart.setDateFormatString("dd-MM-yyyy");
         dateEnd.setDateFormatString("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.set(2025, Calendar.JANUARY, 1);
@@ -426,6 +426,10 @@ public class PhieuXuatPanel extends JPanel {
         Date dateS=dateStart.getDate();
         Timestamp dateStart=new Timestamp(dateS.getTime());
         Date dateE=dateEnd.getDate();
+        if(dateEnd.getDate()==null){
+            System.out.println("dong 429 phieuxuatpanel dateEnd bi null ");
+            dateE=new Date(1000);
+        }
         Timestamp dateEnd=new Timestamp(dateE.getTime());
         String minPrice=txfPriceStart.getText().toString();
         String maxPrice=txfPriceEnd.getText().toString();
@@ -441,6 +445,7 @@ public class PhieuXuatPanel extends JPanel {
         }
     }
 }
+<<<<<<< HEAD
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nb://SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -885,3 +890,5 @@ public class PhieuXuatPanel extends JPanel {
         }
     }
 }
+=======
+>>>>>>> 9a2fe74514396c4d69cdba981ecd3a6ee4bc3ade
