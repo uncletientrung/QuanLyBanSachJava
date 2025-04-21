@@ -9,6 +9,7 @@ import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SachBUS;
 import DTO.ChiTietPhieuNhapDTO;
+import DTO.NhanVienDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
 import java.awt.*;
@@ -32,6 +33,7 @@ public class PhieuNhapDialogDetail extends JDialog{
     private NhaCungCapBUS nccBUS = new NhaCungCapBUS();
     private NhanVienBUS nvBUS = new NhanVienBUS();
     private JTable tableCTPN;
+    private NhanVienDTO nvDTO = new NhanVienDTO();
 
     public PhieuNhapDialogDetail(JFrame parent, PhieuNhapDTO pnDTO) {
         super(parent,"Danh mục xem chi tiết phiếu nhập",true);
@@ -60,8 +62,8 @@ public class PhieuNhapDialogDetail extends JDialog{
         infoPanel.add(createLabel("Tổng hóa đơn"));
         // Dòng 2: TextField
         txfMaPhieu=createTextField(pnDTO.getMaphieu()+"");
-        txfNV=createTextField(pnDTO.getManv()+"");
-        txfNCC=createTextField(pnDTO.getMancc()+"");
+        txfNV=createTextField(nvBUS.getHoTenNVById(pnDTO.getManv()) +"");
+        txfNCC=createTextField(nccBUS.getTenNCC(pnDTO.getMancc())+"");
         txfTime=createTextField(pnDTO.getThoiGian()+"");
         txfTongHD=createTextField(pnDTO.getTongTien()+"");
         infoPanel.add(txfMaPhieu);

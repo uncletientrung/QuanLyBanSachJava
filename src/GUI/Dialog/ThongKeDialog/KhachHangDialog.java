@@ -83,7 +83,7 @@ public class KhachHangDialog extends JDialog {
     
     int t=1;
     public ArrayList<PhieuXuatDTO> listpx = new PhieuXuatDAO().selectAll();
-    public ArrayList<ChiTietPhieuXuatDTO> listctpx = new ChiTietPhieuXuatDAO().selectAll2();
+    public ArrayList<ChiTietPhieuXuatDTO> listctpx = new ChiTietPhieuXuatDAO().selectAll();
     public ArrayList<KhachHangDTO> listkh = new KhachHangBUS().getKhachHangAll();
     public ArrayList<Long> list;
     

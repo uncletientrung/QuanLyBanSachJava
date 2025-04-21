@@ -29,6 +29,16 @@ public class PhieuNhapBUS {
         this.list_pn = pnDAO.selectAll();
         return this.list_pn;
     }
+
+    public int getLastMaPhieuNhap(){
+        int lastMaPhieuNhap = 0;
+        for (PhieuNhapDTO pn : list_pn) {
+            if (pn.getMaphieu() > lastMaPhieuNhap) {
+                lastMaPhieuNhap = pn.getMaphieu();
+            }
+        }
+        return lastMaPhieuNhap;
+    }
     
     public void insert(PhieuNhapDTO pn, ArrayList<ChiTietPhieuNhapDTO> list_ctpn){
         pnDAO.insert(pn);

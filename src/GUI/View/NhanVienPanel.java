@@ -178,7 +178,6 @@ public class NhanVienPanel extends JPanel {
                     gioitinh,
                     nv.getSdt(),
                     nv.getNgaysinh(),
-                    trangthai
             });
         }
     }
@@ -200,22 +199,19 @@ public class NhanVienPanel extends JPanel {
             });
         }
     }
-    public void FindSDT(String text){
-        listNV=new NhanVienBUS().searchSDTNv(text);
-        dataNV.setRowCount(0);
-        for(NhanVienDTO nv: listNV){
-            String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
-            String trangthai = (nv.getTrangthai() == 1) ? "Hoạt động" : "Khóa";
-            dataNV.addRow(new Object[]{
-                    nv.getManv(),
-                    nv.getHonv(),
-                    nv.getTennv(),
-                    gioitinh,
-                    nv.getSdt(),
-                    nv.getNgaysinh(),
-                    trangthai
-            });
-        }
-    }
-
+//    public void FindSDT(String text){
+//        listNV = new NhanVienBUS().searchSDTNv(text);
+//        dataNV.setRowCount(0);
+//        for(NhanVienDTO nv: listNV){
+//            String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
+//            String trangthai = (nv.getTrangthai() == 1) ? "Hoạt động" : "Khóa";
+//            dataNV.addRow(new Object[]{
+//                    nv.getManv(),
+//                    nv.getHonv(),
+//                    nv.getTennv(),
+//                    gioitinh,
+//                    nv.getSdt(),
+//                    nv.getNgaysinh(),
+//                    trangthai
+//            });
 }

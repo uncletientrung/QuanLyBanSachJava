@@ -36,6 +36,14 @@ public class NhaCungCapBUS {
         }
         return null;
     }
+
+    public ArrayList<String> getAllTenNCC() {
+        ArrayList<String> tenNCC = new ArrayList<>();
+        for (NhaCungCapDTO ncc : listNhaCungCap) {
+            tenNCC.add(ncc.getTenncc());
+        }
+        return tenNCC;
+    }
     
     public ArrayList<NhaCungCapDTO> timkiem(String keywords) {
         ArrayList<NhaCungCapDTO> ketqua = new ArrayList<>();

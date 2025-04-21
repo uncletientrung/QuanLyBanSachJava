@@ -7,6 +7,8 @@ import BUS.*;
 import DTO.PhieuNhapDTO;
 import GUI.Controller.PhieuNhapController;
 import GUI.Dialog.PhieuNhapDialog.AddPanel;
+import GUI.Format.DateFormat;
+import GUI.Format.NumberFormatter;
 import GUI.WorkFrame;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -67,7 +69,7 @@ public class PhieuNhapPanel extends JPanel{
         
         //Tạo JTable cho PhieuNhapPanel
         listpn = new PhieuNhapBUS().getAll();
-        String[] columnPhieuNhap = {"Mã phiếu nhập","Nhân viên","Nhà cung cấp","Thời gian","Tổng tiền","Trạng thái"};
+        String[] columnPhieuNhap = {"Mã phiếu nhập","Nhân viên","Nhà cung cấp","Thời gian","Tổng tiền"};
         dataPhieuNhap = new DefaultTableModel(columnPhieuNhap,0){
             //Hàm không cho chỉnh sửa ô
             @Override
@@ -86,13 +88,14 @@ public class PhieuNhapPanel extends JPanel{
         for (PhieuNhapDTO pn: listpn){
             String nv = nvBUS.getHoTenNVById(pn.getManv());
             String ncc = nccBUS.getTenNCC(pn.getMancc());
-            String trangthai = (pn.getTrangthai() == 1) ? "Đã xử lý" : "Chưa xử lý";
-            dataPhieuNhap.addRow(new Object[]{pn.getMaphieu(),nv,ncc,pn.getThoigiantao(),pn.getTongTien(),trangthai});
+            if (pn.getTrangthai() == 1) 
+            dataPhieuNhap.addRow(new Object[]{pn.getMaphieu(),nv,ncc,DateFormat.fomat(pn.getThoigiantao().toString()), 
+                    NumberFormatter.format(pn.getTongTien())});
         }
         //Tạo renderer để căn giữa dữ liệu
         DefaultTableCellRenderer center = new DefaultTableCellRenderer();
         center.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter = {0,1,2,3,4,5};
+        int[] columnsToCenter = {0,1,2,3,4};
         for (int col: columnsToCenter){
             tablePhieuNhap.getColumnModel().getColumn(col).setCellRenderer(center);
         }
@@ -104,7 +107,6 @@ public class PhieuNhapPanel extends JPanel{
         tablePhieuNhap.getColumnModel().getColumn(2).setPreferredWidth(150);
         tablePhieuNhap.getColumnModel().getColumn(3).setPreferredWidth(165);
         tablePhieuNhap.getColumnModel().getColumn(4).setPreferredWidth(65);
-        tablePhieuNhap.getColumnModel().getColumn(5).setPreferredWidth(30);
          // Tạo ScrollPane cho Table để tên cột column hiện
         SPPhieuNhap= new JScrollPane(tablePhieuNhap);
         
@@ -159,9 +161,10 @@ public class PhieuNhapPanel extends JPanel{
         for (PhieuNhapDTO pn : listpn) {
             String hoTenNV = nvBUS.getHoTenNVById(pn.getManv());
             String hoTenNCC = nccBUS.getTenNCC(pn.getMancc());
-            String trangThai = pn.getTrangthai() == 1 ? "Đã xử lý" : "Chưa xử lý";
+            if (pn.getTrangthai() == 1 )
             // Thay đổi dữ liệu trong bảng
-              dataPhieuNhap.addRow(new Object[]{pn.getMaphieu(), hoTenNV, hoTenNCC, pn.getThoigiantao(), pn.getTongTien(), trangThai});
+              dataPhieuNhap.addRow(new Object[]{pn.getMaphieu(), hoTenNV, hoTenNCC, DateFormat.fomat(pn.getThoigiantao().toString()), 
+                    NumberFormatter.format(pn.getTongTien())});
         }
    }
 

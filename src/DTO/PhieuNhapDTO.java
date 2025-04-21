@@ -55,4 +55,5 @@ public class PhieuNhapDTO extends PhieuDTO {
     public String getThoiGian() {
         return String.valueOf(getThoigiantao());
     }
+    
 }

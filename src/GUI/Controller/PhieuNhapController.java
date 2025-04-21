@@ -58,8 +58,11 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
                 pnp.getPanelCenter().setLayout(new BorderLayout()); // Đặt layout cho tab
                 
                 // Thêm AddPanel vào PanelCenter
-                AddPanel addPanel = new AddPanel();
+              AddPanel addPanel = new AddPanel();
                 pnp.getPanelCenter().add(addPanel, BorderLayout.CENTER);
+                
+//                PhieuNhapDialogAdd pnda = new PhieuNhapDialogAdd();
+//                pnp.getPanelCenter().add(pnda, BorderLayout.CENTER);
                 
                 pnp.getPanelCenter().revalidate(); // Làm mới giao diện
                 pnp.getPanelCenter().repaint(); // Vẽ lại giao diện

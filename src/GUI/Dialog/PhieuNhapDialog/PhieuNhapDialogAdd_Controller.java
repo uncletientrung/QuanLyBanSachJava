@@ -28,35 +28,35 @@ public class PhieuNhapDialogAdd_Controller implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String evt = e.getActionCommand();
-        if(evt.equals("Thêm dữ liệu")){
-            if (PNDA.getTxfMaPhieu().getText().isEmpty() ||
-                PNDA.getTxfMaNv().getText().isEmpty() ||
-                PNDA.getTxfMaNcc().getText().isEmpty() ||
-                PNDA.getTxfTongTien().getText().isEmpty() ||
-                PNDA.getTxfTrangthai().getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                int ma = Integer.parseInt(PNDA.getTxfMaPhieu().getText());
-                int manv = Integer.parseInt(PNDA.getTxfMaNv().getText());
-                int mancc = Integer.parseInt(PNDA.getTxfMaNcc().getText());
-                Timestamp thoigiantao = Timestamp.from(Instant.now());
-                long tongtien = Long.parseLong(PNDA.getTxfTongTien().getText());
-                int trangthai = Integer.parseInt(PNDA.getTxfTrangthai().getText());
-                int maAuto = PhieuNhapDAO.getInstance().getAutoIncrement();
-                
-                PhieuNhapDTO pnnew = new PhieuNhapDTO(maAuto, manv, mancc, thoigiantao, tongtien, trangthai);
-                boolean result = pnBUS.addPN(pnnew);
-                if (result) {
-                   JOptionPane.showMessageDialog(null, "Thêm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                   PNDA.dispose();
-                   } else {
-                    JOptionPane.showMessageDialog(null, "Thêm thất bại", "Error", JOptionPane.ERROR_MESSAGE);
-                   }
-            }
-        }
-        if(evt.equals("Xóa")){
-            PNDA.ClearTextField();
-        }
+//        String evt = e.getActionCommand();
+//        if(evt.equals("Thêm dữ liệu")){
+//            if (PNDA.getTxfMaPhieu().getText().isEmpty() ||
+//                PNDA.getTxfMaNv().getText().isEmpty() ||
+//                PNDA.getTxfMaNcc().getText().isEmpty() ||
+//                PNDA.getTxfTongTien().getText().isEmpty() ||
+//                PNDA.getTxfTrangthai().getText().isEmpty()) {
+//                JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin", "Error", JOptionPane.ERROR_MESSAGE);
+//            } else {
+//                int ma = Integer.parseInt(PNDA.getTxfMaPhieu().getText());
+//                int manv = Integer.parseInt(PNDA.getTxfMaNv().getText());
+//                int mancc = Integer.parseInt(PNDA.getTxfMaNcc().getText());
+//                Timestamp thoigiantao = Timestamp.from(Instant.now());
+//                long tongtien = Long.parseLong(PNDA.getTxfTongTien().getText());
+//                int trangthai = Integer.parseInt(PNDA.getTxfTrangthai().getText());
+//                int maAuto = PhieuNhapDAO.getInstance().getAutoIncrement();
+//                
+//                PhieuNhapDTO pnnew = new PhieuNhapDTO(maAuto, manv, mancc, thoigiantao, tongtien, trangthai);
+//                boolean result = pnBUS.addPN(pnnew);
+//                if (result) {
+//                   JOptionPane.showMessageDialog(null, "Thêm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//                   PNDA.dispose();
+//                   } else {
+//                    JOptionPane.showMessageDialog(null, "Thêm thất bại", "Error", JOptionPane.ERROR_MESSAGE);
+//                   }
+//            }
+//        }
+//        if(evt.equals("Xóa")){
+//            PNDA.ClearTextField();
+//        }
     }
 }

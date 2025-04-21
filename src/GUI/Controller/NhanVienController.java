@@ -120,31 +120,43 @@ public class NhanVienController implements ActionListener, ListSelectionListener
     public void valueChanged(ListSelectionEvent e) {
     }
 
+//    @Override
+//    public void insertUpdate(DocumentEvent e) {
+//        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
+//            np.FindAll(np.getTxtFind().getText());
+//        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
+//            np.FindSDT(np.getTxtFind().getText());
+//        }
+//    }
+//
+//    @Override
+//    public void removeUpdate(DocumentEvent e) {
+//        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
+//            np.FindAll(np.getTxtFind().getText());
+//        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
+//            np.FindSDT(np.getTxtFind().getText());
+//        }
+//    }
+//
+//    @Override
+//    public void changedUpdate(DocumentEvent e) {
+//        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
+//            np.FindAll(np.getTxtFind().getText());
+//        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
+//            np.FindSDT(np.getTxtFind().getText());
+//        }
+//    }
+
     @Override
     public void insertUpdate(DocumentEvent e) {
-        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
-            np.FindAll(np.getTxtFind().getText());
-        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
-            np.FindSDT(np.getTxtFind().getText());
-        }
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
-            np.FindAll(np.getTxtFind().getText());
-        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
-            np.FindSDT(np.getTxtFind().getText());
-        }
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-        if(np.getCbbox().getSelectedItem().equals("Tất cả") || np.getCbbox().getSelectedItem().equals("Họ tên")) {
-            np.FindAll(np.getTxtFind().getText());
-        }else{      // Nếu chọn tìm SDT thì gọi hàm FindSDT
-            np.FindSDT(np.getTxtFind().getText());
-        }
     }
     
 }

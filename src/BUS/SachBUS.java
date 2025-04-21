@@ -30,6 +30,8 @@ public class SachBUS {
         }
         return result;
     }
+
+
     public SachDTO getSachById(int maSach){ // Update sách trong List
         SachDTO result=new SachDTO();
         for(SachDTO sach: listSach){
@@ -116,6 +118,16 @@ public class SachBUS {
         return result;
     }
     
-    
+    public int getDongGiaById(String maSach){
+        int idSach=Integer.parseInt(maSach);
+        int result=0;
+        for (SachDTO s: listSach){
+            if(s.getMasach() == idSach){
+                result =s.getDongia();
+                return result;
+            }
+        }
+        return result;
+    }
 
 }
