@@ -41,8 +41,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -253,6 +255,12 @@ public class KhachHangDialog extends JDialog {
         };
 
         table = new JTable(tablekh);
+        
+        JTableHeader header = table.getTableHeader();
+
+        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) header.getDefaultRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        
         table.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
 
         //lam tieu de no dam hơn 
@@ -297,7 +305,12 @@ public class KhachHangDialog extends JDialog {
 
         table2 = new JTable(tablekh2);
         table2.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
+        
+        JTableHeader header2 = table2.getTableHeader();
 
+        renderer = (DefaultTableCellRenderer) header2.getDefaultRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        
         //lam tieu de no dam hơn 
         table2.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table2.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
@@ -308,7 +321,7 @@ public class KhachHangDialog extends JDialog {
 
         centerRenderer2.setHorizontalAlignment(JLabel.CENTER);
         int[] columnsToCenter2 = {0, 1, 2, 3, 4, 5};
-        for (int col : columnsToCenter) {
+        for (int col : columnsToCenter2) {
             table2.getColumnModel().getColumn(col).setCellRenderer(centerRenderer2);
         }
 
