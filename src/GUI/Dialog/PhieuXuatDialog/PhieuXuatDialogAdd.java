@@ -222,6 +222,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
             }
         };
         listSach = new SachBUS().getSachAll();
+        listSach.sort(Comparator.comparingInt(s -> Integer.parseInt(s.getMasach().substring(1))));
         tacgiaBUS = new TacGiaBUS();
         tableChonSach = new JTable(dataBook);
         tableChonSach.getTableHeader().setReorderingAllowed(false);
@@ -240,6 +241,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         for (int col : columnsToCenter) {
             tableChonSach.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
+        
         tableChonSach.setRowHeight(30);
         tableChonSach.getColumnModel().getColumn(0).setPreferredWidth(35);
         tableChonSach.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -268,6 +270,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
             }
         };
         tableListBan = new JTable(dataBan);
+        
         tableListBan.setRowHeight(30);
         tableListBan.getColumnModel().getColumn(0).setPreferredWidth(200);
         tableListBan.getColumnModel().getColumn(1).setPreferredWidth(100);
@@ -787,9 +790,9 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         refreshKhuyenMaiCache(selectedDate);
         List<KhuyenMaiDTO> activeKM = new ArrayList<>();
         for (KhuyenMaiDTO km : cachedKhuyenMai) {
-            if (!selectedDate.before(km.getNgayBatDau()) &&
-                !selectedDate.after(km.getNgayKetThuc()) &&
-                tongTien >= km.getDieuKienToiThieu()) {
+            if (!selectedDate.before(km.getNgayBatDau()) && !selectedDate.after(km.getNgayKetThuc())
+                && tongTien >= km.getDieuKienToiThieu()) {
+ 
                 activeKM.add(km);
             }
         }
@@ -881,10 +884,25 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         return false;
     }
 
+    public void setUpBlock(Boolean TorF){  // Truyền tham số True or False
+        txfGiamGia.setEditable(TorF);
+        txfTimKhach.setEditable(TorF);
+        txfTimSach.setEditable(TorF);
+        txfSoLuong.setEditable(TorF);
+        txfSoLuongV2.setEditable(TorF);
+        // Khóa các nút
+        btnThemPhieu.setEnabled(TorF);
+        btnSua.setEnabled(TorF);
+        btnThemChiTiet.setEnabled(TorF);
+        btnXoaV2.setEnabled(TorF);
+        
+    }
+    
     public void setUpDefault() {
         long startTime = System.currentTimeMillis();
         SwingUtilities.invokeLater(() -> {
             // Đặt lại tất cả JTextField
+            txfGiaBan.setText("");
             txfTongTien.setText("");
             txfGiamGia.setText("");
             txfThanhToan.setText("");

@@ -292,7 +292,7 @@ public class PhieuXuatPanel extends JPanel {
         // Tạo ScrollPane cho TableBookDetails
         SPBookDetails = new JScrollPane(tableBookDetails);
         int SizeRowHeight2 = tableBookDetails.getRowHeight();
-        int MaxRow2 = SizeRowHeight2 * 5 + tableBookDetails.getTableHeader().getPreferredSize().height; // Tối da 5 dòng
+        int MaxRow2 = SizeRowHeight2 * 4 + tableBookDetails.getTableHeader().getPreferredSize().height; // Tối da 4 dòng
         SPBookDetails.setPreferredSize(new Dimension(0, MaxRow2));
         
         // Thiết kế PanelCenter

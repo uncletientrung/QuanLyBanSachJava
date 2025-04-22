@@ -171,12 +171,11 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
        if(sukien.equals("Xóa tất cả")){
            if(PXDA.getDataBan().getRowCount()!=0){
                 PXDA.getDataBan().setRowCount(0);
-                // Gán các txf chỗ chỉnh sửa về rỗng sau khi update
-                 PXDA.getTxfDonGiaV2().setText("");
-                 PXDA.getTxfSoLuongV2().setText("");
-                 PXDA.getTxfThanhTienV2().setText("");
-                 PXDA.getTxfTenSachV2().setText("");
                  PXDA.CalcBill();
+                // Sau khi ấn xóa  xong thì set tất cả về trạng thái ban đầu
+                PXDA.setUpDefault();
+                PXDA.setUpBlock(true); // truyền lại True để mở khóa
+                PXDA.refreshTableChonSach();
            }else{
                JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để xóa", "Thông báo", JOptionPane.ERROR_MESSAGE);
            }
@@ -212,21 +211,14 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                    ChiTietPhieuXuatDTO ctpxNew=new ChiTietPhieuXuatDTO(maPhieuXuat, masach, soluong, dongia);
                    ListCTPhieuXuat.add(ctpxNew);
                }
-               // Sau khi chạy for xong đủ hết chi tiết phiếu nhập thì thêm vào database
+               // Sau khi chạy for xong đủ hết chi tiết phiếu xuất thì thêm vào database
                 phieuxuat= new PhieuXuatDTO(maPhieuXuat, maNV, maKH, current_day, (long)tongtien, trangthai);
                 pxBUS.insert(phieuxuat, ListCTPhieuXuat);
                 
                 
                JOptionPane.showMessageDialog(null, "Xuất hóa đơn thành công!", "Thông báo", JOptionPane.NO_OPTION);
-               // Sau khi xuất xong thì set tất cả về trạng thái ban đầu
-                PXDA.setTxfTongTien("");
-                PXDA.setTxfGiamGia("");
-                PXDA.setTxfThanhToan("");
-                PXDA.setTxfTenKhuyenMai("");
-                PXDA.setTxfPhanTramGiam("0");
-                PXDA.setUpDefault();
-                
-                PXDA.refreshTableChonSach();
+
+                PXDA.setUpBlock(false); // Truyền False vào để Chặn các nút khi khi ấn thêm phiếu mở lại khi ấn xóa tất cả
            }else{
                JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để xuất hóa đơn", "Thông báo", JOptionPane.ERROR_MESSAGE);
            }
