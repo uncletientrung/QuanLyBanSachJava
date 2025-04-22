@@ -1,5 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nb://SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nb://SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI.View;
@@ -29,6 +29,9 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentListener;
 import GUI.Format.*;
 import javax.swing.event.ListSelectionListener;
+import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -54,8 +57,12 @@ public class PhieuXuatPanel extends JPanel {
     private JTabbedPane tabbedPane;
     private ArrayList<String> listCBB_NV;
     private ArrayList<String> listCBB_KH;
-    private JComboBox<String> cbb_nv;
-    private JComboBox<String> cbb_kh;
+    private JList<String> jList_nv;
+    private JList<String> jList_kh;
+    private JPopupMenu popupEmployee; // Menu bật lên cho JList nhân viên
+    private JPopupMenu popupCustomer; // Menu bật lên cho JList khách hàng
+    private JTextField txfEmployee; // TextField để kích hoạt menu bật lên nhân viên
+    private JTextField txfCustomer; // TextField để kích hoạt menu bật lên khách hàng
     private JButton btnHome;
     private JButton btnAdd;
     private JButton btndelete;
@@ -68,6 +75,7 @@ public class PhieuXuatPanel extends JPanel {
     private JPanel titlePanel;
     private JPanel tongTienPanel;
     private JTextField txfTongTien;
+
     public PhieuXuatPanel() {
         this.taikhoan = taikhoan;
         // Tạo Panel toolBar cho thanh công cụ trên cùng
@@ -97,24 +105,41 @@ public class PhieuXuatPanel extends JPanel {
         btndelete.setFont(font);
         btndetail.setFont(font);
         btnexport.setFont(font);
-        
+
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5); // Khoảng cách giữa các thành phần
 
         // Hàng 1: Nhân viên, Ngày bắt đầu, Ngày kết thúc
         JLabel lblEmployee = new JLabel("Nhân viên:");
-        cbb_nv = new JComboBox<String>(getListNameNV().toArray(new String[0]));   // Jcombobox không nhân ArrayList chỉ nhận kiểu String[]
-        cbb_nv.setPreferredSize(new Dimension(120, 30)); 
-        
+        // Khởi tạo JList cho nhân viên
+        jList_nv = new JList<>(getListNameNV().toArray(new String[0])); // Jcombobox không nhân ArrayList chỉ nhận kiểu String[]
+        jList_nv.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jList_nv.setVisibleRowCount(5); // Hiển thị tối đa 8 mục
+        jList_nv.setSelectedIndex(0); // Chọn mặc định "Tất cả"
+        JScrollPane scrollNv = new JScrollPane(jList_nv);
+        scrollNv.setPreferredSize(new Dimension(125, 150));
+        popupEmployee = new JPopupMenu();
+        popupEmployee.add(scrollNv);
+        txfEmployee = new JTextField("Tất cả");
+        txfEmployee.setEditable(false);
+        txfEmployee.setPreferredSize(new Dimension(120, 30));
+        txfEmployee.setBackground(Color.WHITE);
+        txfEmployee.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                popupEmployee.show(txfEmployee, 0, txfEmployee.getHeight());
+            }
+        });
+
         JLabel lblDateStart = new JLabel("Từ:");
         dateStart = new JDateChooser();
-        dateStart.setPreferredSize(new Dimension(100, 30)); 
-        
+        dateStart.setPreferredSize(new Dimension(100, 30));
+
         JLabel lblDateEnd = new JLabel("Đến:");
         dateEnd = new JDateChooser();
-        dateEnd.setPreferredSize(new Dimension(100, 30)); 
-        
+        dateEnd.setPreferredSize(new Dimension(100, 30));
+
         // Thêm vào toolBar_Right (Hàng 1)
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -127,7 +152,7 @@ public class PhieuXuatPanel extends JPanel {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        toolBar_Right.add(cbb_nv, gbc);
+        toolBar_Right.add(txfEmployee, gbc); // Sử dụng TextField thay cho JList
 
         gbc.gridx = 2;
         gbc.gridy = 0;
@@ -159,8 +184,25 @@ public class PhieuXuatPanel extends JPanel {
 
         // Hàng 2: Khách hàng, Tổng tiền từ, Đến
         JLabel lblCustomer = new JLabel("Khách hàng:");
-        cbb_kh = new JComboBox<>(getListNameKH().toArray(new String[0]));
-        cbb_kh.setPreferredSize(new Dimension(120, 30)); // Tăng kích thước để tận dụng không gian
+        // Khởi tạo JList cho khách hàng
+        jList_kh = new JList<>(getListNameKH().toArray(new String[0]));
+        jList_kh.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jList_kh.setVisibleRowCount(5);
+        jList_kh.setSelectedIndex(0); // Chọn mặc định "Tất cả"
+        JScrollPane scrollKh = new JScrollPane(jList_kh);
+        scrollKh.setPreferredSize(new Dimension(125, 150));
+        popupCustomer = new JPopupMenu();
+        popupCustomer.add(scrollKh);
+        txfCustomer = new JTextField("Tất cả");
+        txfCustomer.setEditable(false);
+        txfCustomer.setPreferredSize(new Dimension(120, 30));
+        txfCustomer.setBackground(Color.WHITE);
+        txfCustomer.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                popupCustomer.show(txfCustomer, 0, txfCustomer.getHeight());
+            }
+        });
 
         JLabel lblPriceStart = new JLabel("Giá từ:");
         txfPriceStart = new JTextField("");
@@ -182,7 +224,7 @@ public class PhieuXuatPanel extends JPanel {
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        toolBar_Right.add(cbb_kh, gbc);
+        toolBar_Right.add(txfCustomer, gbc); // Sử dụng TextField thay cho JList
 
         gbc.gridx = 2;
         gbc.gridy = 1;
@@ -229,15 +271,15 @@ public class PhieuXuatPanel extends JPanel {
 
         nvBUS = new NhanVienBUS();
         khBUS = new KhachHangBUS();
-        for (PhieuXuatDTO px : listPx) {  
+        for (PhieuXuatDTO px : listPx) {
             String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
             String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
             String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, 
-                    DateFormat.fomat(px.getThoigiantao().toString()), 
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh,
+                    DateFormat.fomat(px.getThoigiantao().toString()),
                     NumberFormatter.format(px.getTongTien()), trangThai});
         }
-        
+
         // Tạo renderer để căn giữa dữ liệu trong TablePhieuXuat
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -245,8 +287,8 @@ public class PhieuXuatPanel extends JPanel {
         for (int col : columnsToCenter) {
             tablePhieuXuat.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
-        
-        // Điều chỉnh kích thước width và height của các cột tablePhieuXuat 
+
+        // Điều chỉnh kích thước width và height của các cột tablePhieuXuat
         tablePhieuXuat.setRowHeight(30);
         tablePhieuXuat.getColumnModel().getColumn(0).setPreferredWidth(30);
         tablePhieuXuat.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -294,7 +336,7 @@ public class PhieuXuatPanel extends JPanel {
         int SizeRowHeight2 = tableBookDetails.getRowHeight();
         int MaxRow2 = SizeRowHeight2 * 4 + tableBookDetails.getTableHeader().getPreferredSize().height; // Tối da 4 dòng
         SPBookDetails.setPreferredSize(new Dimension(0, MaxRow2));
-        
+
         // Thiết kế PanelCenter
         PanelCenter = new JPanel(new BorderLayout());
 
@@ -310,30 +352,30 @@ public class PhieuXuatPanel extends JPanel {
         Font titleFont = new Font("Arial", Font.BOLD, 20);
         titleLabel.setFont(titleFont);
         titleLabel.setForeground(Color.WHITE);
-        
+
         titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(new Color(72, 118, 255));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        
+
         //Tạo Panel thêm các  Thêm label và txf tổng tiền
-        JLabel lbTongTien=new JLabel("Tổng tiền hóa đơn: ");
+        JLabel lbTongTien = new JLabel("Tổng tiền hóa đơn: ");
         lbTongTien.setFont(new Font("Arial", Font.PLAIN, 14));
         lbTongTien.setHorizontalAlignment(SwingConstants.CENTER);
-        txfTongTien=new JTextField();
+        txfTongTien = new JTextField();
         txfTongTien.setEditable(false);
         txfTongTien.setFont(new Font("Arial", Font.PLAIN, 14));
-        txfTongTien.setPreferredSize(new Dimension(100,20));
-        
-        tongTienPanel=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        txfTongTien.setPreferredSize(new Dimension(100, 20));
+
+        tongTienPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         tongTienPanel.add(lbTongTien);
         tongTienPanel.add(txfTongTien);
-        
+
         // Thêm các Panel  vào bottomPanel
         bottomPanel.add(titlePanel, BorderLayout.NORTH);
         bottomPanel.add(SPBookDetails, BorderLayout.CENTER);
-        bottomPanel.add(tongTienPanel,BorderLayout.SOUTH);
-        
+        bottomPanel.add(tongTienPanel, BorderLayout.SOUTH);
+
         // Thêm vào PanelCenter
         PanelCenter.add(topPanel, BorderLayout.NORTH);
         PanelCenter.add(bottomPanel, BorderLayout.CENTER);
@@ -346,11 +388,11 @@ public class PhieuXuatPanel extends JPanel {
 
         toolBar.add(toolBar_Left);
         toolBar.add(toolBar_Right);
-        
+
         setLayout(new BorderLayout());
         add(toolBar, BorderLayout.NORTH);
         add(PanelCenter, BorderLayout.CENTER);
-        
+
         // Thêm ActionListener
         ActionListener action = new PhieuXuatController(this, Wf);
         btnAdd.addActionListener(action);
@@ -358,23 +400,25 @@ public class PhieuXuatPanel extends JPanel {
         btndelete.addActionListener(action);
         btnexport.addActionListener(action);
         btnHome.addActionListener(action);
+
         // Thêm ChangedListner
         tabbedPane = new JTabbedPane();
-        tabbedPane.addChangeListener((ChangeListener)action);
-        
+        tabbedPane.addChangeListener((ChangeListener) action);
+
         // Thêm DocumentListener cho Price và add Action cho 2cbbox và JdateChosser
         txfPriceStart.getDocument().addDocumentListener((DocumentListener) action);
         txfPriceEnd.getDocument().addDocumentListener((DocumentListener) action);
-        cbb_nv.addActionListener(action);
-        cbb_kh.addActionListener(action);
-        
+
         // Thêm PropertyChangeListener
-        dateStart.addPropertyChangeListener((PropertyChangeListener)action);
-        dateEnd.addPropertyChangeListener((PropertyChangeListener)action);
-        
+        dateStart.addPropertyChangeListener((PropertyChangeListener) action);
+        dateEnd.addPropertyChangeListener((PropertyChangeListener) action);
+
         // Thêm ListSelectionListner
         tablePhieuXuat.getSelectionModel().addListSelectionListener((ListSelectionListener) action);
-        
+        jList_nv.getSelectionModel().addListSelectionListener((ListSelectionListener) action);
+        jList_kh.getSelectionModel().addListSelectionListener((ListSelectionListener) action);
+
+
         // Set ngày mặc định tìm kiếm
         dateStart.setDateFormatString("dd-MM-yyyy");
         dateEnd.setDateFormatString("dd-MM-yyyy");
@@ -382,8 +426,9 @@ public class PhieuXuatPanel extends JPanel {
         cal.set(2025, Calendar.JANUARY, 1);
         dateStart.setDate(cal.getTime());
         dateEnd.setDate(new Date());
+
     }
-    
+
     private JButton createToolBarButton(String text, String imageLink) {
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/GUI/Image/" + imageLink));
         JButton button = new JButton(text, imageIcon); // Đặt ảnh và chữ
@@ -402,30 +447,37 @@ public class PhieuXuatPanel extends JPanel {
         txfTongTien.setText("");
         nvBUS = new NhanVienBUS();
         khBUS = new KhachHangBUS();
-        for (PhieuXuatDTO px : listPx) {  
+        for (PhieuXuatDTO px : listPx) {
             String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
             String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
             String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, 
-                    DateFormat.fomat(px.getThoigiantao().toString()), 
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh,
+                    DateFormat.fomat(px.getThoigiantao().toString()),
                     NumberFormatter.format(px.getTongTien()), trangThai});
         }
-        
-        
     }
 
+    public JTextField getTxfCustomer() {
+        return txfCustomer;
+    }
+
+    public JTextField getTxfEmployee() {
+        return txfEmployee;
+    }
+
+    
     public JTextField getTxfTongTien() {
         return txfTongTien;
     }
-    
+
     public JPanel getTongTienPanel() {
         return tongTienPanel;
     }
-    
+
     public JPanel getTitlePanel() {
         return titlePanel;
     }
-    
+
     public JPanel getTopPanel() {
         return topPanel;
     }
@@ -490,12 +542,12 @@ public class PhieuXuatPanel extends JPanel {
         return txfPriceEnd;
     }
 
-    public JComboBox<String> getCbb_nv() {
-        return cbb_nv;
+    public JList<String> getJList_nv() {
+        return jList_nv;
     }
 
-    public JComboBox<String> getCbb_kh() {
-        return cbb_kh;
+    public JList<String> getJList_kh() {
+        return jList_kh;
     }
 
     public JButton getBtnAdd() {
@@ -521,7 +573,7 @@ public class PhieuXuatPanel extends JPanel {
     public JPanel getToolBar_Right() {
         return toolBar_Right;
     }
-    
+
     public ArrayList<String> getListNameNV() {
         nvBUS = new NhanVienBUS();
         ArrayList<NhanVienDTO> list_Nv = nvBUS.getNVAll();
@@ -548,8 +600,15 @@ public class PhieuXuatPanel extends JPanel {
 
     public void Filter() {
         pxBUS = new PhieuXuatBUS();
-        String nameNV = cbb_nv.getSelectedItem().toString();
-        String nameKH = cbb_kh.getSelectedItem().toString();
+        jList_nv.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); // Cho phép chọn nhiều bằng Jlist để làm tìm kiếm
+        jList_kh.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); // nâng cao AND
+        List<String> selected_list_nv = jList_nv.getSelectedValuesList();
+        ArrayList<String> list_chosser_nv = new ArrayList<>(selected_list_nv);
+        List<String> selected_list_kh = jList_kh.getSelectedValuesList();
+        ArrayList<String> list_chosser_kh = new ArrayList<>(selected_list_kh);
+
+       
+
         Date dateS = dateStart.getDate();
         Timestamp dateStart = new Timestamp(dateS.getTime());
         Date dateE = dateEnd.getDate();
@@ -560,14 +619,21 @@ public class PhieuXuatPanel extends JPanel {
         Timestamp dateEnd = new Timestamp(dateE.getTime());
         String minPrice = txfPriceStart.getText().toString();
         String maxPrice = txfPriceEnd.getText().toString();
-        ArrayList<PhieuXuatDTO> List_sort = pxBUS.Filter(nameNV, nameKH, dateStart, dateEnd, minPrice, maxPrice);
+
+        ArrayList<PhieuXuatDTO> List_sort = new ArrayList<>();
+        for (String nv : list_chosser_nv) {
+            for (String kh : list_chosser_kh) { // Dùng 2 vòng lặp để kiểm tra các trường hợp PhieuXuat
+                ArrayList<PhieuXuatDTO> List_PxFilter = pxBUS.Filter(nv, kh, dateStart, dateEnd, minPrice, maxPrice);
+                List_sort.addAll(List_PxFilter);
+            }
+        }
         dataPhieuXuat.setRowCount(0);
-        for (PhieuXuatDTO px : List_sort) {  
+        for (PhieuXuatDTO px : List_sort) {
             String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
             String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
             String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh, 
-                    DateFormat.fomat(px.getThoigiantao().toString()), 
+            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh,
+                    DateFormat.fomat(px.getThoigiantao().toString()),
                     NumberFormatter.format(px.getTongTien()), trangThai});
         }
     }

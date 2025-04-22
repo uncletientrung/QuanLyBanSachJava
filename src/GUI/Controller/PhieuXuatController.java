@@ -66,6 +66,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -176,13 +177,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
         }
         
         // Thêm action cho tìm kiếm nâng cao CBB NhanVien và KhachHang
-        if(!PxP.getCbb_nv().getSelectedItem().equals("Tất cả")  || !PxP.getCbb_kh().getSelectedItem().equals("Tất cả")){
-            PxP.Filter();
-
-        }else if (PxP.getCbb_nv().getSelectedItem().equals("Tất cả")  && PxP.getCbb_kh().getSelectedItem().equals("Tất cả")){
-            PxP.refreshTablePx();
-
-        }     
+          
         
     }
 
@@ -440,26 +435,51 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if(!e.getValueIsAdjusting()){
-            PxP.getDataBookDetails().setRowCount(0);
-            pxBUS=new PhieuXuatBUS();
-            sBUS=new SachBUS();
-            int SelectRow=PxP.getTablePhieuXuat().getSelectedRow();
-            if(SelectRow !=-1){
-                int mapx=Integer.parseInt(PxP.getTablePhieuXuat().getValueAt(SelectRow, 0).toString());
-                ArrayList<ChiTietPhieuXuatDTO> ListCTPX=pxBUS.getListCTPXById(mapx);
-                PxP.getTxfTongTien().setText(PxP.getTablePhieuXuat().getValueAt(SelectRow, 4).toString());
-                int STT=1;
-                for(ChiTietPhieuXuatDTO ctpx: ListCTPX){
-                    String maSach=ctpx.getMasach().toString();
-                    String tenSach= sBUS.getSachById(ctpx.getMasach()).getTensach();
-                    String donGia=String.valueOf(ctpx.getDongia());
-                    String soLuong=String.valueOf(ctpx.getSoluong());
-                    String thanhTien=String.valueOf(ctpx.getDongia()*ctpx.getSoluong());
-                    PxP.getDataBookDetails().addRow(new Object[]{STT,maSach,tenSach,donGia,soLuong,thanhTien});
-                    STT+=1;
+            Object sukien=e.getSource(); // Lắng nghe sự kiện
+            
+            if(sukien == PxP.getTablePhieuXuat().getSelectionModel()){
+                PxP.getDataBookDetails().setRowCount(0);
+                pxBUS=new PhieuXuatBUS();
+                sBUS=new SachBUS();
+                int SelectRow=PxP.getTablePhieuXuat().getSelectedRow();
+                if(SelectRow !=-1){
+                    int mapx=Integer.parseInt(PxP.getTablePhieuXuat().getValueAt(SelectRow, 0).toString());
+                    ArrayList<ChiTietPhieuXuatDTO> ListCTPX=pxBUS.getListCTPXById(mapx);
+                    PxP.getTxfTongTien().setText(PxP.getTablePhieuXuat().getValueAt(SelectRow, 4).toString());
+                    int STT=1;
+                    for(ChiTietPhieuXuatDTO ctpx: ListCTPX){
+                        String maSach=ctpx.getMasach().toString();
+                        String tenSach= sBUS.getSachById(ctpx.getMasach()).getTensach();
+                        String donGia=String.valueOf(ctpx.getDongia());
+                        String soLuong=String.valueOf(ctpx.getSoluong());
+                        String thanhTien=String.valueOf(ctpx.getDongia()*ctpx.getSoluong());
+                        PxP.getDataBookDetails().addRow(new Object[]{STT,maSach,tenSach,donGia,soLuong,thanhTien});
+                        STT+=1;
+                    }
                 }
-                
             }
+            
+            else if(sukien == PxP.getJList_nv().getSelectionModel()){ // Nếu tích vào txf Jlistnhaan vieen thì gọi action này
+                List<String> selected = PxP.getJList_nv().getSelectedValuesList();
+                if (selected.contains("Tất cả") || selected.isEmpty()) {
+                    PxP.getTxfEmployee().setText("Tất cả");
+                    PxP.getJList_nv().setSelectedIndex(0); // Chọn mặc định trong Jlist là  tất cả
+                } else {
+                   PxP.getTxfEmployee().setText(selected.size() + " nhân viên được chọn");
+                }
+                PxP.Filter();
+            }else if( sukien == PxP.getJList_kh().getSelectionModel()){
+                 List<String> selected = PxP.getJList_kh().getSelectedValuesList();
+                if (selected.contains("Tất cả") || selected.isEmpty()) {
+                    PxP.getTxfCustomer().setText("Tất cả");
+                    PxP.getJList_kh().setSelectedIndex(0); 
+                } else {
+                   PxP.getTxfCustomer().setText(selected.size() + " khách hàng được chọn");
+                }
+                PxP.Filter();
+            }
+            
         }
+        
     }
 }
