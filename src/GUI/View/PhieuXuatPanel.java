@@ -607,15 +607,13 @@ public class PhieuXuatPanel extends JPanel {
         List<String> selected_list_kh = jList_kh.getSelectedValuesList();
         ArrayList<String> list_chosser_kh = new ArrayList<>(selected_list_kh);
 
-       
-
         Date dateS = dateStart.getDate();
         Timestamp dateStart = new Timestamp(dateS.getTime());
         Date dateE = dateEnd.getDate();
-        if (dateEnd.getDate() == null) {
-            System.out.println("dong 429 phieuxuatpanel dateEnd bi null ");
-            dateE = new Date(1000);
-        }
+//        if (dateEnd.getDate() == null) {
+//            System.out.println("dong 429 phieuxuatpanel dateEnd bi null ");
+//            dateE = new Date(1000);
+//        }
         Timestamp dateEnd = new Timestamp(dateE.getTime());
         String minPrice = txfPriceStart.getText().toString();
         String maxPrice = txfPriceEnd.getText().toString();

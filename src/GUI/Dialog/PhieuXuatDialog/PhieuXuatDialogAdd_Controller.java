@@ -116,22 +116,28 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
        JTable tableSach=PXDA.getTableChonSach();
        JTable tableChiTiet=PXDA.getTableListBan();
        if (sukien.equals("Thêm")){
-           if(!PXDA.getTxfKhachHang().getText().trim().isEmpty() 
-                && !PXDA.getTxtSoLuong().getText().trim().isEmpty()
-                && !PXDA.gettTxfDonGia().getText().trim().isEmpty()
-                && tableSach.getSelectedRow() != -1){
-                    String tenSach=tableSach.getValueAt(tableSach.getSelectedRow(), 1).toString();
-                    String soluong=PXDA.getTxtSoLuong().getText().toString();
-                    String dongia=NumberFormatter.formatReverse((PXDA.gettTxfDonGia().getText()));
-                    String tong = NumberFormatter.format(Integer.parseInt(soluong) * Integer.parseInt(dongia));
-                    if(sBUS.getSoLuongById(tableSach.getValueAt(tableSach.getSelectedRow(), 0).toString()) < Integer.parseInt(soluong)){
-                        JOptionPane.showMessageDialog(null, "Số lượng vượt quá mức", "Thông báo", JOptionPane.ERROR_MESSAGE);
-                    }else{
-                        PXDA.getDataBan().addRow(new Object[]{tenSach,soluong,
-                                                NumberFormatter.format(Integer.parseInt(dongia)),tong});
-                         PXDA.CalcBill();
-                         
+           if(!PXDA.getTxfKhachHang().getText().trim().isEmpty() && !PXDA.getTxtSoLuong().getText().trim().isEmpty()
+           && !PXDA.gettTxfDonGia().getText().trim().isEmpty()  && tableSach.getSelectedRow() != -1){
+                String tenSach=tableSach.getValueAt(tableSach.getSelectedRow(), 1).toString();
+                // Kiểm tra sách đã thêm vào bên tablechi tiết chưa
+                for(int i=0; i< tableChiTiet.getRowCount();i++){
+                    if(tableChiTiet.getValueAt(i, 0).toString().equals(tenSach)){
+                         JOptionPane.showMessageDialog(null, "Sách đã được thêm vào danh sách!!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                         return;
                     }
+                }
+
+                String soluong=PXDA.getTxtSoLuong().getText().toString();
+                String dongia=NumberFormatter.formatReverse((PXDA.gettTxfDonGia().getText()));
+                String tong = NumberFormatter.format(Integer.parseInt(soluong) * Integer.parseInt(dongia));
+                if(sBUS.getSoLuongById(tableSach.getValueAt(tableSach.getSelectedRow(), 0).toString()) < Integer.parseInt(soluong)){
+                    JOptionPane.showMessageDialog(null, "Số lượng vượt quá mức", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                }else{
+                    PXDA.getDataBan().addRow(new Object[]{tenSach,soluong,
+                                            NumberFormatter.format(Integer.parseInt(dongia)),tong});
+                     PXDA.CalcBill();
+
+                }
                     
            }else{
            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!", "Thông báo", JOptionPane.ERROR_MESSAGE);
@@ -214,7 +220,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                // Sau khi chạy for xong đủ hết chi tiết phiếu xuất thì thêm vào database
                 phieuxuat= new PhieuXuatDTO(maPhieuXuat, maNV, maKH, current_day, (long)tongtien, trangthai);
                 pxBUS.insert(phieuxuat, ListCTPhieuXuat);
-                
+                PXDA.refreshTableChonSach();
                 
                JOptionPane.showMessageDialog(null, "Xuất hóa đơn thành công!", "Thông báo", JOptionPane.NO_OPTION);
 
