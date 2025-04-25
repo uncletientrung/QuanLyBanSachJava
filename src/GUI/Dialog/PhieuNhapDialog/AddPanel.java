@@ -16,7 +16,6 @@ import DTO.TacGiaDTO;
 import GUI.Format.NumberFormatter;
 import GUI.WorkFrame;
 import java.awt.Color;
-import java.security.Timestamp;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -125,6 +124,7 @@ public class AddPanel extends JPanel{
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txfFindFocusLost(evt);
+                
             }
         });
         txfFind.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -893,6 +893,8 @@ public class AddPanel extends JPanel{
         if(txfFind.getText().trim().isEmpty()){
             txfFind.setText("Tìm kiếm sản phẩm...");
             txfFind.setForeground(Color.lightGray);
+
+            refreshJTable4();
         }
     }//GEN-LAST:event_txfFindFocusLost
 
@@ -941,31 +943,35 @@ public class AddPanel extends JPanel{
     // Xóa dữ liệu hiện tại trong bảng
     dataBook.setRowCount(0);
 
-    // Lọc dữ liệu từ danh sách sách
-    for (SachDTO sach : listSach) {
-        String maSach = sach.getMasach().toLowerCase();
-        String tenSach = sach.getTensach().toLowerCase();
+        // Lọc dữ liệu từ danh sách sách
+        for (SachDTO sach : listSach) {
+            String maSach = sach.getMasach().toLowerCase();
+            String tenSach = sach.getTensach().toLowerCase();
 
-        // Kiểm tra nếu mã sách hoặc tên sách chứa từ khóa
-        if (maSach.contains(keyword) || tenSach.contains(keyword)) {
-            String tacGia = "";
-            TacGiaDTO tg = tacgiaBUS.getTGById(sach.getMatacgia());
-            if (tg != null) {
-                tacGia = tg.getHotentacgia();
+            // Kiểm tra nếu mã sách hoặc tên sách chứa từ khóa
+            if (maSach.contains(keyword) || tenSach.contains(keyword)) {
+                String tacGia = "";
+                TacGiaDTO tg = tacgiaBUS.getTGById(sach.getMatacgia());
+                if (tg != null) {
+                    tacGia = tg.getHotentacgia();
+                }
+                dataBook.addRow(new Object[]{
+                    sach.getMasach(),
+                    sach.getTensach(),
+                    tacGia,
+                    NumberFormatter.format(sach.getSoluongton())
+                });
             }
-            dataBook.addRow(new Object[]{
-                sach.getMasach(),
-                sach.getTensach(),
-                tacGia,
-                NumberFormatter.format(sach.getSoluongton())
-            });
         }
-    }
+    
+
+    // Đặt lại trạng thái chọn hàng
+    jTable4.clearSelection();
 
     // Cập nhật giao diện bảng
     jTable4.revalidate();
     jTable4.repaint();
-}
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane SPSachThem;
