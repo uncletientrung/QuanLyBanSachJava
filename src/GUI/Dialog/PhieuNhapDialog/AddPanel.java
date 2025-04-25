@@ -137,6 +137,22 @@ public class AddPanel extends JPanel{
                 txfFindActionPerformed(evt);
             }
         });
+        txfFind.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        @Override
+        public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            filterTable();
+        }
+
+        @Override
+        public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            filterTable();
+        }
+
+        @Override
+        public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            filterTable();
+        }
+    });
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -919,6 +935,37 @@ public class AddPanel extends JPanel{
         jTable4.repaint();
     }
     
+    private void filterTable() {
+    String keyword = txfFind.getText().trim().toLowerCase();
+
+    // Xóa dữ liệu hiện tại trong bảng
+    dataBook.setRowCount(0);
+
+    // Lọc dữ liệu từ danh sách sách
+    for (SachDTO sach : listSach) {
+        String maSach = sach.getMasach().toLowerCase();
+        String tenSach = sach.getTensach().toLowerCase();
+
+        // Kiểm tra nếu mã sách hoặc tên sách chứa từ khóa
+        if (maSach.contains(keyword) || tenSach.contains(keyword)) {
+            String tacGia = "";
+            TacGiaDTO tg = tacgiaBUS.getTGById(sach.getMatacgia());
+            if (tg != null) {
+                tacGia = tg.getHotentacgia();
+            }
+            dataBook.addRow(new Object[]{
+                sach.getMasach(),
+                sach.getTensach(),
+                tacGia,
+                NumberFormatter.format(sach.getSoluongton())
+            });
+        }
+    }
+
+    // Cập nhật giao diện bảng
+    jTable4.revalidate();
+    jTable4.repaint();
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane SPSachThem;
