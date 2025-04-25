@@ -19,10 +19,10 @@ import java.time.Instant;
  * @author Minnie
  */
 public class PhieuNhapDialogAdd_Controller implements ActionListener{
-    private final PhieuNhapDialogAdd PNDA;
+    private final AddPanel PNDA;
     private PhieuNhapBUS pnBUS = new PhieuNhapBUS();
 
-    public PhieuNhapDialogAdd_Controller(PhieuNhapDialogAdd PNDA){
+    public PhieuNhapDialogAdd_Controller(AddPanel PNDA){
         this.PNDA = PNDA;
     }
 

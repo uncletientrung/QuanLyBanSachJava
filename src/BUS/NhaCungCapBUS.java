@@ -28,6 +28,7 @@ public class NhaCungCapBUS {
         return NhaCungCapDAO.getInstance().selectAll();
     }
 
+
     public String getTenNCC(int maNCC) {
         for (NhaCungCapDTO ncc : listNhaCungCap) {
             if (ncc.getMancc() == maNCC) {
@@ -167,5 +168,13 @@ public class NhaCungCapBUS {
          return nccDAO.delete(mancc)>0;
      }
 
+    public int getMaNccByNameNCC(String tenNCC) {
+        for (NhaCungCapDTO ncc : listNhaCungCap) {
+            if (ncc.getTenncc().equalsIgnoreCase(tenNCC)) {
+                return ncc.getMancc();
+            }
+        }
+        return -1; // Trả về -1 nếu không tìm thấy
+    }
 
 }

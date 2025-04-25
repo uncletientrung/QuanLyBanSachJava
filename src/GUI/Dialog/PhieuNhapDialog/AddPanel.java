@@ -9,22 +9,26 @@ import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SachBUS;
 import BUS.TacGiaBUS;
+import DTO.ChiTietPhieuNhapDTO;
+import DTO.PhieuNhapDTO;
 import DTO.SachDTO;
 import DTO.TacGiaDTO;
 import GUI.Format.NumberFormatter;
 import GUI.WorkFrame;
 import java.awt.Color;
+import java.security.Timestamp;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 
 
 
@@ -202,6 +206,7 @@ public class AddPanel extends JPanel{
 
         jTable4.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting() && jTable4.getSelectedRow() != -1) {
+                System.out.println("01");
                 int selectedRow = jTable4.getSelectedRow();
                 String maSach = jTable4.getValueAt(selectedRow, 0).toString();
                 String tenSach = jTable4.getValueAt(selectedRow, 1).toString();
@@ -217,6 +222,9 @@ public class AddPanel extends JPanel{
                 txfGiaNhap.setEditable(false);
                 txfGiaNhap.setToolTipText("");
                 txfGiaNhap.setText(sachBUS.getDongGiaById(maSach) + "");
+                txfSoLuong.setText("");
+
+                tableListThem.clearSelection();
             }
         });
 
@@ -277,8 +285,8 @@ public class AddPanel extends JPanel{
         btnSua.setBackground(new java.awt.Color(204, 204, 0));
         btnSua.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnSua.setForeground(new java.awt.Color(255, 255, 255));
-        btnSua.setText("Sửa sản phẩm");
-        btnSua.setActionCommand("btnThem");
+        btnSua.setText("Sửa");
+        btnSua.setActionCommand("btnSua");
         btnSua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSuaActionPerformed(evt);
@@ -288,8 +296,8 @@ public class AddPanel extends JPanel{
         btnXoa.setBackground(new java.awt.Color(204, 0, 0));
         btnXoa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnXoa.setForeground(new java.awt.Color(255, 255, 255));
-        btnXoa.setText("Xóa sản phẩm");
-        btnXoa.setActionCommand("btnThem");
+        btnXoa.setText("Bỏ chọn");
+        btnXoa.setActionCommand("btnXoa");
         btnXoa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnXoaActionPerformed(evt);
@@ -343,8 +351,8 @@ public class AddPanel extends JPanel{
                 .addComponent(txfSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnXoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44))
         );
 
@@ -426,7 +434,13 @@ public class AddPanel extends JPanel{
         btnNhap.setBackground(new java.awt.Color(0, 128, 0)); // RGB for green
         btnNhap.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnNhap.setForeground(new java.awt.Color(255, 255, 255));
+        btnNhap.setActionCommand("btnNhap");
         btnNhap.setText("NHẬP HÀNG");
+        btnNhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNhapActionPerformed(evt);
+            }
+        });
 
         lbThanhTien.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbThanhTien.setForeground(new java.awt.Color(0, 0, 0));
@@ -502,7 +516,7 @@ public class AddPanel extends JPanel{
 
         SPSachThem.setBackground(new java.awt.Color(255, 255, 255));
 
-        String[] columnListThem = {"STT", "Tên sách", "Số lượng nhập", "Thành tiền"};
+        String[] columnListThem = {"STT","Mã sách", "Tên sách", "Số lượng nhập", "Thành tiền"};
         DefaultTableModel dataListThem = new DefaultTableModel(columnListThem, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -512,19 +526,23 @@ public class AddPanel extends JPanel{
         tableListThem = new JTable(dataListThem);
         tableListThem.setRowHeight(30);
         tableListThem.getColumnModel().getColumn(0).setPreferredWidth(35);
-        tableListThem.getColumnModel().getColumn(1).setPreferredWidth(200);
-        tableListThem.getColumnModel().getColumn(2).setPreferredWidth(70);
+        tableListThem.getColumnModel().getColumn(1).setPreferredWidth(35);
+        tableListThem.getColumnModel().getColumn(2).setPreferredWidth(200);
         tableListThem.getColumnModel().getColumn(3).setPreferredWidth(70);
+        tableListThem.getColumnModel().getColumn(4).setPreferredWidth(70);
         tableListThem.setShowGrid(true);
         DefaultTableCellRenderer centerRenderer2 = new DefaultTableCellRenderer();
         centerRenderer2.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnIndicesListThem = {0, 1, 2, 3};
+        int[] columnIndicesListThem = {0, 1, 2, 3, 4};
         for (int index : columnIndicesListThem) {
             tableListThem.getColumnModel().getColumn(index).setCellRenderer(centerRenderer2);
         }
         tableListThem.getTableHeader().setReorderingAllowed(false);
         tableListThem.getTableHeader().setBackground(new Color(204, 204, 204));
         tableListThem.getTableHeader().setForeground(Color.BLACK);
+        tableListThem.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Chỉ cho phép chọn một hàng
+        tableListThem.setRowSelectionAllowed(true); // Cho phép chọn hàng
+        tableListThem.setColumnSelectionAllowed(false); // Không cho phép chọn cột
 
         SPSachThem.setViewportView(tableListThem);
         if (tableListThem.getColumnModel().getColumnCount() > 0) {
@@ -532,7 +550,41 @@ public class AddPanel extends JPanel{
             tableListThem.getColumnModel().getColumn(1).setResizable(false);
             tableListThem.getColumnModel().getColumn(2).setResizable(false);
             tableListThem.getColumnModel().getColumn(3).setResizable(false);
+            tableListThem.getColumnModel().getColumn(4).setResizable(false);
         }
+
+        tableListThem.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting() && tableListThem.getSelectedRow() != -1) {
+                System.out.println("Ban da chon hang tai tableListThem");
+                int selectedRow = tableListThem.getSelectedRow();
+                System.out.println("Hàng được chọn: " + selectedRow);
+
+                String maSach = tableListThem.getValueAt(selectedRow, 1).toString();
+                String tenSach = tableListThem.getValueAt(selectedRow, 2).toString();
+                String giaNhap = sachBUS.getDongGiaById(maSach) + "";
+                String soLuongNhap = tableListThem.getValueAt(selectedRow, 3).toString();
+
+                txfTenSach.setText(tenSach);
+                txfMaSach.setText(maSach);
+                txfGiaNhap.setText(giaNhap);
+                txfSoLuong.setText(soLuongNhap);
+
+                // Hiển thị dữ liệu lên các trường thông tin
+                txfTenSach.setEditable(false);
+                txfTenSach.setToolTipText("");
+                txfTenSach.setText(tenSach);
+                txfMaSach.setEditable(false);
+                txfMaSach.setToolTipText("");
+                txfMaSach.setText(maSach);
+                txfGiaNhap.setEditable(false);
+                txfGiaNhap.setToolTipText("");
+                txfGiaNhap.setText(giaNhap);
+
+                // Bỏ chọn select 
+                jTable4.clearSelection();
+            }
+        });
+
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -583,17 +635,228 @@ public class AddPanel extends JPanel{
         // TODO add your handling code here:
     }//GEN-LAST:event_cbboxNCCActionPerformed
 
-    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {                                        
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnThemActionPerformed
+            // Lấy hàng được chọn trong jTable4
+            int selectedRow = jTable4.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một sách để thêm!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Lấy dữ liệu từ hàng được chọn
+            String maSach = jTable4.getValueAt(selectedRow, 0).toString();
+            String tenSach = jTable4.getValueAt(selectedRow, 1).toString();
+            String soLuongTon = jTable4.getValueAt(selectedRow, 3).toString();
+
+            // Kiểm tra số lượng nhập
+            String soLuongNhapStr = txfSoLuong.getText().trim();
+            if (soLuongNhapStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            int soLuongNhap;
+            try {
+                soLuongNhap = Integer.parseInt(soLuongNhapStr);
+                if (soLuongNhap <= 0) {
+                    JOptionPane.showMessageDialog(this, "Số lượng nhập phải lớn hơn 0!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Số lượng nhập không hợp lệ!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Kiểm tra số lượng tồn
+            int soLuongTonInt = Integer.parseInt(soLuongTon.replace(",", ""));
+            if (soLuongNhap > soLuongTonInt) {
+                JOptionPane.showMessageDialog(this, "Số lượng nhập không được vượt quá số lượng tồn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Tính thành tiền
+            int giaNhap = Integer.parseInt(txfGiaNhap.getText().trim());
+            int thanhTien = soLuongNhap * giaNhap;
+
+            // Thêm dữ liệu vào tableListThem
+            DefaultTableModel model = (DefaultTableModel) tableListThem.getModel();
+            model.addRow(new Object[]{
+                model.getRowCount() + 1, // STT
+                maSach,                 // Mã sách
+                tenSach,                 // Tên sách
+                soLuongNhap,             // Số lượng nhập
+                thanhTien                // Thành tiền
+            });
+            
+            // Cập nhật tổng tiền
+            int tongTien = 0;
+            for (int i = 0; i < model.getRowCount(); i++) {
+                tongTien += Integer.parseInt(model.getValueAt(i, 4).toString());
+            }
+            lbThanhTien.setText(tongTien + "đ");
+
+            // Xóa dữ liệu trong các trường nhập
+            txfSoLuong.setText("");
+            txfMaSach.setText("");
+            txfTenSach.setText("");
+            txfGiaNhap.setText("");
+
+            //Bỏ chọn hàng
+            jTable4.clearSelection();
+        }                                       
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // TODO add your handling code here:
+        // Xóa dữ liệu trong các trường nhập
+                txfSoLuong.setText("");
+                txfMaSach.setText("");
+                txfTenSach.setText("");
+                txfGiaNhap.setText("");
+
+                //Bỏ chọn hàng
+                jTable4.clearSelection();
+                tableListThem.clearSelection();
+
+                refreshJTable4();
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
+// Lấy hàng được chọn trong tableListThem
+            int selectedRow = tableListThem.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng trong bảng để sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Kiểm tra các trường nhập liệu
+            String maSach = txfMaSach.getText().trim();
+            String tenSach = txfTenSach.getText().trim();
+            String giaNhapStr = txfGiaNhap.getText().trim();
+            String soLuongNhapStr = txfSoLuong.getText().trim();
+
+            if (maSach.isEmpty() || tenSach.isEmpty() || giaNhapStr.isEmpty() || soLuongNhapStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin trước khi sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            int soLuongNhap;
+            try {
+                soLuongNhap = Integer.parseInt(soLuongNhapStr);
+
+                if (soLuongNhap <= 0) {
+                    JOptionPane.showMessageDialog(this, "Số lượng nhập phải lớn hơn 0!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Số lượng nhập không hợp lệ!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Tính lại thành tiền
+            int thanhTien = Integer.parseInt(giaNhapStr) * soLuongNhap;
+
+            // Cập nhật dữ liệu trong tableListThem
+            DefaultTableModel model = (DefaultTableModel) tableListThem.getModel();
+            model.setValueAt(maSach, selectedRow, 1); // Cập nhật mã sách
+            model.setValueAt(tenSach, selectedRow, 2); // Cập nhật tên sách
+            model.setValueAt(soLuongNhap, selectedRow, 3); // Cập nhật số lượng nhập
+            model.setValueAt(thanhTien, selectedRow, 4); // Cập nhật thành tiền
+
+            // Cập nhật tổng tiền
+            int tongTien = 0;
+            for (int i = 0; i < model.getRowCount(); i++) {
+                tongTien += Integer.parseInt(model.getValueAt(i, 4).toString());
+            }
+            lbThanhTien.setText(tongTien + "đ");
+
+            // Hiển thị thông báo thành công
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+            // Xóa dữ liệu trong các trường nhập
+            txfSoLuong.setText("");
+            txfMaSach.setText("");
+            txfTenSach.setText("");
+            txfGiaNhap.setText("");
+
+            // Bỏ chọn hàng
+            tableListThem.clearSelection();
+            jTable4.clearSelection();                 
+
+            refreshJTable4();            
     }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnNhapActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        // TODO add your handling code here:
+        System.err.println("dang nhan btn Nhap");
+            // Kiểm tra nếu bảng tableListThem không có dữ liệu
+        DefaultTableModel model = (DefaultTableModel) tableListThem.getModel();
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Không có sản phẩm nào để nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra thông tin phiếu nhập
+        String maPhieuNhap = txfMaPhieuNhap.getText().trim();
+        String nhanVienNhap = txfNhanVien.getText().trim();
+        String nhaCungCap = cbboxNCC.getSelectedItem().toString();
+
+        if (maPhieuNhap.isEmpty() || nhanVienNhap.isEmpty() || nhaCungCap.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin phiếu nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Hiển thị xác nhận trước khi nhập
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc chắn muốn nhập hàng?", 
+            "Xác nhận nhập hàng", 
+            JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        // Gọi đến PhieuNhapDialogAdd để xử lý đẩy dữ liệu lên database
+        try {
+            PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+            //Tạo dữ liệu cho Phiếu Nhập DTO
+                int maphieu = Integer.parseInt(txfMaPhieuNhap.getText().trim());
+                int manv = WorkFrame.taiKhoan.getManv();
+                int mancc = nccBUS.getMaNccByNameNCC(nhaCungCap);
+                java.sql.Timestamp thoigiantao = new java.sql.Timestamp(System.currentTimeMillis());
+
+                int tongTien = Integer.parseInt(lbThanhTien.getText().replace("đ", "").trim());
+                int trangthai = 1;
+
+                PhieuNhapDTO pnNew = new PhieuNhapDTO(maphieu, manv, mancc, thoigiantao, tongTien, trangthai);
+
+            //Tạo dữ liệu cho list_ctpn
+                ArrayList<ChiTietPhieuNhapDTO> list_ctpn = new ArrayList<>();
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    String maSachCTPN = model.getValueAt(i, 1).toString();
+                    int soLuongNhapCTPN = Integer.parseInt(model.getValueAt(i, 3).toString());
+                    int donGiaCTPN = sachBUS.getDongGiaById(maSachCTPN);
+                    ChiTietPhieuNhapDTO ctpn = new ChiTietPhieuNhapDTO(maphieu, maSachCTPN, soLuongNhapCTPN, donGiaCTPN);
+                    list_ctpn.add(ctpn);
+                }
+                phieuNhapBUS.insert(pnNew, list_ctpn);
+                boolean success = true; 
+                if (success) {
+                    JOptionPane.showMessageDialog(this, "Nhập hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Xóa dữ liệu trong bảng và các trường nhập
+                    model.setRowCount(0);
+                    txfMaPhieuNhap.setText(String.valueOf(Integer.parseInt(maPhieuNhap) + 1)); // Tăng mã phiếu nhập
+                    lbThanhTien.setText("0đ");
+                    refreshJTable4();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi nhập hàng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    } 
 
     private void txfMaSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfMaSachActionPerformed
         // TODO add your handling code here:
@@ -623,6 +886,38 @@ public class AddPanel extends JPanel{
         txfFind.setForeground(Color.BLACK);
     }//GEN-LAST:event_txfFindFocusGained
     
+    private void refreshJTable4() {
+        // Xóa dữ liệu hiện tại trong bảng
+        dataBook.setRowCount(0);
+
+        // Lấy dữ liệu mới từ cơ sở dữ liệu
+        listSach = sachBUS.getSachAll();
+
+        // Thêm dữ liệu mới vào bảng
+        for (SachDTO sach : listSach) {
+            String tacGia = "";
+            TacGiaDTO tg = tacgiaBUS.getTGById(sach.getMatacgia());
+            if (tg != null) {
+                tacGia = tg.getHotentacgia();
+            }
+            dataBook.addRow(new Object[]{
+                sach.getMasach(),
+                sach.getTensach(),
+                tacGia,
+                NumberFormatter.format(sach.getSoluongton())
+            });
+        }
+
+        // Thông báo cho mô hình bảng rằng dữ liệu đã thay đổi
+        dataBook.fireTableDataChanged();
+
+        // Đặt lại mô hình cho jTable4 (nếu cần)
+        jTable4.setModel(dataBook);
+
+        // Cập nhật giao diện
+        jTable4.revalidate();
+        jTable4.repaint();
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -974,5 +1269,4 @@ public class AddPanel extends JPanel{
         this.txfTenSach = txfTenSach;
     }
 }
-
 
