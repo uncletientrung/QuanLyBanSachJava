@@ -165,4 +165,16 @@ public class BookDialogDetail extends JDialog{
         txfNamxuatban.setText(NamXB);
         txfDongia.setText(dongia);
     }
+
+     public void ShowInfo2(String maSach,String TenSach,String NXB,String TG,String TL,String soluong,String NamXB,String dongia){
+        txfMasach.setText(maSach);
+        txfTensach.setText(TenSach);
+        txfManxb.setText(NXB);
+        txfMatacgia.setText(TG);
+        txfMatheloai.setText(TL);
+        txfSoluong.setText(soluong);
+        txfNamxuatban.setText(NamXB);
+        txfDongia.setText(dongia);
+         this.Visible(true);
+    }
 }
