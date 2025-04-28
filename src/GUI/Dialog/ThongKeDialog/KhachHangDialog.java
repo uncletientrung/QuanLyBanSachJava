@@ -114,9 +114,9 @@ public class KhachHangDialog extends JDialog {
 
         JLabel from1 = new JLabel("Từ : ");
         JLabel to1 = new JLabel("Đến : ");
-        NgayBatDau1 = new JDateChooser(new Date());
+        NgayBatDau1 = new JDateChooser();
         NgayBatDau1.setDate(new Date());
-        NgayKetThuc1 = new JDateChooser(new Date());
+        NgayKetThuc1 = new JDateChooser();
         NgayKetThuc1.setDate(new Date());
         NgayBatDau1.setPreferredSize(new Dimension(100, 30));
         NgayKetThuc1.setPreferredSize(new Dimension(100, 30));
