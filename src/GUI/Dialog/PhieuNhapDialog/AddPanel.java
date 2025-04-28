@@ -16,6 +16,7 @@ import DTO.TacGiaDTO;
 import GUI.Format.NumberFormatter;
 import GUI.WorkFrame;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -176,6 +177,7 @@ public class AddPanel extends JPanel{
             }
         };
         jTable4.setModel(dataBook);
+        jTable4.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Chỉ cho phép chọn một hàng
         listSach = new SachBUS().getSachAll();
         tacgiaBUS = new TacGiaBUS();
         tableChonSach = new JTable(dataBook);
@@ -298,9 +300,7 @@ public class AddPanel extends JPanel{
         txfSoLuong.setBackground(new java.awt.Color(255, 255, 255));
         txfSoLuong.setForeground(new java.awt.Color(0, 0, 0));
 
-        btnSua.setBackground(new java.awt.Color(204, 204, 0));
         btnSua.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnSua.setForeground(new java.awt.Color(255, 255, 255));
         btnSua.setText("Sửa");
         btnSua.setActionCommand("btnSua");
         btnSua.addActionListener(new java.awt.event.ActionListener() {
@@ -309,9 +309,7 @@ public class AddPanel extends JPanel{
             }
         });
 
-        btnXoa.setBackground(new java.awt.Color(204, 0, 0));
         btnXoa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnXoa.setForeground(new java.awt.Color(255, 255, 255));
         btnXoa.setText("Bỏ chọn");
         btnXoa.setActionCommand("btnXoa");
         btnXoa.addActionListener(new java.awt.event.ActionListener() {
@@ -372,9 +370,7 @@ public class AddPanel extends JPanel{
                 .addGap(44, 44, 44))
         );
 
-        btnThem.setBackground(new java.awt.Color(0, 204, 0));
         btnThem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnThem.setForeground(new java.awt.Color(255, 255, 255));
         btnThem.setText("Thêm");
         btnThem.setActionCommand("btnThem");
         btnThem.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -389,27 +385,27 @@ public class AddPanel extends JPanel{
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(125, 125, 125))))
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(125, 125, 125))))
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel1Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 0, Short.MAX_VALUE)) // Khoảng cách 200 đơn vị
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        .addGap(0, 0, Short.MAX_VALUE)
+        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -447,9 +443,7 @@ public class AddPanel extends JPanel{
         lbTongTien.setForeground(new java.awt.Color(255, 51, 51));
         lbTongTien.setText("TỔNG TIỀN:");
 
-        btnNhap.setBackground(new java.awt.Color(0, 128, 0)); // RGB for green
         btnNhap.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnNhap.setForeground(new java.awt.Color(255, 255, 255));
         btnNhap.setActionCommand("btnNhap");
         btnNhap.setText("NHẬP HÀNG");
         btnNhap.addActionListener(new java.awt.event.ActionListener() {
@@ -525,11 +519,12 @@ public class AddPanel extends JPanel{
                     .addComponent(lbThanhTien, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNhap)
-                .addGap(19, 19, 19))
+                .addGap(100, 100, 100))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
+        SPSachThem.setPreferredSize(new Dimension(SPSachThem.getWidth(), 300)); // Giảm chiều cao tổng thể
         SPSachThem.setBackground(new java.awt.Color(255, 255, 255));
 
         String[] columnListThem = {"STT","Mã sách", "Tên sách", "Số lượng nhập", "Thành tiền"};
@@ -609,11 +604,11 @@ public class AddPanel extends JPanel{
             .addComponent(SPSachThem)
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(SPSachThem, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+        jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel3Layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(SPSachThem, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(0, 0, 0)) // Tăng khoảng cách 20 pixel
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -710,7 +705,7 @@ public class AddPanel extends JPanel{
             for (int i = 0; i < model.getRowCount(); i++) {
                 tongTien += Integer.parseInt(model.getValueAt(i, 4).toString());
             }
-            lbThanhTien.setText(tongTien + "đ");
+            lbThanhTien.setText(giaTienString(tongTien) + "đ");
 
             // Xóa dữ liệu trong các trường nhập
             txfSoLuong.setText("");
@@ -785,7 +780,7 @@ public class AddPanel extends JPanel{
             for (int i = 0; i < model.getRowCount(); i++) {
                 tongTien += Integer.parseInt(model.getValueAt(i, 4).toString());
             }
-            lbThanhTien.setText(tongTien + "đ");
+            lbThanhTien.setText(giaTienString(tongTien) + "đ");
 
             // Hiển thị thông báo thành công
             JOptionPane.showMessageDialog(this, "Cập nhật thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -971,6 +966,10 @@ public class AddPanel extends JPanel{
     // Cập nhật giao diện bảng
     jTable4.revalidate();
     jTable4.repaint();
+    }
+
+    private String giaTienString(int n){
+        return String.format("%,d", n).replace(",", " ");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

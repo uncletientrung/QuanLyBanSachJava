@@ -221,37 +221,37 @@ public class KhachHangController implements ActionListener,ListSelectionListener
         
         if (columnIndex != -1) {
             if(columnIndex==0){
-                khf.setListsx(new ThongKeBUS().TheoSTT(khf.getListsx(), khf.t0));
+                khf.setListsx(new ThongKeBUS().TheoSTT(khf.getList(), khf.t0));
                 khf.sapxepTable();
                 khf.t0=!khf.t0;
             }
             if(columnIndex==1){
-                khf.setListsx(new ThongKeBUS().TheoMa(khf.getListsx(), khf.t1));
+                khf.setListsx(new ThongKeBUS().TheoMa(khf.getList(), khf.t1));
                 khf.sapxepTable();
                 khf.t1=!khf.t1;
             }
             if(columnIndex==2){
-                khf.setListsx(new ThongKeBUS().TheoHoTen(khf.getListsx(), khf.t2));
+                khf.setListsx(new ThongKeBUS().TheoHoTen(khf.getList(), khf.t2));
                 khf.sapxepTable();
                 khf.t2=!khf.t2;
             }
             if(columnIndex==3){
-                khf.setListsx(new ThongKeBUS().TheoHoaDon(khf.getListsx(), khf.t3));
+                khf.setListsx(new ThongKeBUS().TheoHoaDon(khf.getList(), khf.t3));
                 khf.sapxepTable();
                 khf.t3=!khf.t3;
             }
             if(columnIndex==4){
-                khf.setListsx(new ThongKeBUS().TheoSach(khf.getListsx(), khf.t4));
+                khf.setListsx(new ThongKeBUS().TheoSach(khf.getList(), khf.t4));
                 khf.sapxepTable();
                 khf.t4=!khf.t4;
             }
             if(columnIndex==5){
-                khf.setListsx(new ThongKeBUS().TheoDoanhThu(khf.getListsx(), khf.t5));
+                khf.setListsx(new ThongKeBUS().TheoDoanhThu(khf.getList(), khf.t5));
                 khf.sapxepTable();
                 khf.t5=!khf.t5;
             }              
             if(columnIndex==6){
-                khf.setListsx(new ThongKeBUS().TheoLN(khf.getListsx(), khf.t6));
+                khf.setListsx(new ThongKeBUS().TheoLN(khf.getList(), khf.t6));
                 khf.sapxepTable();
                 khf.t6=!khf.t6;
             }

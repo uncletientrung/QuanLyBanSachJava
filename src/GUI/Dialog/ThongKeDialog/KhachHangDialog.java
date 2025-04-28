@@ -114,10 +114,8 @@ public class KhachHangDialog extends JDialog {
 
         JLabel from1 = new JLabel("Từ : ");
         JLabel to1 = new JLabel("Đến : ");
-        NgayBatDau1 = new JDateChooser();
-        NgayBatDau1.setDate(new Date());
-        NgayKetThuc1 = new JDateChooser();
-        NgayKetThuc1.setDate(new Date());
+        NgayBatDau1 = new JDateChooser(new Date());
+        NgayKetThuc1 = new JDateChooser(new Date());
         NgayBatDau1.setPreferredSize(new Dimension(100, 30));
         NgayKetThuc1.setPreferredSize(new Dimension(100, 30));
         ngay=new JPanel();
@@ -204,7 +202,7 @@ public class KhachHangDialog extends JDialog {
         });
 
         //bảng dữ liệu
-        String[] columnNCC = {"STT","Mã", "Họ Tên","Số Hóa Đơn","Tổng Sách","Doanh Thu","Lợi Nhuận"};
+        String[] columnNCC = {"STT","Mã", "Họ Tên","Số Hóa Đơn","Doanh Thu","Tổng Sách","Lợi Nhuận"};
         tablekh = new DefaultTableModel(columnNCC, 0) {       
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -229,7 +227,7 @@ public class KhachHangDialog extends JDialog {
             tablekh.addRow(list.get(i));   
             n+=3;
         }
-        doitable(true,list);
+        doitable(true,listsx);
         // Căn giữa các cột: Mã NCC (0), SĐT (3)
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);

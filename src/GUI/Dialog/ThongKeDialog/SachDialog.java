@@ -1,21 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package GUI.Dialog.ThongKeDialog;
 
 import BUS.SachBUS;
-import BUS.NhaCungCapBUS;
-import BUS.ThongKeBUS;
-import DAO.ChiTietPhieuXuatDAO;
-import DAO.PhieuXuatDAO;
-import DTO.ChiTietPhieuXuatDTO;
 import DTO.SachDTO;
-import DTO.NhaCungCapDTO;
-import DTO.PhieuXuatDTO;
-import GUI.Controller.NhaCungCapController;
 import GUI.WorkFrame;
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
@@ -36,7 +24,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -45,139 +32,141 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import java.util.Date;
+import javax.swing.table.TableColumn;
 
-/**
- *
- * @author Hi
- */
 public class SachDialog extends JDialog {
 
     private JTable table;
-    private JTable table2;
-    private JTable table3;
-    private DefaultTableModel tableSach;
-    private DefaultTableModel tableSach2;
-    private DefaultTableModel tableSach3;
+    private DefaultTableModel tables;
+   
     private WorkFrame workFrame;
-    private JTextField txtTimKiem;
-    private Boolean checkTimkiem = false;
     private ImageIcon icon;
-    private JComboBox<String> cbbox;
-    JDateChooser aaChooser;
-    JDateChooser bbChooser;
-    JMonthChooser m1Chooser;
-    JMonthChooser m2Chooser;
-    JYearChooser y1Chooser2;
-    JYearChooser  y2Chooser2;
     
-    JYearChooser y1Chooser;
-    JYearChooser  y2Chooser;
-    
+    private JTextField txtTimKiem;
 
-    JYearChooser y1Chooser4;
-    JYearChooser  y2Chooser4;
+    private JComboBox<String> cbbox;
     
-    JPanel panel,panel2,panel3,panel4;
+    private JComboBox<String> kieusapxep;
+    private JComboBox<String> sapxep;
     
-    JComboBox<String> qui1;
-    JComboBox<String> qui2;
+    private JDateChooser NgayBatDau1;
+    private JDateChooser NgayKetThuc1;
     
+    private JMonthChooser ThangBatDau2;
+    private JMonthChooser ThangKetThuc2;
+    private JYearChooser NamBatDau2;
+    private JYearChooser  NamKetThuc2;
     
-    int t=1;
-    public ArrayList<PhieuXuatDTO> listpx = new PhieuXuatDAO().selectAll();
-    public ArrayList<ChiTietPhieuXuatDTO> listctpx = new ChiTietPhieuXuatDAO().selectAll2();
-    public ArrayList<SachDTO> listSach = new SachBUS().getSachAll();
-    public ArrayList<Long> list;
+    private JYearChooser NamBatDau3;
+    private JYearChooser  NamKetThuc3;
+   
+    private JYearChooser NamBatDau4;
+    private JYearChooser  NamKetThuc4;
     
-    JScrollPane scrollPane;
+    private JPanel ngay,thang,quy,nam;
+    
+    private JComboBox<String> qui1;
+    private JComboBox<String> qui2;
+
+    private ArrayList<SachDTO> lists = new SachBUS().getSachAll();
+    private ArrayList<Long> listthongke = new ArrayList();
+
+    private ArrayList<Object[]> list=List();
+    private ArrayList<Object[]> listsx=new ArrayList<>(list);
+    
+    public boolean t0=true;
+    public boolean t1=true;
+    public boolean t2=true;
+    public boolean t3=true;
+    public boolean t4=true;
+    public boolean t5=true;
+    public boolean t6=true;
     
     public SachDialog(JFrame parent) {
-        super(parent, "Thống kê sach", true);
+        super(parent, "Thống kê sách hàng", true);
         setSize(1300, 700);
         setResizable(false);
         setLocationRelativeTo(parent);
-        setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
+        setLayout(new BorderLayout(10, 10));
 
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setPreferredSize(new Dimension(100, 100));
 
-        JLabel lbTitle = new JLabel("Thông kê sách", JLabel.CENTER);
+        JLabel lbTitle = new JLabel("Thông kê sách hàng", JLabel.CENTER);
         lbTitle.setFont(new Font("Arial", Font.BOLD, 24));
         lbTitle.setForeground(Color.BLACK);
-        lbTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0)); // Tạo Sachoảng cách dưới tiêu đề
+        lbTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0)); // Tạo soảng cách dưới tiêu đề
         headerPanel.add(lbTitle, BorderLayout.NORTH);
 
         JPanel searchPanel = new JPanel();
-         // Tạo Sachoảng cách giữa tìm kiếm và tiêu đề
+         // Tạo soảng cách giữa tìm kiếm và tiêu đề
         
-       
-        
+        String[] List_Combobox1 = {"Tăng","Giảm"};
+        kieusapxep = new JComboBox<String>(List_Combobox1);
+        String[] List_Combobox2 = {"Theo Mã","Theo Họ Tên"};
+        sapxep = new JComboBox<String>(List_Combobox2);
+         
         JLabel a = new JLabel("Theo : ");
-
         String[] List_Combobox = {"Tất cả","Trước đến nay", "Ngày", "Tháng","Quý", "Năm"};
         cbbox = new JComboBox<String>(List_Combobox);
         cbbox.setPreferredSize(new Dimension(150, 35));
 
-        aaChooser = new JDateChooser();
-        bbChooser = new JDateChooser();
-        m1Chooser = new JMonthChooser();
-        m2Chooser = new JMonthChooser();
-        y1Chooser=new JYearChooser();
-        y2Chooser=new JYearChooser();
+        JLabel from1 = new JLabel("Từ : ");
+        JLabel to1 = new JLabel("Đến : ");
+        NgayBatDau1 = new JDateChooser(new Date());
+        NgayKetThuc1 = new JDateChooser(new Date());
+        NgayBatDau1.setPreferredSize(new Dimension(100, 30));
+        NgayKetThuc1.setPreferredSize(new Dimension(100, 30));
+        ngay=new JPanel();
+        ngay.add(from1);
+        ngay.add(NgayBatDau1);
+        ngay.add(to1);
+        ngay.add(NgayKetThuc1);
+        ngay.setVisible(false);
         
-        y1Chooser2=new JYearChooser();
-        y2Chooser2=new JYearChooser();
+        JLabel from2 = new JLabel("Từ : ");
+        JLabel to2 = new JLabel("Đến : ");
+        ThangBatDau2 = new JMonthChooser();
+        ThangKetThuc2 = new JMonthChooser();
+        NamBatDau2=new JYearChooser();
+        NamKetThuc2=new JYearChooser();
+        thang=new JPanel();
+        thang.add(from2);
+        thang.add(ThangBatDau2);
+        thang.add(NamBatDau2);
+        thang.add(to2);
+        thang.add(ThangKetThuc2);
+        thang.add(NamKetThuc2);
+        thang.setVisible(false);
         
-      
-        y1Chooser4=new JYearChooser();
-        y2Chooser4=new JYearChooser();
+        JLabel from3 = new JLabel("Từ : ");
+        JLabel to3 = new JLabel("Đến : ");
+        String[] Qui1 = {"Quý I","Quý II","Quý III","Quý IV  "};
+        String[] Qui2 = {"Quý I","Quý II","Quý III","Quý IV  "};
+        qui1 = new JComboBox<String>(Qui1);
+        qui2 = new JComboBox<String>(Qui2);
+        NamBatDau3=new JYearChooser();
+        NamKetThuc3=new JYearChooser();
+        quy=new JPanel();
+        quy.add(from3);
+        quy.add(qui1);
+        quy.add(NamBatDau3);
+        quy.add(to3);
+        quy.add(qui2);
+        quy.add(NamKetThuc3);
+        quy.setVisible(false);
         
-        JLabel b = new JLabel("Từ : ");
-        JLabel c = new JLabel("Đến : ");
-        
-        JLabel b2 = new JLabel("Từ : ");
-        JLabel c2 = new JLabel("Đến : ");
-        JLabel b3 = new JLabel("Từ : ");
-        JLabel c3 = new JLabel("Đến : ");
-        JLabel b4 = new JLabel("Từ : ");
-        JLabel c4 = new JLabel("Đến : ");
-        
-        panel=new JPanel();
-        panel.add(b);
-        panel.add(aaChooser);
-        panel.add(c);
-        panel.add(bbChooser);
-        panel.setVisible(false);
-        
-        panel2=new JPanel();
-        panel2.add(b2);
-        panel2.add(m1Chooser);
-        panel2.add(y1Chooser2);
-        panel2.add(c2);
-        panel2.add(m2Chooser);
-        panel2.add(y2Chooser2);
-        panel2.setVisible(false);
-        
-        panel3=new JPanel();
-        panel3.add(b3);
-        panel3.add(y1Chooser);
-        panel3.add(c3);
-        panel3.add(y2Chooser);
-        panel3.setVisible(false);
-        
-        String[] List = {"Quý I","Quý II","Quý III","Quý IV  "};
-        String[] List2 = {"Quý I","Quý II","Quý III","Quý IV  "};
-        qui1 = new JComboBox<String>(List);
-        qui2 = new JComboBox<String>(List2);
-        
-        panel4=new JPanel();
-        panel4.add(b4);
-        panel4.add(qui1);
-        panel4.add(y1Chooser4);
-        panel4.add(c2);
-        panel4.add(qui2);
-        panel4.add(y2Chooser4);
-        panel4.setVisible(false);
+        JLabel from4 = new JLabel("Từ : ");
+        JLabel to4 = new JLabel("Đến : ");
+        NamBatDau4 = new JYearChooser();
+        NamKetThuc4 = new JYearChooser();
+        nam=new JPanel();
+        nam.add(from4);
+        nam.add(NamBatDau4);
+        nam.add(to4);
+        nam.add(NamKetThuc4);
+        nam.setVisible(false);
         
         txtTimKiem = new JTextField("Tìm kiếm.....");
         txtTimKiem.setPreferredSize(new Dimension(200, 35));
@@ -188,12 +177,13 @@ public class SachDialog extends JDialog {
         Image img = icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
         JButton btnTimKiem = new JButton(new ImageIcon(img));
 
+        
         searchPanel.add(a);
         searchPanel.add(cbbox);
-        searchPanel.add(panel);
-        searchPanel.add(panel2);
-        searchPanel.add(panel3);
-        searchPanel.add(panel4);
+        searchPanel.add(ngay);
+        searchPanel.add(thang);
+        searchPanel.add(quy);
+        searchPanel.add(nam);
         searchPanel.add(txtTimKiem);
         searchPanel.add(btnTimKiem);
         headerPanel.add(searchPanel, BorderLayout.CENTER);
@@ -202,165 +192,85 @@ public class SachDialog extends JDialog {
         add(headerPanel, BorderLayout.NORTH);
 
         //tim kiem
-        txtTimKiem.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (txtTimKiem.getText().equals("Tìm kiếm.....")) {
-                    txtTimKiem.setText("");
-                    txtTimKiem.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (txtTimKiem.getText().trim().isEmpty()) {
-                    txtTimKiem.setText("Tìm kiếm.....");
-                    txtTimKiem.setForeground(Color.GRAY);
-                }
-            }
-        });
-        //tìm kiem Sachi dang go hoac an nut
-        txtTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                timKiemKhiDangGo();
-            }
-
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                timKiemKhiDangGo();
-            }
-
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                timKiemKhiDangGo();
-            }
-
-        });
+        txtTimKiem.addFocusListener(new SachController(this, workFrame));
+        //tìm kiem si dang go hoac an nut
+        txtTimKiem.getDocument().addDocumentListener(new SachController(this, workFrame));
         btnTimKiem.addActionListener(e -> {
-            checkTimkiem = true;
+            
             timKiemKhiDangGo();
 
         });
 
         //bảng dữ liệu
-        String[] columnNCC = {"Mã", "Tên"};
-        tableSach = new DefaultTableModel(columnNCC, 0) {
-            ;
-        
-        @Override
+        String[] columnNCC = {"STT","Mã", "Tên","Số Khách","Doanh Thu","Tổng Sách","Lợi Nhuận"};
+        tables = new DefaultTableModel(columnNCC, 0) {       
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;// chặn chỉnh sửa các ô      
             }
         };
 
-        table = new JTable(tableSach);
-        table.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
-
+        table = new JTable(tables);
+        
         JTableHeader header = table.getTableHeader();
-
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) header.getDefaultRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
         
+        table.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
+
         //lam tieu de no dam hơn 
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
-
-        for (SachDTO ncc : listSach) {
-            tableSach.addRow(new Object[]{ncc.getMasach(),  ncc.getTensach()});
-
+        
+        int n=0;
+        for (int i=0;i<lists.size();i++){ 
+            tables.addRow(list.get(i));   
+            n+=3;
         }
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        doitable(true,listsx);
         // Căn giữa các cột: Mã NCC (0), SĐT (3)
-
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter = {0, 1};
+        int[] columnsToCenter = {0, 1, 2,3,4,5,6};
         for (int col : columnsToCenter) {
             table.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
-
-       
 
         // Điều chỉnh kích thước width và hieght của các cột tableBook 
         table.setRowHeight(30);
         table.getColumnModel().getColumn(0).setPreferredWidth(80);
         table.getColumnModel().getColumn(1).setPreferredWidth(80);
+        table.getColumnModel().getColumn(2).setPreferredWidth(80);
+        table.getColumnModel().getColumn(3).setPreferredWidth(80);
+        table.getColumnModel().getColumn(4).setPreferredWidth(80);
+        table.getColumnModel().getColumn(5).setPreferredWidth(80);
+        table.getColumnModel().getColumn(6).setPreferredWidth(80);
         
- 
-       
-
+        header.addMouseListener(new SachController(this, workFrame));
         
-        // table1
-        String[] columnNCC2 = {"Mã", "Tên","Doanh thu","Số lượng"};
-        tableSach2 = new DefaultTableModel(columnNCC2, 0) {
-            ;
-        
-        @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;// chặn chỉnh sửa các ô      
-            }
-        };
-
-        table2 = new JTable(tableSach2);
-        table2.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
-
-        JTableHeader header2 = table2.getTableHeader();
-
-        renderer = (DefaultTableCellRenderer) header2.getDefaultRenderer();
-        renderer.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        //lam tieu de no dam hơn 
-        table2.getTableHeader().setBackground(Color.LIGHT_GRAY);
-        table2.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
- 
-       
-         DefaultTableCellRenderer centerRenderer2 = new DefaultTableCellRenderer();
-        // Căn giữa các cột: Mã NCC (0), SĐT (3)
-
-        centerRenderer2.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter2 = {0, 1, 2,3};
-        for (int col : columnsToCenter2) {
-            table2.getColumnModel().getColumn(col).setCellRenderer(centerRenderer2);
-        }
-
-       
-
-        // Điều chỉnh kích thước width và hieght của các cột tableBook 
-        table2.setRowHeight(30);
-        table2.getColumnModel().getColumn(0).setPreferredWidth(80);
-        table2.getColumnModel().getColumn(1).setPreferredWidth(80);
-        table2.getColumnModel().getColumn(2).setPreferredWidth(80);
-table2.getColumnModel().getColumn(3).setPreferredWidth(80);
-        
-        
-        table3=table;
-        
-        scrollPane = new JScrollPane(table3);
+        JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
         
-        //panel chứa 3 
+        //ngay chứa 3 
         JButton btnct = new JButton("chi tiết");
         JButton btntk = new JButton("thống kê");
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnct = createButton("chi tiết", new Color(46, 204, 113));
-        btntk = createButton("thống kê", new Color(60, 123, 231));
-        
+        btntk = createButton("thống kê", new Color(60, 123, 231));        
         btnct.setFont(new Font("Arial", Font.BOLD, 16));
         btntk.setFont(new Font("Arial", Font.BOLD, 16));
 
         SachController controller = new SachController(this, workFrame);
         btnct.addActionListener(controller);
         btntk.addActionListener(controller);
-        cbbox.addActionListener(controller);
-      
         
+        cbbox.addActionListener(controller);
         
         buttonPanel.add(btnct);
         buttonPanel.add(btntk);
 
         add(buttonPanel, BorderLayout.SOUTH);
-        //ham nay de cho Sachong focus con tro vao o tim kiem
+        //ham nay de cho song focus con tro vao o tim kiem
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowOpened(java.awt.event.WindowEvent e) {
@@ -370,51 +280,27 @@ table2.getColumnModel().getColumn(3).setPreferredWidth(80);
 
     }
 
-    private void timKiemKhiDangGo() {
+    public void timKiemKhiDangGo() {
         String keyword = txtTimKiem.getText().trim().toLowerCase();
-
         ArrayList<SachDTO> danhsachmoi;
         if (keyword.isEmpty() || keyword.equals("tìm kiếm.....")) {
             danhsachmoi = new SachBUS().getSachAll();
         } else {
             danhsachmoi = new SachBUS().search(keyword);
         }
-
         capNhatBang(danhsachmoi);
-        //Sachi ấn tìm mới kiểm tra tìm thấy, tìm Sachông thấy mới thông báo
-        if (checkTimkiem && danhsachmoi.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy kết quả!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        }
-        checkTimkiem = false;
     }
 
-    public void capNhatBang(ArrayList<SachDTO> danhSach) {
-        tableSach.setRowCount(0); // Xóa bảng cũ
-
-        for (SachDTO ncc : danhSach) {
-            tableSach.addRow(new Object[]{ncc.getMasach(),ncc.getTensach()});
+    public void capNhatBang(ArrayList<SachDTO> danhSach) { 
+        listsx=new ArrayList<>();
+        tables.setRowCount(0);
+        for (int i=0;i<danhSach.size();i++) {
+            for (int j=0;j<list.size();j++)
+                if(String.valueOf(danhSach.get(i).getMasach()).equals(String.valueOf(list.get(j)[1]))){
+                    tables.addRow(list.get(j));
+                    listsx.add(list.get(j));
+                }
         }
-    }
-
-    //load lai du lieu Sachi moi them vo
-    public void loadData() {
-        listSach = new SachBUS().getSachAll(); // Lấy danh sách mới
-        capNhatBang(listSach); // Cập nhật lại bảng
-    }
-
-    //lấy đối tượng nhóm quyền đang được click để hàm update biết
-    public NhaCungCapDTO getSelectedNhaCungCap() {
-        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
-        if (selectedRow == -1) {
-            return null; // Nếu Sachông chọn gì, trả về null
-        }
-        int maNhaCungCap = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhóm quyền
-        String tenncc = (String) table.getValueAt(selectedRow, 1);
-        String diachi = (String) table.getValueAt(selectedRow, 2);
-        String sdt = (String) table.getValueAt(selectedRow, 3);
-        String email = (String) table.getValueAt(selectedRow, 4);
-
-        return new NhaCungCapDTO(maNhaCungCap, tenncc, diachi, sdt, email);
     }
 
     // ======= Tạo button đồng bộ với phong cách UI =======
@@ -428,9 +314,9 @@ table2.getColumnModel().getColumn(3).setPreferredWidth(80);
                 // Xác định màu nền dựa trên trạng thái của button
                 Color actualBgColor = bgColor;
                 if (getModel().isPressed()) {
-                    actualBgColor = bgColor.darker(); // Màu tối hơn Sachi nhấn
+                    actualBgColor = bgColor.darker(); // Màu tối hơn si nhấn
                 } else if (getModel().isRollover()) {
-                    actualBgColor = bgColor.brighter(); // Màu sáng hơn Sachi hover
+                    actualBgColor = bgColor.brighter(); // Màu sáng hơn si hover
                 }
                 // Vẽ bo tròn góc cho nút
                 g2.setColor(actualBgColor);
@@ -450,71 +336,164 @@ table2.getColumnModel().getColumn(3).setPreferredWidth(80);
 
         return button;
     }
+    
+    public void doitable(boolean t,ArrayList<Object[]> list){
+        if(t){
+            // 3 4 5 6
+            for(int i=3;i<=6;i++){
+                TableColumn column = table.getColumnModel().getColumn(i);
+                column.setMinWidth(0);
+                column.setMaxWidth(0);
+                column.setPreferredWidth(0);
+                column.setResizable(false);
+            }
+        }
+        else{
+            for(int i=3;i<=6;i++){
+                TableColumn column = table.getColumnModel().getColumn(i);
+                column.setMinWidth(80);
+                column.setMaxWidth(80);
+                column.setPreferredWidth(80);
+                column.setResizable(false);
+            }
+        }
+        tables.setRowCount(0);
+            for(int i=0;i<list.size();i++){
+                tables.addRow(list.get(i));
+            }
+    }
+    
+    public void sapxepTable(){
+        if(table.getColumnModel().getColumn(5).getWidth()==0) doitable(true,listsx);
+        else  doitable(false,listsx);
+    }
+
+    public  ArrayList <Object[]> List(){
+        ArrayList <Object[]> list1=new ArrayList();
+        int t=0;
+        for(int i=0;i<lists.size();i++){
+            if(list!=null){
+                list1.add(new Object[]{i+1,lists.get(i).getMasach(),lists.get(i).getTensach(),listthongke.get(t),listthongke.get(t+1),listthongke.get(t+2),listthongke.get(t+3)});
+                t+=4;
+            }else 
+                list1.add(new Object[]{i+1,lists.get(i).getMasach(),lists.get(i).getTensach(),-1,-1,-1,-1});
+        }
+
+        return list1;
+    }
 
     public JTable getTable() {
         return table;
     }
-    
-    public JTable getTable2() {
-        return table2;
+
+    public DefaultTableModel getTables() {
+        return tables;
+    }
+
+    public ImageIcon getIcon() {
+        return icon;
+    }
+
+    public JTextField getTxtTimKiem() {
+        return txtTimKiem;
     }
 
     public JComboBox<String> getCbbox() {
         return cbbox;
     }
 
-    public JDateChooser getAaChooser() {
-        return aaChooser;
+    public JDateChooser getNgayBatDau1() {
+        return NgayBatDau1;
     }
 
-    public JDateChooser getBbChooser() {
-        return bbChooser;
-    }
-    
-       public void doitable(int index,JScrollPane a) {
-        tableSach2.setRowCount(0);
-        tableSach.setRowCount(0);
-        // Thay đổi bảng tùy theo lựa chọn trong JComboBox
-         
-        if (index == 1) {
-            suatable2(listSach);
-            table3 = table;
-        } else {
-            suatable(listSach, list);
-            table3 = table2;
-        }
-     
-        // Cập nhật JScrollPane để hiển thị bảng mới
-        a.setViewportView(table3);
-        table3.revalidate();  // Cập nhật lại bảng
-        table3.repaint();  // Vẽ lại bảng
-    }
-    public void suatable( ArrayList<SachDTO> listSach , ArrayList<Long> list ){
-        int n=0;
-         for (SachDTO ncc : listSach) {
-             
-            tableSach2.addRow(new Object[]{ncc.getMasach(), ncc.getTensach(),list.get(n+1),list.get(n+2)});
-                n+=3;
-        }
-    }
-    
-    public void suatable2( ArrayList<SachDTO> listSach  ){
-        
-         for (SachDTO ncc : listSach) {
-             
-            tableSach.addRow(new Object[]{ncc.getMasach(), ncc.getTensach()});
-                
-        }
+    public JDateChooser getNgayKetThuc1() {
+        return NgayKetThuc1;
     }
 
-    public JScrollPane getScrollPane() {
-        return scrollPane;
+    public JMonthChooser getThangBatDau2() {
+        return ThangBatDau2;
     }
 
-    public void setCbbox() {
-        this.cbbox.setSelectedItem("Tất cả");
+    public JMonthChooser getThangKetThuc2() {
+        return ThangKetThuc2;
     }
-    
+
+    public JYearChooser getNamBatDau2() {
+        return NamBatDau2;
+    }
+
+    public JYearChooser getNamKetThuc2() {
+        return NamKetThuc2;
+    }
+
+    public JYearChooser getNamBatDau3() {
+        return NamBatDau3;
+    }
+
+    public JYearChooser getNamKetThuc3() {
+        return NamKetThuc3;
+    }
+
+    public JYearChooser getNamBatDau4() {
+        return NamBatDau4;
+    }
+
+    public JYearChooser getNamKetThuc4() {
+        return NamKetThuc4;
+    }
+
+    public JPanel getNgay() {
+        return ngay;
+    }
+
+    public JPanel getThang() {
+        return thang;
+    }
+
+    public JPanel getQuy() {
+        return quy;
+    }
+
+    public JPanel getNam() {
+        return nam;
+    }
+
+    public JComboBox<String> getQui1() {
+        return qui1;
+    }
+
+    public JComboBox<String> getQui2() {
+        return qui2;
+    }
+
+    public ArrayList<SachDTO> getLists() {
+        return lists;
+    }
+
+    public ArrayList<Long> getListthongke() {
+        return listthongke;
+    }
+
+    public ArrayList<Object[]> getList() {
+        return list;
+    }
+
+    public void setListthongke(ArrayList<Long> listthongke) {
+        this.listthongke = listthongke;
+    }
+
+    public void setList(ArrayList<Object[]> list) {
+        this.list = list;
+    }
+
+    public void setListsx(ArrayList<Object[]> listsx) {
+        this.listsx = listsx;
+    }
+
+    public ArrayList<Object[]> getListsx() {
+        return listsx;
+    }
+
 
 
 }
