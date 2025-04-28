@@ -177,4 +177,16 @@ public class NhanVienDialogDetail extends JDialog{
         txfTrangthai.setText(trangthai);
         txfNgaysinh.setText(ngaysinh);
     }
+
+        public void ShowInfo2(String ma, String ho, String ten, String gioitinh, String sdt, String ngaysinh,String trangthai){
+        System.err.println(ma);
+        txfMa.setText(ma);
+        txfHo.setText(ho);
+        txfTen.setText(ten);
+        txfGioitinh.setText(gioitinh);
+        txfSdt.setText(sdt);
+        txfTrangthai.setText(trangthai);
+        txfNgaysinh.setText(ngaysinh);
+            this.setVisible(true);
+    }
 }
