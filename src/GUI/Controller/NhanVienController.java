@@ -149,14 +149,18 @@ public class NhanVienController implements ActionListener, ListSelectionListener
 
     @Override
     public void insertUpdate(DocumentEvent e) {
+        np.FindNhanVien(np.getTxtFind().getText().toString(), np.getCbbox().getSelectedItem().toString());
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
+         np.FindNhanVien(np.getTxtFind().getText().toString(), np.getCbbox().getSelectedItem().toString());
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
+            np.FindNhanVien(np.getTxtFind().getText().toString(), np.getCbbox().getSelectedItem().toString());
+        
     }
     
 }
