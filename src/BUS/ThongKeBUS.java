@@ -165,17 +165,13 @@ public class ThongKeBUS {
                 if(px.getThoigiantao().getTime()>=a.getTime() && px.getThoigiantao().getTime()<=b.getTime()){
                     ArrayList<ChiTietPhieuXuatDTO> listctpx=new ChiTietPhieuXuatDAO().selectAll(String.valueOf(px.getMaphieu()));
                     for(ChiTietPhieuXuatDTO ctpx : listctpx)
-                        if(kh.getMasach()==ctpx.getMasach()){
+                        if(kh.getMasach().equals(ctpx.getMasach())){
                             sl+=ctpx.getSoluong();
                             tien+=ctpx.getDongia();
                         }
                 }
-            for(PhieuNhapDTO pn : listpn)
-                if(pn.getThoigiantao().getTime()>=a.getTime() && pn.getThoigiantao().getTime()<=b.getTime()){
-                    ArrayList<ChiTietPhieuNhapDTO> listctpn=new ChiTietPhieuNhapDAO().selectAll(String.valueOf(pn.getMaphieu()));
-                    for(ChiTietPhieuNhapDTO ctpn : listctpn)                  
-                        ln=ctpn.getDongia();
-                }
+           
+                
             
             
             thongke.add(hd);
@@ -247,6 +243,12 @@ public class ThongKeBUS {
     public ArrayList <Object[]> TheoLN(ArrayList <Object[]> list,boolean t){
         if(t) Collections.sort(list, (o1, o2) -> Long.compare((Long)o1[6], (Long)o2[6]));
         else  Collections.sort(list, (o1, o2) -> Long.compare((Long)o2[6], (Long)o1[6]));
+        return list;
+    }
+    
+     public ArrayList <Object[]> TheoMas(ArrayList <Object[]> list,boolean t){
+        if(t)  Collections.sort(list, (o1, o2) -> ((String)o1[1]).compareTo((String)o2[1]));
+        else   Collections.sort(list, (o1, o2) -> ((String)o2[1]).compareTo((String)o1[1]));
         return list;
     }
     
