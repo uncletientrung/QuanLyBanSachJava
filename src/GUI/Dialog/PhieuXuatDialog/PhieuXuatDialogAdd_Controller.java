@@ -145,6 +145,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
        }
        if(sukien.equals("Sửa")){
            if(tableChiTiet.getSelectedRow()!=-1){
+               PXDA.CalcBill();
                int selectRowV2=tableChiTiet.getSelectedRow();
                String soLuongNew= PXDA.getTxfSoLuongV2().getText().toString();
                String dongiaNew=NumberFormatter.formatReverse(PXDA.getTxfDonGiaV2().getText().toString());
@@ -154,7 +155,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                tableChiTiet.setValueAt(tong, selectRowV2, 3);
                PXDA.getTxfDonGiaV2().setText(dongiaNew);
                PXDA.getTxfThanhTienV2().setText(tong);
-               PXDA.CalcBill();
+               
            }else{
            JOptionPane.showMessageDialog(null, "Hãy chọn mục cần sửa!", "Thông báo", JOptionPane.ERROR_MESSAGE);
              }
@@ -169,6 +170,14 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                 PXDA.getTxfSoLuongV2().setText("");
                 PXDA.getTxfThanhTienV2().setText("");
                 PXDA.getTxfTenSachV2().setText("");
+                if(tableChiTiet.getRowCount()==0){
+                     PXDA.getTxfTenKhuyenMai().setText("");
+                     PXDA.getTxfPhanTramGiam().setText("");
+                     PXDA.setUpDefault();
+                     
+                }
+                
+                
                 PXDA.CalcBill();
             }else{
            JOptionPane.showMessageDialog(null, "Hãy chọn mục cần xóa!", "Thông báo", JOptionPane.ERROR_MESSAGE);
@@ -221,6 +230,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                 phieuxuat= new PhieuXuatDTO(maPhieuXuat, maNV, maKH, current_day, (long)tongtien, trangthai);
                 pxBUS.insert(phieuxuat, ListCTPhieuXuat);
                 PXDA.refreshTableChonSach();
+                
                 
                JOptionPane.showMessageDialog(null, "Xuất hóa đơn thành công!", "Thông báo", JOptionPane.NO_OPTION);
 

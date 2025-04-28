@@ -25,7 +25,7 @@ import GUI.Format.*;
  * @author DELL
  */
 public class PhieuXuatDialogDetail extends JDialog{
-    private JTextField  txfMaPhieu,txfNV,txfKhachHang,txfTime,txfTongHD;
+    private JTextField  txfMaPhieu,txfNV,txfKhachHang,txfTime,txfTongHD,txfGiamgia;
     private DefaultTableModel dataCTPX;
     private PhieuXuatBUS pxBUS=new PhieuXuatBUS();
     private ArrayList<ChiTietPhieuXuatDTO> list_ctpx;
@@ -75,7 +75,7 @@ public class PhieuXuatDialogDetail extends JDialog{
 
         // ========== BẢNG CHI TIẾT ==========
         list_ctpx=pxBUS.getListCTPXById(pxDTO.getMaphieu());
-        String[] columnNames = {"STT", "Mã sách", "Tên sách", "Đơn giá", "Số lượng", "Thành tiền"};
+        String[] columnNames = {"STT", "Mã sách", "Tên sách", "Đơn giá", "Số lượng","Thành tiền"};
         dataCTPX =new DefaultTableModel(columnNames,0){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -90,6 +90,8 @@ public class PhieuXuatDialogDetail extends JDialog{
             String tenSach=sBUS.getSachById(list_ctpx.get(i).getMasach()).getTensach();
             String donGia=NumberFormatter.format(list_ctpx.get(i).getDongia());
             String soLuong=String.valueOf(list_ctpx.get(i).getSoluong());
+            
+            
             String thanhTien=NumberFormatter.format(list_ctpx.get(i).getSoluong()*list_ctpx.get(i).getDongia());
             dataCTPX.addRow(new Object[]{STT,maSach,tenSach,donGia,soLuong,thanhTien});
         }

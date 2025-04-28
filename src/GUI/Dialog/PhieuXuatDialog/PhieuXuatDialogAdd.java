@@ -800,46 +800,51 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     }
 
     public void CalcBill() {
-        // Debounce để tránh gọi liên tục
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastCalcBillTime < DEBOUNCE_DELAY) {
-            return;
-        }
-        lastCalcBillTime = currentTime;
+    // Debounce để tránh gọi liên tục
+    long currentTime = System.currentTimeMillis();
+    if (currentTime - lastCalcBillTime < DEBOUNCE_DELAY) {
+        return;
+    }
+    lastCalcBillTime = currentTime;
 
-        long startTime = System.currentTimeMillis();
-        int tongTien = 0;
-        int giamGia = 0;
-        int thanhToan = 0;
-        int columnTong = 3;
+    int tongTien = 0;
+    int giamGia = 0;
+    int thanhToan = 0;
+    int columnTong = 3;
 
-        // Tính tổng tiền
-        for (int i = 0; i < tableListBan.getRowCount(); i++) {
-            String value = tableListBan.getValueAt(i, columnTong).toString().trim();
-            if (!value.isEmpty()) {
-                try {
-                    tongTien += Integer.parseInt(NumberFormatter.formatReverse(value));
-                } catch (NumberFormatException e) {
-                    continue;
-                }
-            }
-        }
-
-        // Kiểm tra giảm giá thủ công
-        if (!txfGiamGia.getText().isEmpty()) {
+    // Tính tổng tiền
+    for (int i = 0; i < tableListBan.getRowCount(); i++) {
+        String value = tableListBan.getValueAt(i, columnTong).toString().trim();
+        if (!value.isEmpty()) {
             try {
-                giamGia = Integer.parseInt(NumberFormatter.formatReverse(txfGiamGia.getText()));
+                tongTien += Integer.parseInt(NumberFormatter.formatReverse(value));
             } catch (NumberFormatException e) {
-                giamGia = 0;
+                // Bỏ qua lỗi
             }
         }
+    }
 
-        // Kiểm tra khuyến mãi nếu chưa có giảm giá thủ công
+    // Nếu người dùng nhập giảm giá thủ công thì ưu tiên
+    boolean coNhapGiamGia = false;
+    if (!txfGiamGia.getText().isEmpty()) {
+        try {
+            int giamGiaNhapTay = Integer.parseInt(NumberFormatter.formatReverse(txfGiamGia.getText()));
+            if (giamGiaNhapTay > 0) {
+                giamGia = giamGiaNhapTay;
+                coNhapGiamGia = true;
+            }
+        } catch (NumberFormatException e) {
+            // Bỏ qua lỗi, không có giảm giá hợp lệ
+        }
+    }
+
+    // Nếu không nhập giảm giá, tự tính theo khuyến mãi
+    if (!coNhapGiamGia && tongTien > 0) {
         Date selectedDate = jDateChooser1.getDate();
-        if (selectedDate != null && tongTien > 0 && giamGia == 0) {
+        if (selectedDate != null) {
             List<KhuyenMaiDTO> danhSachKM = getActiveKhuyenMai(selectedDate, tongTien);
             if (!danhSachKM.isEmpty()) {
-                // Tìm chương trình khuyến mãi có phần trăm giảm cao nhất
+                // Tìm khuyến mãi tốt nhất
                 KhuyenMaiDTO bestKM = null;
                 double maxPhanTramGiam = 0;
                 for (KhuyenMaiDTO km : danhSachKM) {
@@ -854,28 +859,22 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
                     txfPhanTramGiam.setText(String.valueOf(bestKM.getPhanTramGiam()));
                 }
             } else {
-                // Nếu không có khuyến mãi, đặt lại các trường khuyến mãi
+                // Không có khuyến mãi
                 txfTenKhuyenMai.setText("");
                 txfPhanTramGiam.setText("");
             }
-        } else {
-            // Nếu có giảm giá thủ công hoặc tổng tiền không hợp lệ, đặt lại các trường khuyến mãi
-            txfTenKhuyenMai.setText("");
-            txfPhanTramGiam.setText("");
         }
-
-        thanhToan = tongTien - giamGia;
-
-        // Cập nhật giao diện an toàn
-        final int finalTongTien = tongTien;
-        final int finalGiamGia = giamGia;
-        final int finalThanhToan = thanhToan;
-        SwingUtilities.invokeLater(() -> {
-            txfTongTien.setText(NumberFormatter.format(finalTongTien));
-            txfGiamGia.setText(NumberFormatter.format(finalGiamGia));
-            txfThanhToan.setText(NumberFormatter.format(finalThanhToan));
-        });
     }
+
+    // Tính thành tiền
+    thanhToan = Math.max(tongTien - giamGia, 0);
+
+    // Cập nhật giao diện
+    txfTongTien.setText(NumberFormatter.format(tongTien));
+    txfGiamGia.setText(NumberFormatter.format(giamGia));
+    txfThanhToan.setText(NumberFormatter.format(thanhToan));
+}
+
 
     public boolean CheckEmptyRow() {
         if (tableListBan.getRowCount() == 0) {
@@ -957,4 +956,14 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     void setTxfPhanTramGiam(String string) {
         this.txfPhanTramGiam.setText(string);
     }
+
+    public JTextField getTxfTenKhuyenMai() {
+        return txfTenKhuyenMai;
+    }
+
+    public JTextField getTxfPhanTramGiam() {
+        return txfPhanTramGiam;
+    }
+    
+    
 }

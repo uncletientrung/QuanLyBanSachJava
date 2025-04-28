@@ -78,6 +78,8 @@ public class KhuyenMaiDialogAdd extends JDialog{
         txTenChuongTrinh = new JTextField(20);
         dcNgayBatDau = new JDateChooser();
         dcNgayKetThuc = new JDateChooser();
+//  
+
         txHoaDonToiThieu = new JTextField(20);
         txPhanTramGiam = new JTextField(20);
 

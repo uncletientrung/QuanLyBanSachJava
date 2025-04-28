@@ -705,7 +705,7 @@ public class AddPanel extends JPanel{
             for (int i = 0; i < model.getRowCount(); i++) {
                 tongTien += Integer.parseInt(model.getValueAt(i, 4).toString());
             }
-            lbThanhTien.setText(giaTienString(tongTien) + "đ");
+            lbThanhTien.setText(tongTien + "đ");
 
             // Xóa dữ liệu trong các trường nhập
             txfSoLuong.setText("");
@@ -780,7 +780,7 @@ public class AddPanel extends JPanel{
             for (int i = 0; i < model.getRowCount(); i++) {
                 tongTien += Integer.parseInt(model.getValueAt(i, 4).toString());
             }
-            lbThanhTien.setText(giaTienString(tongTien) + "đ");
+            lbThanhTien.setText(tongTien + "đ");
 
             // Hiển thị thông báo thành công
             JOptionPane.showMessageDialog(this, "Cập nhật thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);

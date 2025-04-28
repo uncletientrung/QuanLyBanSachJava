@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 public class PhieuXuatDTO extends PhieuDTO {
     private int makh;
     
+
+    
     public PhieuXuatDTO(){}
     
     public PhieuXuatDTO(int maphieu, int manv, int makh, Timestamp thoigiantao, long tongTien, int trangthai) {
@@ -19,6 +21,9 @@ public class PhieuXuatDTO extends PhieuDTO {
     public void setMakh(int makh) {
         this.makh = makh;
     }
+
+   
+    
 
     @Override
     public int hashCode() {

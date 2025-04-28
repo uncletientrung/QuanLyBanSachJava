@@ -598,41 +598,56 @@ public class PhieuXuatPanel extends JPanel {
         return listCBB_KH;
     }
 
-    public void Filter() {
-        pxBUS = new PhieuXuatBUS();
-        jList_nv.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); // Cho phép chọn nhiều bằng Jlist để làm tìm kiếm
-        jList_kh.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); // nâng cao AND
-        List<String> selected_list_nv = jList_nv.getSelectedValuesList();
-        ArrayList<String> list_chosser_nv = new ArrayList<>(selected_list_nv);
-        List<String> selected_list_kh = jList_kh.getSelectedValuesList();
-        ArrayList<String> list_chosser_kh = new ArrayList<>(selected_list_kh);
+   public void Filter() {
+    pxBUS = new PhieuXuatBUS();
 
-        Date dateS = dateStart.getDate();
-        Timestamp dateStart = new Timestamp(dateS.getTime());
-        Date dateE = dateEnd.getDate();
-//        if (dateEnd.getDate() == null) {
-//            System.out.println("dong 429 phieuxuatpanel dateEnd bi null ");
-//            dateE = new Date(1000);
-//        }
-        Timestamp dateEnd = new Timestamp(dateE.getTime());
-        String minPrice = txfPriceStart.getText().toString();
-        String maxPrice = txfPriceEnd.getText().toString();
+    jList_nv.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    jList_kh.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        ArrayList<PhieuXuatDTO> List_sort = new ArrayList<>();
-        for (String nv : list_chosser_nv) {
-            for (String kh : list_chosser_kh) { // Dùng 2 vòng lặp để kiểm tra các trường hợp PhieuXuat
-                ArrayList<PhieuXuatDTO> List_PxFilter = pxBUS.Filter(nv, kh, dateStart, dateEnd, minPrice, maxPrice);
-                List_sort.addAll(List_PxFilter);
-            }
-        }
-        dataPhieuXuat.setRowCount(0);
-        for (PhieuXuatDTO px : List_sort) {
-            String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
-            String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
-            String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{px.getMaphieu(), hoTenNv, hoTenKh,
-                    DateFormat.fomat(px.getThoigiantao().toString()),
-                    NumberFormatter.format(px.getTongTien()), trangThai});
+    ArrayList<String> list_chosser_nv = new ArrayList<>(jList_nv.getSelectedValuesList());
+    ArrayList<String> list_chosser_kh = new ArrayList<>(jList_kh.getSelectedValuesList());
+
+    // Xử lý ngày bắt đầu
+    Date dateS = dateStart.getDate();
+    Timestamp dateStartTimestamp = (dateS != null)
+            ? new Timestamp(dateS.getTime())
+            : Timestamp.valueOf("1970-01-01 00:00:00"); // Ngày nhỏ nhất
+
+    // Xử lý ngày kết thúc
+    Date dateE = dateEnd.getDate();
+    Timestamp dateEndTimestamp = (dateE != null)
+            ? new Timestamp(dateE.getTime())
+            : Timestamp.valueOf("2100-12-31 23:59:59"); // Ngày lớn nhất
+
+    // Lấy khoảng giá
+    String minPrice = txfPriceStart.getText().trim();
+    String maxPrice = txfPriceEnd.getText().trim();
+
+    ArrayList<PhieuXuatDTO> List_sort = new ArrayList<>();
+
+    // Lọc dữ liệu
+    for (String nv : list_chosser_nv) {
+        for (String kh : list_chosser_kh) {
+            ArrayList<PhieuXuatDTO> List_PxFilter = pxBUS.Filter(nv, kh, dateStartTimestamp, dateEndTimestamp, minPrice, maxPrice);
+            List_sort.addAll(List_PxFilter);
         }
     }
+
+    // Đổ dữ liệu lên bảng
+    dataPhieuXuat.setRowCount(0);
+    for (PhieuXuatDTO px : List_sort) {
+        String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
+        String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
+        String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
+        dataPhieuXuat.addRow(new Object[]{
+                px.getMaphieu(),
+                hoTenNv,
+                hoTenKh,
+                DateFormat.fomat(px.getThoigiantao().toString()),
+                NumberFormatter.format(px.getTongTien()),
+                trangThai
+        });
+    }
+}
+
 }

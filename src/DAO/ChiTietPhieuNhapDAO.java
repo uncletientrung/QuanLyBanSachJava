@@ -34,6 +34,8 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
                 pst.setString(2, chitiet.getMasach());
                 pst.setInt(3, chitiet.getSoluong());
                 pst.setInt(4, chitiet.getDongia());
+
+
                 result += pst.executeUpdate();
             }
             JDBCUtil.closeConnection(con);
