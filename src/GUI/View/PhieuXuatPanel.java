@@ -443,7 +443,7 @@ public class PhieuXuatPanel extends JPanel {
     public void refreshTablePx() {
         listPx = new PhieuXuatBUS().getAll();
         dataPhieuXuat.setRowCount(0);
-        dataBookDetails.setRowCount(0);
+        dataBookDetails.setRowCount(0);          
         txfTongTien.setText("");
         nvBUS = new NhanVienBUS();
         khBUS = new KhachHangBUS();

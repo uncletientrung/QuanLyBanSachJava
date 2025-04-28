@@ -177,41 +177,28 @@ public class NhanVienPanel extends JPanel {
                     nv.getTennv(),
                     gioitinh,
                     nv.getSdt(),
-                    nv.getNgaysinh(),
+                    nv.getNgaysinh(),trangthai
             });
         }
     }
 
-    public void FindAll(String text) {
-        listNV = new NhanVienBUS().search(text);
+    public void FindNhanVien(String text,String choice_cbb) {
+         if (choice_cbb.equals("Tất cả") || choice_cbb.equals("Tên khách hàng"))
+            listNV=new NhanVienBUS().search(text);
+        else if( choice_cbb.equals("Họ tên")){
+            listNV = new NhanVienBUS().search(text);
+        }
+        else if(choice_cbb.equals("Số điện thoại")){
+            listNV=new NhanVienBUS().searchSDTNv(text);
+        }
         dataNV.setRowCount(0);
         for (NhanVienDTO nv : listNV) {
             String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
             String trangthai = (nv.getTrangthai() == 1) ? "Hoạt động" : "Khóa";
-            dataNV.addRow(new Object[]{
-                    nv.getManv(),
-                    nv.getHonv(),
-                    nv.getTennv(),
-                    gioitinh,
-                    nv.getSdt(),
-                    nv.getNgaysinh(),
-                    trangthai
-            });
+            dataNV.addRow(new Object[]{nv.getManv(), nv.getHonv(), nv.getTennv(), gioitinh,
+                    nv.getSdt(), nv.getNgaysinh(), trangthai});
         }
+        
     }
-//    public void FindSDT(String text){
-//        listNV = new NhanVienBUS().searchSDTNv(text);
-//        dataNV.setRowCount(0);
-//        for(NhanVienDTO nv: listNV){
-//            String gioitinh = (nv.getGioitinh() == 1) ? "Nam" : "Nữ";
-//            String trangthai = (nv.getTrangthai() == 1) ? "Hoạt động" : "Khóa";
-//            dataNV.addRow(new Object[]{
-//                    nv.getManv(),
-//                    nv.getHonv(),
-//                    nv.getTennv(),
-//                    gioitinh,
-//                    nv.getSdt(),
-//                    nv.getNgaysinh(),
-//                    trangthai
-//            });
+
 }
