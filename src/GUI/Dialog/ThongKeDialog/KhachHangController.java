@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package GUI.Dialog.ThongKeDialog;
 
 import BUS.KhachHangBUS;
@@ -10,8 +7,13 @@ import DTO.KhachHangDTO;
 import GUI.Dialog.KhachHangDialog.KhachHangDialogDetail;
 import GUI.Dialog.ThongKeDialog.KhachHangDialog;
 import GUI.WorkFrame;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
@@ -19,177 +21,240 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-/**
- *
- * @author Hi
- */
-public class KhachHangController implements ActionListener,ListSelectionListener,DocumentListener{
-    private KhachHangDialog khf;
-    private WorkFrame wk;
-    private KhachHangBUS khBUS;
-    private KhachHangDialogDetail khdd;
-    private ThongKeBUS tkBUS=new ThongKeBUS() ;
 
-   
-    
+
+public class KhachHangController implements ActionListener,ListSelectionListener,DocumentListener,FocusListener,MouseListener{
+    private KhachHangDialog khf;
+    private WorkFrame wk;    
+       
     public KhachHangController(KhachHangDialog nccpn,WorkFrame wk){
         this.khf=nccpn;
-        this.wk=wk;
-        this.khBUS= new KhachHangBUS();
-        
+        this.wk=wk;      
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        JTable tableB = khf.getTable();
-        
-        JTable tableB2 = khf.getTable2();
- if(action.equals("chi tiết")){
-        
-        int selectRow = tableB.getSelectedRow();
-        if (selectRow >= 0) {  // Kiểm tra xem có hàng nào đang được chọn không
-             String ma = tableB.getValueAt(selectRow, 0).toString();
-             for(KhachHangDTO kh : khf.listkh){
-                 if(String.valueOf(kh.getMakh()).equals(ma)){
-                     String ho= kh.getHokh();
-                    String ten = kh.getTenkh();
-                    String email = kh.getemail();
-                    String ngaysinh = String.valueOf(kh.getNgaysinh());
-                    String sdt = kh.getSdt();
-                    
-                    khdd = new KhachHangDialogDetail(wk);
-            khdd.ShowInfo(ma, ho, ten, email, ngaysinh,sdt); // Cập nhật dữ liệu trước
-            khdd.setVisible(true); // Hiển thị hộp thoại sau
-             }
-             }
-            
-
-            // Mở hộp thoại sửa và hiển thị thông tin
-            
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "Hãy chọn một khach hang! ","Thông báo", JOptionPane.ERROR_MESSAGE);
+        JTable table = khf.getTable();
+          
+        if(action.equals("chi tiết")){
+            int selectRow = table.getSelectedRow();      
+            if (selectRow >= 0) {  
+                String ma = table.getValueAt(selectRow, 1).toString();
+                for(KhachHangDTO kh : khf.getListkh())
+                    if(String.valueOf(kh.getMakh()).equals(ma)){
+                        String ho= kh.getHokh();
+                        String ten = kh.getTenkh();
+                        String email = kh.getemail();
+                        String ngaysinh = String.valueOf(kh.getNgaysinh());
+                        String sdt = kh.getSdt();
+                        new KhachHangDialogDetail(wk).ShowInfo2(ma, ho, ten, email, ngaysinh, sdt);
+                    }               
+            }
+            else 
+            JOptionPane.showMessageDialog(null, "Hãy chọn một khach hang! ","Thông báo", JOptionPane.ERROR_MESSAGE);       
         }
- }
- if(action.equals("thống kê")){
         
-        if (khf.getCbbox().getSelectedItem().equals("Tất cả")){
-            khf.doitable(1,khf.getScrollPane()  );
-            khf.panel.setVisible(false);
-            khf.panel2.setVisible(false);
-            khf.panel3.setVisible(false);
-            khf.panel4.setVisible(false);
+        if (khf.getCbbox().getSelectedItem().equals("Tất cả")){          
+            khf.getNgay().setVisible(false);
+            khf.getThang().setVisible(false);
+            khf.getQuy().setVisible(false);
+            khf.getNam().setVisible(false);
         }
+        
         if (((String) khf.getCbbox().getSelectedItem()).equals("Trước đến nay")){
-            khf.panel.setVisible(false);
-            khf.panel2.setVisible(false);
-            khf.panel3.setVisible(false);
-            khf.panel4.setVisible(false);
-            khf.list=tkBUS.khachhangtatca(khf.listkh, khf.listpx, khf.listctpx);
-            khf.doitable(2,khf.getScrollPane()  );
-            
-            
-        }else System.out.println((String) khf.getCbbox().getSelectedItem());
+            khf.getNgay().setVisible(false);
+            khf.getThang().setVisible(false);
+            khf.getQuy().setVisible(false);
+            khf.getNam().setVisible(false);
+        }
+        
         if (khf.getCbbox().getSelectedItem().equals("Ngày")){
-             if((khf.aaChooser.getDate()==null || khf.bbChooser.getDate()==null)&&khf.panel.isVisible()){
-                JOptionPane.showMessageDialog(null, "Hãy chọn ngày ","Thông báo", JOptionPane.ERROR_MESSAGE);
-                
-            }
-            
-            khf.panel.setVisible(true);
-            khf.panel2.setVisible(false);
-            khf.panel3.setVisible(false);
-            khf.panel4.setVisible(false);
-           
-            if(khf.bbChooser.getDate()!=null && khf.aaChooser.getDate()!=null){
-                if((khf.bbChooser.getDate().getTime()-khf.aaChooser.getDate().getTime()<0)){
-                    JOptionPane.showMessageDialog(null, "Ngày kết thúc phải lớn hơn ngày bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);
-                }
-                else{
-                    khf.list=tkBUS.khachhangngay(khf.listkh, khf.listpx, khf.listctpx,khf.aaChooser.getDate(), khf.bbChooser.getDate());
-                    khf.doitable(2,khf.getScrollPane()  );
-                }
-            }
+            khf.getNgay().setVisible(true);
+            khf.getThang().setVisible(false);
+            khf.getQuy().setVisible(false);
+            khf.getNam().setVisible(false);
         }
+        
         if (khf.getCbbox().getSelectedItem().equals("Tháng")){
-            khf.panel.setVisible(false);
-            khf.panel2.setVisible(true);
-            khf.panel3.setVisible(false);
-            khf.panel4.setVisible(false);
-           
-          
-            if(khf.y2Chooser2.getYear()<khf.y1Chooser2.getYear() || (khf.y2Chooser2.getYear()==khf.y1Chooser2.getYear() && khf.m2Chooser.getMonth()<khf.m1Chooser.getMonth()) ){
-                JOptionPane.showMessageDialog(null, "tháng kết thúc phải lớn hơn thang bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);
-            }
-            else{
-                khf.list=tkBUS.khachhangthang(khf.listkh, khf.listpx, khf.listctpx,khf.m1Chooser.getMonth()+1, khf.m2Chooser.getMonth()+1,khf.y1Chooser.getYear(),khf.y2Chooser.getYear());
-                khf.doitable(2,khf.getScrollPane()  );
-            }
-           
+            khf.getNgay().setVisible(false);
+            khf.getThang().setVisible(true);
+            khf.getQuy().setVisible(false);
+            khf.getNam().setVisible(false);
         }
-        if (khf.getCbbox().getSelectedItem().equals("Năm")){
-            khf.panel.setVisible(false);
-            khf.panel2.setVisible(false);
-            khf.panel3.setVisible(true);
-            khf.panel4.setVisible(false);
-           
-          
-            if(khf.y2Chooser.getYear()<khf.y1Chooser.getYear()  ){
-                JOptionPane.showMessageDialog(null, "năm kết thúc phải lớn hơn năm bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);
-            }
-            else{
-                khf.list=tkBUS.khachhangnam(khf.listkh, khf.listpx, khf.listctpx,khf.y1Chooser.getYear(),khf.y2Chooser.getYear());
-                khf.doitable(2,khf.getScrollPane()  );
-            }
-        }
+        
         if (khf.getCbbox().getSelectedItem().equals("Quý")){
-            khf.panel.setVisible(false);
-            khf.panel2.setVisible(false);
-            khf.panel3.setVisible(false);
-            khf.panel4.setVisible(true);
-           
-          
-            if(khf.y2Chooser4.getYear()<khf.y1Chooser4.getYear() || (khf.y2Chooser4.getYear()==khf.y1Chooser4.getYear() && String.valueOf(khf.qui1.getSelectedItem()).length()>String.valueOf(khf.qui2.getSelectedItem()).length()) ){
-                JOptionPane.showMessageDialog(null, "Quý kết thúc phải lớn hơn Quý bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);
-            }
+            khf.getNgay().setVisible(false);
+            khf.getThang().setVisible(false);
+            khf.getQuy().setVisible(true);
+            khf.getNam().setVisible(false);
+  }
+        
+        if (khf.getCbbox().getSelectedItem().equals("Năm")){
+            khf.getNgay().setVisible(false);
+            khf.getThang().setVisible(false);
+            khf.getQuy().setVisible(false);
+            khf.getNam().setVisible(true);
+  }
+
+  
+      
+       
+    if(action.equals("thống kê")){
+        if (((String) khf.getCbbox().getSelectedItem()).equals("Tất cả")){
+            khf.doitable(true,khf.getList());
+        }
+        
+        if (((String) khf.getCbbox().getSelectedItem()).equals("Trước đến nay")){
+            khf.setListthongke(new ThongKeBUS().khtatca());
+            khf.setList(khf.List()); 
+            khf.doitable(false,khf.getList());
+        }      
+        
+        if (khf.getCbbox().getSelectedItem().equals("Ngày")){                   
+            if(khf.getNgayBatDau1().getDate().getTime()>=khf.getNgayKetThuc1().getDate().getTime())
+                JOptionPane.showMessageDialog(null, "Ngày kết thúc phải lớn hơn ngày bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);      
             else{
-                khf.list=tkBUS.khachhangquy(khf.listkh, khf.listpx, khf.listctpx,khf.y1Chooser4.getYear(),khf.y2Chooser4.getYear(),String.valueOf(khf.qui1.getSelectedItem()).length()-4,String.valueOf(khf.qui2.getSelectedItem()).length()-4);
-                khf.doitable(2,khf.getScrollPane());
+                khf.setListthongke(new ThongKeBUS().khngay(khf.getNgayBatDau1().getDate(),khf.getNgayKetThuc1().getDate()));
+                khf.setList(khf.List());
+                khf.doitable(false,khf.getList());
             }
+        }
+        
+        if (khf.getCbbox().getSelectedItem().equals("Tháng")){
+            if(khf.getNamBatDau2().getYear()>khf.getNamKetThuc2().getYear() || (khf.getNamBatDau2().getYear()==khf.getNamKetThuc2().getYear() && khf.getThangBatDau2().getMonth()>=khf.getThangKetThuc2().getMonth()) )
+                JOptionPane.showMessageDialog(null, "tháng kết thúc phải lớn hơn thang bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);
+            else{
+                khf.setListthongke(new ThongKeBUS().khthang(khf.getThangBatDau2().getMonth(),khf.getThangKetThuc2().getMonth(),khf.getNamBatDau2().getYear(),khf.getNamKetThuc2().getYear()));
+                khf.setList(khf.List());
+                khf.doitable(false,khf.getList());
+            } 
+        }
+        
+        if (khf.getCbbox().getSelectedItem().equals("Quý")){      
+            if(khf.getNamBatDau3().getYear()>khf.getNamKetThuc3().getYear() || (khf.getNamBatDau3().getYear()==khf.getNamKetThuc3().getYear() && khf.getQui1().getSelectedIndex()>=khf.getQui2().getSelectedIndex())) 
+                JOptionPane.showMessageDialog(null, "Quý kết thúc phải lớn hơn Quý bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);           
+            else{
+                khf.setListthongke(new ThongKeBUS().khquy(khf.getQui1().getSelectedIndex(),khf.getQui1().getSelectedIndex(),khf.getNamBatDau3().getYear(),khf.getNamKetThuc3().getYear()));
+                khf.setList(khf.List());
+                khf.doitable(false,khf.getList());
+            }
+
           
         }
- }   
-                
-    
         
-        
-
-        
-    
-        
+        if (khf.getCbbox().getSelectedItem().equals("Năm")){
+            if(khf.getNamBatDau4().getYear()>=khf.getNamKetThuc4().getYear()  )
+                JOptionPane.showMessageDialog(null, "năm kết thúc phải lớn hơn năm bắt đầu","Thông báo", JOptionPane.ERROR_MESSAGE);          
+            else{
+                khf.setListthongke(new ThongKeBUS().khnam(khf.getNamBatDau4().getYear(),khf.getNamKetThuc4().getYear()));
+                khf.setList(khf.List());
+                khf.doitable(false,khf.getList());
+            }
+        }
+    }        
 }
+    
+    @Override
+    public void focusGained(java.awt.event.FocusEvent evt) {
+        if (khf.getTxtTimKiem().getText().equals("Tìm kiếm.....")) {
+            khf.getTxtTimKiem().setText("");
+            khf.getTxtTimKiem().setForeground(Color.BLACK);
+        }
+    }
 
+    @Override
+    public void focusLost(java.awt.event.FocusEvent evt) {
+        if (khf.getTxtTimKiem().getText().trim().isEmpty()) {
+            khf.getTxtTimKiem().setText("Tìm kiếm.....");
+            khf.getTxtTimKiem().setForeground(Color.GRAY);
+        }
+    }
+              
+    @Override
+    public void insertUpdate(javax.swing.event.DocumentEvent e) {
+        khf.timKiemKhiDangGo();
+    }
+
+    @Override
+    public void removeUpdate(javax.swing.event.DocumentEvent e) {
+        khf.timKiemKhiDangGo();
+    }
+
+    @Override
+    public void changedUpdate(javax.swing.event.DocumentEvent e) {
+        khf.timKiemKhiDangGo();
+    }
+    
     @Override
     public void valueChanged(ListSelectionEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+     @Override
+    public void mousePressed(MouseEvent e) {
+        // Xử lý sự kiện mousePressed
     }
 
     @Override
-    public void removeUpdate(DocumentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void mouseReleased(MouseEvent e) {
+        // Xử lý sự kiện mouseReleased
     }
 
     @Override
-    public void changedUpdate(DocumentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void mouseEntered(MouseEvent e) {
+        // Xử lý sự kiện mouseEntered
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // Xử lý sự kiện mouseExited
     }
     
     
-    
+     @Override
+    public void mouseClicked(MouseEvent e) {
+        // Lấy cột được nhấp vào
+        int columnIndex = khf.getTable().getTableHeader().columnAtPoint(e.getPoint());
+        
+        // Kiểm tra xem cột có hợp lệ không (tránh lỗi khi nhấp vào ngoài cột)
+        
+        if (columnIndex != -1) {
+            if(columnIndex==0){
+                khf.setListsx(new ThongKeBUS().TheoSTT(khf.getListsx(), khf.t0));
+                khf.sapxepTable();
+                khf.t0=!khf.t0;
+            }
+            if(columnIndex==1){
+                khf.setListsx(new ThongKeBUS().TheoMa(khf.getListsx(), khf.t1));
+                khf.sapxepTable();
+                khf.t1=!khf.t1;
+            }
+            if(columnIndex==2){
+                khf.setListsx(new ThongKeBUS().TheoHoTen(khf.getListsx(), khf.t2));
+                khf.sapxepTable();
+                khf.t2=!khf.t2;
+            }
+            if(columnIndex==3){
+                khf.setListsx(new ThongKeBUS().TheoHoaDon(khf.getListsx(), khf.t3));
+                khf.sapxepTable();
+                khf.t3=!khf.t3;
+            }
+            if(columnIndex==4){
+                khf.setListsx(new ThongKeBUS().TheoSach(khf.getListsx(), khf.t4));
+                khf.sapxepTable();
+                khf.t4=!khf.t4;
+            }
+            if(columnIndex==5){
+                khf.setListsx(new ThongKeBUS().TheoDoanhThu(khf.getListsx(), khf.t5));
+                khf.sapxepTable();
+                khf.t5=!khf.t5;
+            }              
+            if(columnIndex==6){
+                khf.setListsx(new ThongKeBUS().TheoLN(khf.getListsx(), khf.t6));
+                khf.sapxepTable();
+                khf.t6=!khf.t6;
+            }
+        }
+    }
 }

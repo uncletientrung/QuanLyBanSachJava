@@ -1,21 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package GUI.Dialog.ThongKeDialog;
 
 import BUS.KhachHangBUS;
-import BUS.NhaCungCapBUS;
-import BUS.ThongKeBUS;
-import DAO.ChiTietPhieuXuatDAO;
-import DAO.PhieuXuatDAO;
-import DTO.ChiTietPhieuXuatDTO;
 import DTO.KhachHangDTO;
-import DTO.NhaCungCapDTO;
-import DTO.PhieuXuatDTO;
-import GUI.Controller.NhaCungCapController;
 import GUI.WorkFrame;
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
@@ -36,7 +24,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -45,58 +32,63 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import java.util.Date;
+import javax.swing.table.TableColumn;
 
-/**
- *
- * @author Hi
- */
 public class KhachHangDialog extends JDialog {
 
     private JTable table;
-    private JTable table2;
-    private JTable table3;
     private DefaultTableModel tablekh;
-    private DefaultTableModel tablekh2;
-    private DefaultTableModel tablekh3;
+   
     private WorkFrame workFrame;
-    private JTextField txtTimKiem;
-    private Boolean checkTimkiem = false;
     private ImageIcon icon;
-    private JComboBox<String> cbbox;
-    JDateChooser aaChooser;
-    JDateChooser bbChooser;
-    JMonthChooser m1Chooser;
-    JMonthChooser m2Chooser;
-    JYearChooser y1Chooser2;
-    JYearChooser  y2Chooser2;
     
-    JYearChooser y1Chooser;
-    JYearChooser  y2Chooser;
-    
+    private JTextField txtTimKiem;
 
-    JYearChooser y1Chooser4;
-    JYearChooser  y2Chooser4;
+    private JComboBox<String> cbbox;
     
-    JPanel panel,panel2,panel3,panel4;
+    private JComboBox<String> kieusapxep;
+    private JComboBox<String> sapxep;
     
-    JComboBox<String> qui1;
-    JComboBox<String> qui2;
+    private JDateChooser NgayBatDau1;
+    private JDateChooser NgayKetThuc1;
     
+    private JMonthChooser ThangBatDau2;
+    private JMonthChooser ThangKetThuc2;
+    private JYearChooser NamBatDau2;
+    private JYearChooser  NamKetThuc2;
     
-    int t=1;
-    public ArrayList<PhieuXuatDTO> listpx = new PhieuXuatDAO().selectAll();
-    public ArrayList<ChiTietPhieuXuatDTO> listctpx = new ChiTietPhieuXuatDAO().selectAll2();
-    public ArrayList<KhachHangDTO> listkh = new KhachHangBUS().getKhachHangAll();
-    public ArrayList<Long> list;
+    private JYearChooser NamBatDau3;
+    private JYearChooser  NamKetThuc3;
+   
+    private JYearChooser NamBatDau4;
+    private JYearChooser  NamKetThuc4;
     
-    JScrollPane scrollPane;
+    private JPanel ngay,thang,quy,nam;
+    
+    private JComboBox<String> qui1;
+    private JComboBox<String> qui2;
+
+    private ArrayList<KhachHangDTO> listkh = new KhachHangBUS().getKhachHangAll();
+    private ArrayList<Long> listthongke = new ArrayList();
+
+    private ArrayList<Object[]> list=List();
+    private ArrayList<Object[]> listsx=new ArrayList<>(list);
+    
+    public boolean t0=true;
+    public boolean t1=true;
+    public boolean t2=true;
+    public boolean t3=true;
+    public boolean t4=true;
+    public boolean t5=true;
+    public boolean t6=true;
     
     public KhachHangDialog(JFrame parent) {
         super(parent, "Thống kê khách hàng", true);
         setSize(1300, 700);
         setResizable(false);
         setLocationRelativeTo(parent);
-        setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
+        setLayout(new BorderLayout(10, 10));
 
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setPreferredSize(new Dimension(100, 100));
@@ -110,74 +102,73 @@ public class KhachHangDialog extends JDialog {
         JPanel searchPanel = new JPanel();
          // Tạo khoảng cách giữa tìm kiếm và tiêu đề
         
-       
-        
+        String[] List_Combobox1 = {"Tăng","Giảm"};
+        kieusapxep = new JComboBox<String>(List_Combobox1);
+        String[] List_Combobox2 = {"Theo Mã","Theo Họ Tên"};
+        sapxep = new JComboBox<String>(List_Combobox2);
+         
         JLabel a = new JLabel("Theo : ");
-
         String[] List_Combobox = {"Tất cả","Trước đến nay", "Ngày", "Tháng","Quý", "Năm"};
         cbbox = new JComboBox<String>(List_Combobox);
         cbbox.setPreferredSize(new Dimension(150, 35));
 
-        aaChooser = new JDateChooser();
-        bbChooser = new JDateChooser();
-        m1Chooser = new JMonthChooser();
-        m2Chooser = new JMonthChooser();
-        y1Chooser=new JYearChooser();
-        y2Chooser=new JYearChooser();
+        JLabel from1 = new JLabel("Từ : ");
+        JLabel to1 = new JLabel("Đến : ");
+        NgayBatDau1 = new JDateChooser();
+        NgayBatDau1.setDate(new Date());
+        NgayKetThuc1 = new JDateChooser();
+        NgayKetThuc1.setDate(new Date());
+        NgayBatDau1.setPreferredSize(new Dimension(100, 30));
+        NgayKetThuc1.setPreferredSize(new Dimension(100, 30));
+        ngay=new JPanel();
+        ngay.add(from1);
+        ngay.add(NgayBatDau1);
+        ngay.add(to1);
+        ngay.add(NgayKetThuc1);
+        ngay.setVisible(false);
         
-        y1Chooser2=new JYearChooser();
-        y2Chooser2=new JYearChooser();
+        JLabel from2 = new JLabel("Từ : ");
+        JLabel to2 = new JLabel("Đến : ");
+        ThangBatDau2 = new JMonthChooser();
+        ThangKetThuc2 = new JMonthChooser();
+        NamBatDau2=new JYearChooser();
+        NamKetThuc2=new JYearChooser();
+        thang=new JPanel();
+        thang.add(from2);
+        thang.add(ThangBatDau2);
+        thang.add(NamBatDau2);
+        thang.add(to2);
+        thang.add(ThangKetThuc2);
+        thang.add(NamKetThuc2);
+        thang.setVisible(false);
         
-      
-        y1Chooser4=new JYearChooser();
-        y2Chooser4=new JYearChooser();
+        JLabel from3 = new JLabel("Từ : ");
+        JLabel to3 = new JLabel("Đến : ");
+        String[] Qui1 = {"Quý I","Quý II","Quý III","Quý IV  "};
+        String[] Qui2 = {"Quý I","Quý II","Quý III","Quý IV  "};
+        qui1 = new JComboBox<String>(Qui1);
+        qui2 = new JComboBox<String>(Qui2);
+        NamBatDau3=new JYearChooser();
+        NamKetThuc3=new JYearChooser();
+        quy=new JPanel();
+        quy.add(from3);
+        quy.add(qui1);
+        quy.add(NamBatDau3);
+        quy.add(to3);
+        quy.add(qui2);
+        quy.add(NamKetThuc3);
+        quy.setVisible(false);
         
-        JLabel b = new JLabel("Từ : ");
-        JLabel c = new JLabel("Đến : ");
-        
-        JLabel b2 = new JLabel("Từ : ");
-        JLabel c2 = new JLabel("Đến : ");
-        JLabel b3 = new JLabel("Từ : ");
-        JLabel c3 = new JLabel("Đến : ");
-        JLabel b4 = new JLabel("Từ : ");
-        JLabel c4 = new JLabel("Đến : ");
-        
-        panel=new JPanel();
-        panel.add(b);
-        panel.add(aaChooser);
-        panel.add(c);
-        panel.add(bbChooser);
-        panel.setVisible(false);
-        
-        panel2=new JPanel();
-        panel2.add(b2);
-        panel2.add(m1Chooser);
-        panel2.add(y1Chooser2);
-        panel2.add(c2);
-        panel2.add(m2Chooser);
-        panel2.add(y2Chooser2);
-        panel2.setVisible(false);
-        
-        panel3=new JPanel();
-        panel3.add(b3);
-        panel3.add(y1Chooser);
-        panel3.add(c3);
-        panel3.add(y2Chooser);
-        panel3.setVisible(false);
-        
-        String[] List = {"Quý I","Quý II","Quý III","Quý IV  "};
-        String[] List2 = {"Quý I","Quý II","Quý III","Quý IV  "};
-        qui1 = new JComboBox<String>(List);
-        qui2 = new JComboBox<String>(List2);
-        
-        panel4=new JPanel();
-        panel4.add(b4);
-        panel4.add(qui1);
-        panel4.add(y1Chooser4);
-        panel4.add(c2);
-        panel4.add(qui2);
-        panel4.add(y2Chooser4);
-        panel4.setVisible(false);
+        JLabel from4 = new JLabel("Từ : ");
+        JLabel to4 = new JLabel("Đến : ");
+        NamBatDau4 = new JYearChooser();
+        NamKetThuc4 = new JYearChooser();
+        nam=new JPanel();
+        nam.add(from4);
+        nam.add(NamBatDau4);
+        nam.add(to4);
+        nam.add(NamKetThuc4);
+        nam.setVisible(false);
         
         txtTimKiem = new JTextField("Tìm kiếm.....");
         txtTimKiem.setPreferredSize(new Dimension(200, 35));
@@ -188,12 +179,13 @@ public class KhachHangDialog extends JDialog {
         Image img = icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
         JButton btnTimKiem = new JButton(new ImageIcon(img));
 
+        
         searchPanel.add(a);
         searchPanel.add(cbbox);
-        searchPanel.add(panel);
-        searchPanel.add(panel2);
-        searchPanel.add(panel3);
-        searchPanel.add(panel4);
+        searchPanel.add(ngay);
+        searchPanel.add(thang);
+        searchPanel.add(quy);
+        searchPanel.add(nam);
         searchPanel.add(txtTimKiem);
         searchPanel.add(btnTimKiem);
         headerPanel.add(searchPanel, BorderLayout.CENTER);
@@ -202,53 +194,19 @@ public class KhachHangDialog extends JDialog {
         add(headerPanel, BorderLayout.NORTH);
 
         //tim kiem
-        txtTimKiem.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (txtTimKiem.getText().equals("Tìm kiếm.....")) {
-                    txtTimKiem.setText("");
-                    txtTimKiem.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (txtTimKiem.getText().trim().isEmpty()) {
-                    txtTimKiem.setText("Tìm kiếm.....");
-                    txtTimKiem.setForeground(Color.GRAY);
-                }
-            }
-        });
+        txtTimKiem.addFocusListener(new KhachHangController(this, workFrame));
         //tìm kiem khi dang go hoac an nut
-        txtTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                timKiemKhiDangGo();
-            }
-
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                timKiemKhiDangGo();
-            }
-
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                timKiemKhiDangGo();
-            }
-
-        });
+        txtTimKiem.getDocument().addDocumentListener(new KhachHangController(this, workFrame));
         btnTimKiem.addActionListener(e -> {
-            checkTimkiem = true;
+            
             timKiemKhiDangGo();
 
         });
 
         //bảng dữ liệu
-        String[] columnNCC = {"Mã", "Họ", "Tên","Số điện thoại"};
-        tablekh = new DefaultTableModel(columnNCC, 0) {
-            ;
-        
-        @Override
+        String[] columnNCC = {"STT","Mã", "Họ Tên","Số Hóa Đơn","Tổng Sách","Doanh Thu","Lợi Nhuận"};
+        tablekh = new DefaultTableModel(columnNCC, 0) {       
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;// chặn chỉnh sửa các ô      
             }
@@ -257,7 +215,6 @@ public class KhachHangDialog extends JDialog {
         table = new JTable(tablekh);
         
         JTableHeader header = table.getTableHeader();
-
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) header.getDefaultRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
         
@@ -266,22 +223,20 @@ public class KhachHangDialog extends JDialog {
         //lam tieu de no dam hơn 
         table.getTableHeader().setBackground(Color.LIGHT_GRAY);
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
-
-        for (KhachHangDTO ncc : listkh) {
-            tablekh.addRow(new Object[]{ncc.getMakh(), ncc.getHokh(), ncc.getTenkh(), ncc.getSdt()});
-
+        
+        int n=0;
+        for (int i=0;i<listkh.size();i++){ 
+            tablekh.addRow(list.get(i));   
+            n+=3;
         }
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        doitable(true,list);
         // Căn giữa các cột: Mã NCC (0), SĐT (3)
-
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter = {0, 1, 2, 3};
+        int[] columnsToCenter = {0, 1, 2,3,4,5,6};
         for (int col : columnsToCenter) {
             table.getColumnModel().getColumn(col).setCellRenderer(centerRenderer);
         }
-
-       
 
         // Điều chỉnh kích thước width và hieght của các cột tableBook 
         table.setRowHeight(30);
@@ -289,75 +244,29 @@ public class KhachHangDialog extends JDialog {
         table.getColumnModel().getColumn(1).setPreferredWidth(80);
         table.getColumnModel().getColumn(2).setPreferredWidth(80);
         table.getColumnModel().getColumn(3).setPreferredWidth(80);
-       
-
+        table.getColumnModel().getColumn(4).setPreferredWidth(80);
+        table.getColumnModel().getColumn(5).setPreferredWidth(80);
+        table.getColumnModel().getColumn(6).setPreferredWidth(80);
         
-        // table1
-        String[] columnNCC2 = {"Mã", "Họ", "Tên","Tổng hóa đơn","Tổng tiền","Tổng sách"};
-        tablekh2 = new DefaultTableModel(columnNCC2, 0) {
-            ;
+        header.addMouseListener(new KhachHangController(this, workFrame));
         
-        @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;// chặn chỉnh sửa các ô      
-            }
-        };
-
-        table2 = new JTable(tablekh2);
-        table2.getTableHeader().setReorderingAllowed(false); // Tắt tính năng thay đổi thứ tự cột
-        
-        JTableHeader header2 = table2.getTableHeader();
-
-        renderer = (DefaultTableCellRenderer) header2.getDefaultRenderer();
-        renderer.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        //lam tieu de no dam hơn 
-        table2.getTableHeader().setBackground(Color.LIGHT_GRAY);
-        table2.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
- 
-       
-         DefaultTableCellRenderer centerRenderer2 = new DefaultTableCellRenderer();
-        // Căn giữa các cột: Mã NCC (0), SĐT (3)
-
-        centerRenderer2.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter2 = {0, 1, 2, 3, 4, 5};
-        for (int col : columnsToCenter2) {
-            table2.getColumnModel().getColumn(col).setCellRenderer(centerRenderer2);
-        }
-
-       
-
-        // Điều chỉnh kích thước width và hieght của các cột tableBook 
-        table2.setRowHeight(30);
-        table2.getColumnModel().getColumn(0).setPreferredWidth(80);
-        table2.getColumnModel().getColumn(1).setPreferredWidth(80);
-        table2.getColumnModel().getColumn(2).setPreferredWidth(80);
-        table2.getColumnModel().getColumn(3).setPreferredWidth(80);
-        table2.getColumnModel().getColumn(4).setPreferredWidth(80);
-        table2.getColumnModel().getColumn(5).setPreferredWidth(80);
-        
-        
-        table3=table;
-        
-        scrollPane = new JScrollPane(table3);
+        JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
         
-        //panel chứa 3 
+        //ngay chứa 3 
         JButton btnct = new JButton("chi tiết");
         JButton btntk = new JButton("thống kê");
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnct = createButton("chi tiết", new Color(46, 204, 113));
-        btntk = createButton("thống kê", new Color(60, 123, 231));
-        
+        btntk = createButton("thống kê", new Color(60, 123, 231));        
         btnct.setFont(new Font("Arial", Font.BOLD, 16));
         btntk.setFont(new Font("Arial", Font.BOLD, 16));
 
         KhachHangController controller = new KhachHangController(this, workFrame);
         btnct.addActionListener(controller);
         btntk.addActionListener(controller);
-        cbbox.addActionListener(controller);
-      
         
+        cbbox.addActionListener(controller);
         
         buttonPanel.add(btnct);
         buttonPanel.add(btntk);
@@ -373,59 +282,27 @@ public class KhachHangDialog extends JDialog {
 
     }
 
-    private void timKiemKhiDangGo() {
+    public void timKiemKhiDangGo() {
         String keyword = txtTimKiem.getText().trim().toLowerCase();
-
         ArrayList<KhachHangDTO> danhsachmoi;
         if (keyword.isEmpty() || keyword.equals("tìm kiếm.....")) {
             danhsachmoi = new KhachHangBUS().getKhachHangAll();
         } else {
             danhsachmoi = new KhachHangBUS().search(keyword);
         }
-
         capNhatBang(danhsachmoi);
-        //khi ấn tìm mới kiểm tra tìm thấy, tìm không thấy mới thông báo
-        if (checkTimkiem && danhsachmoi.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy kết quả!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        }
-        checkTimkiem = false;
     }
 
-    public void capNhatBang(ArrayList<KhachHangDTO> danhSach) {
-        tablekh.setRowCount(0); // Xóa bảng cũ
-
-        for (KhachHangDTO ncc : danhSach) {
-            tablekh.addRow(new Object[]{ncc.getMakh(), ncc.getHokh(), ncc.getTenkh(), ncc.getemail(), ncc.getNgaysinh(), ncc.getSdt()});
+    public void capNhatBang(ArrayList<KhachHangDTO> danhSach) { 
+        listsx=new ArrayList<>();
+        tablekh.setRowCount(0);
+        for (int i=0;i<danhSach.size();i++) {
+            for (int j=0;j<list.size();j++)
+                if(String.valueOf(danhSach.get(i).getMakh()).equals(String.valueOf(list.get(j)[1]))){
+                    tablekh.addRow(list.get(j));
+                    listsx.add(list.get(j));
+                }
         }
-    }
-
-    //load lai du lieu khi moi them vo
-    public void loadData() {
-        listkh = new KhachHangBUS().getKhachHangAll(); // Lấy danh sách mới
-        capNhatBang(listkh); // Cập nhật lại bảng
-    }
-
-    public int getSelectedRow() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhà cung cấp để sửa!");
-        }
-        return selectedRow;
-    }
-
-    //lấy đối tượng nhóm quyền đang được click để hàm update biết
-    public NhaCungCapDTO getSelectedNhaCungCap() {
-        int selectedRow = table.getSelectedRow(); // Lấy chỉ số hàng đang chọn
-        if (selectedRow == -1) {
-            return null; // Nếu không chọn gì, trả về null
-        }
-        int maNhaCungCap = (int) table.getValueAt(selectedRow, 0); // Lấy mã nhóm quyền
-        String tenncc = (String) table.getValueAt(selectedRow, 1);
-        String diachi = (String) table.getValueAt(selectedRow, 2);
-        String sdt = (String) table.getValueAt(selectedRow, 3);
-        String email = (String) table.getValueAt(selectedRow, 4);
-
-        return new NhaCungCapDTO(maNhaCungCap, tenncc, diachi, sdt, email);
     }
 
     // ======= Tạo button đồng bộ với phong cách UI =======
@@ -461,71 +338,164 @@ public class KhachHangDialog extends JDialog {
 
         return button;
     }
+    
+    public void doitable(boolean t,ArrayList<Object[]> list){
+        if(t){
+            // 3 4 5 6
+            for(int i=3;i<=6;i++){
+                TableColumn column = table.getColumnModel().getColumn(i);
+                column.setMinWidth(0);
+                column.setMaxWidth(0);
+                column.setPreferredWidth(0);
+                column.setResizable(false);
+            }
+        }
+        else{
+            for(int i=3;i<=6;i++){
+                TableColumn column = table.getColumnModel().getColumn(i);
+                column.setMinWidth(80);
+                column.setMaxWidth(80);
+                column.setPreferredWidth(80);
+                column.setResizable(false);
+            }
+        }
+        tablekh.setRowCount(0);
+            for(int i=0;i<list.size();i++){
+                tablekh.addRow(list.get(i));
+            }
+    }
+    
+    public void sapxepTable(){
+        if(table.getColumnModel().getColumn(5).getWidth()==0) doitable(true,listsx);
+        else  doitable(false,listsx);
+    }
+
+    public  ArrayList <Object[]> List(){
+        ArrayList <Object[]> list1=new ArrayList();
+        int t=0;
+        for(int i=0;i<listkh.size();i++){
+            if(list!=null){
+                list1.add(new Object[]{i+1,listkh.get(i).getMakh(),listkh.get(i).getHokh()+" "+listkh.get(i).getTenkh(),listthongke.get(t),listthongke.get(t+1),listthongke.get(t+2),listthongke.get(t+3)});
+                t+=4;
+            }else 
+                list1.add(new Object[]{i+1,listkh.get(i).getMakh(),listkh.get(i).getHokh()+" "+listkh.get(i).getTenkh(),-1,-1,-1,-1});
+        }
+
+        return list1;
+    }
 
     public JTable getTable() {
         return table;
     }
-    
-    public JTable getTable2() {
-        return table2;
+
+    public DefaultTableModel getTablekh() {
+        return tablekh;
+    }
+
+    public ImageIcon getIcon() {
+        return icon;
+    }
+
+    public JTextField getTxtTimKiem() {
+        return txtTimKiem;
     }
 
     public JComboBox<String> getCbbox() {
         return cbbox;
     }
 
-    public JDateChooser getAaChooser() {
-        return aaChooser;
+    public JDateChooser getNgayBatDau1() {
+        return NgayBatDau1;
     }
 
-    public JDateChooser getBbChooser() {
-        return bbChooser;
-    }
-    
-       public void doitable(int index,JScrollPane a) {
-        tablekh2.setRowCount(0);
-        tablekh.setRowCount(0);
-        // Thay đổi bảng tùy theo lựa chọn trong JComboBox
-         
-        if (index == 1) {
-            suatable2(listkh);
-            table3 = table;
-        } else {
-            suatable(listkh, list);
-            table3 = table2;
-        }
-     
-        // Cập nhật JScrollPane để hiển thị bảng mới
-        a.setViewportView(table3);
-        table3.revalidate();  // Cập nhật lại bảng
-        table3.repaint();  // Vẽ lại bảng
-    }
-    public void suatable( ArrayList<KhachHangDTO> listkh , ArrayList<Long> list ){
-        int n=0;
-         for (KhachHangDTO ncc : listkh) {
-             
-            tablekh2.addRow(new Object[]{ncc.getMakh(), ncc.getHokh(), ncc.getTenkh(), list.get(n),list.get(n+1),list.get(n+2)});
-                n+=3;
-        }
-    }
-    
-    public void suatable2( ArrayList<KhachHangDTO> listkh  ){
-        
-         for (KhachHangDTO ncc : listkh) {
-             
-            tablekh.addRow(new Object[]{ncc.getMakh(), ncc.getHokh(), ncc.getTenkh(),ncc.getSdt()});
-                
-        }
+    public JDateChooser getNgayKetThuc1() {
+        return NgayKetThuc1;
     }
 
-    public JScrollPane getScrollPane() {
-        return scrollPane;
+    public JMonthChooser getThangBatDau2() {
+        return ThangBatDau2;
     }
 
-    public void setCbbox() {
-        this.cbbox.setSelectedItem("Tất cả");
+    public JMonthChooser getThangKetThuc2() {
+        return ThangKetThuc2;
     }
-    
+
+    public JYearChooser getNamBatDau2() {
+        return NamBatDau2;
+    }
+
+    public JYearChooser getNamKetThuc2() {
+        return NamKetThuc2;
+    }
+
+    public JYearChooser getNamBatDau3() {
+        return NamBatDau3;
+    }
+
+    public JYearChooser getNamKetThuc3() {
+        return NamKetThuc3;
+    }
+
+    public JYearChooser getNamBatDau4() {
+        return NamBatDau4;
+    }
+
+    public JYearChooser getNamKetThuc4() {
+        return NamKetThuc4;
+    }
+
+    public JPanel getNgay() {
+        return ngay;
+    }
+
+    public JPanel getThang() {
+        return thang;
+    }
+
+    public JPanel getQuy() {
+        return quy;
+    }
+
+    public JPanel getNam() {
+        return nam;
+    }
+
+    public JComboBox<String> getQui1() {
+        return qui1;
+    }
+
+    public JComboBox<String> getQui2() {
+        return qui2;
+    }
+
+    public ArrayList<KhachHangDTO> getListkh() {
+        return listkh;
+    }
+
+    public ArrayList<Long> getListthongke() {
+        return listthongke;
+    }
+
+    public ArrayList<Object[]> getList() {
+        return list;
+    }
+
+    public void setListthongke(ArrayList<Long> listthongke) {
+        this.listthongke = listthongke;
+    }
+
+    public void setList(ArrayList<Object[]> list) {
+        this.list = list;
+    }
+
+    public void setListsx(ArrayList<Object[]> listsx) {
+        this.listsx = listsx;
+    }
+
+    public ArrayList<Object[]> getListsx() {
+        return listsx;
+    }
+
 
 
 }

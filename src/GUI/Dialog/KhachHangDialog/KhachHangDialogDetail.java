@@ -160,4 +160,15 @@ public class KhachHangDialogDetail extends JDialog{
         txfEmail.setText(email);
         
     }
+
+     public void ShowInfo2(String ma,String ho,String ten,String email,String ns,String sdt){
+        System.err.println(ma);
+        txfMa.setText(ma);
+        txfHo.setText(ho);
+        txfTen.setText(ten);
+        txfNgaySinh.setText(ns);
+        txfSdt.setText(sdt);
+        txfEmail.setText(email);
+        this.setVisible(true);
+    }
 }
