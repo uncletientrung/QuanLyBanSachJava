@@ -175,6 +175,6 @@ public class BookDialogDetail extends JDialog{
         txfSoluong.setText(soluong);
         txfNamxuatban.setText(NamXB);
         txfDongia.setText(dongia);
-         this.Visible(true);
+        this.setVisible(true);
     }
 }
