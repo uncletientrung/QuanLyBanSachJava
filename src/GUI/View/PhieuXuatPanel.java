@@ -75,6 +75,8 @@ public class PhieuXuatPanel extends JPanel {
     private JPanel titlePanel;
     private JPanel tongTienPanel;
     private JTextField txfTongTien;
+    private ArrayList<Boolean> nvCheckStates; // Danh Sach trạng thái checkbox của Jlist NV
+    private ArrayList<Boolean> khCheckStates; // Danh Sach trạng thái checkbox của Jlist KH
 
     public PhieuXuatPanel() {
         this.taikhoan = taikhoan;
@@ -113,12 +115,18 @@ public class PhieuXuatPanel extends JPanel {
         // Hàng 1: Nhân viên, Ngày bắt đầu, Ngày kết thúc
         JLabel lblEmployee = new JLabel("Nhân viên:");
         // Khởi tạo JList cho nhân viên
-        jList_nv = new JList<>(getListNameNV().toArray(new String[0])); // Jcombobox không nhân ArrayList chỉ nhận kiểu String[]
+        listCBB_NV = getListNameNV(); // Lấy danh sách tên nhân viên
+        nvCheckStates = new ArrayList<>(); 
+        for (int i = 0; i < listCBB_NV.size(); i++) {
+            nvCheckStates.add(i == 0);
+        }
+        // Sử dụng renderer tùy chỉnh để hiển thị checkbox (mới thêm)
+        jList_nv = new JList<>(listCBB_NV.toArray(new String[0]));
+        jList_nv.setCellRenderer(new CheckBoxKeBenJList(nvCheckStates)); // Set kiểu Renderer là dạng có checkbox
         jList_nv.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jList_nv.setVisibleRowCount(5); // Hiển thị tối đa 8 mục
-        jList_nv.setSelectedIndex(0); // Chọn mặc định "Tất cả"
+        jList_nv.setVisibleRowCount(5); // Hiển thị tối đa 5 mục 
         JScrollPane scrollNv = new JScrollPane(jList_nv);
-        scrollNv.setPreferredSize(new Dimension(125, 150));
+        scrollNv.setPreferredSize(new Dimension(150, 150)); // Tăng kích thước để chứa checkbox
         popupEmployee = new JPopupMenu();
         popupEmployee.add(scrollNv);
         txfEmployee = new JTextField("Tất cả");
@@ -185,12 +193,18 @@ public class PhieuXuatPanel extends JPanel {
         // Hàng 2: Khách hàng, Tổng tiền từ, Đến
         JLabel lblCustomer = new JLabel("Khách hàng:");
         // Khởi tạo JList cho khách hàng
-        jList_kh = new JList<>(getListNameKH().toArray(new String[0]));
+        listCBB_KH = getListNameKH(); // Lấy danh sách tên khách hàng
+        khCheckStates = new ArrayList<>(); // Tạo danh sách để lưu trạng thái checkbox
+        for (int i = 0; i < listCBB_KH.size(); i++) {
+            khCheckStates.add(i == 0); // Nếu i=0 thì True mặc định là chọn tất cả
+        }
+        // Sử dụng renderer tùy chỉnh cho khách hàng (mới thêm)
+        jList_kh = new JList<>(listCBB_KH.toArray(new String[0]));
+        jList_kh.setCellRenderer(new CheckBoxKeBenJList(khCheckStates)); // Gán renderer để hiển thị checkbox
         jList_kh.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         jList_kh.setVisibleRowCount(5);
-        jList_kh.setSelectedIndex(0); // Chọn mặc định "Tất cả"
         JScrollPane scrollKh = new JScrollPane(jList_kh);
-        scrollKh.setPreferredSize(new Dimension(125, 150));
+        scrollKh.setPreferredSize(new Dimension(150, 150)); // Tăng kích thước để chứa checkbox
         popupCustomer = new JPopupMenu();
         popupCustomer.add(scrollKh);
         txfCustomer = new JTextField("Tất cả");
@@ -418,7 +432,6 @@ public class PhieuXuatPanel extends JPanel {
         jList_nv.getSelectionModel().addListSelectionListener((ListSelectionListener) action);
         jList_kh.getSelectionModel().addListSelectionListener((ListSelectionListener) action);
 
-
         // Set ngày mặc định tìm kiếm
         dateStart.setDateFormatString("dd-MM-yyyy");
         dateEnd.setDateFormatString("dd-MM-yyyy");
@@ -427,6 +440,96 @@ public class PhieuXuatPanel extends JPanel {
         dateStart.setDate(cal.getTime());
         dateEnd.setDate(new Date());
 
+        // Xử lý sự kiện thì Ấn vào JList KH
+        jList_nv.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = jList_nv.locationToIndex(e.getPoint()); // Sau khi ấn chuột nó sẽ lấy tọa độ đó để biến vừa ấn vào vị trí thứ mấy Jlist
+                boolean Check_CheckBox=false; // Biến kiểm tra xem có nút nào được chọn không
+                if (index > 0) {
+                    nvCheckStates.set(0, false); // Khi chọn các cb khác tất cả thì tất cả set là false
+                    nvCheckStates.set(index, !nvCheckStates.get(index)); // Đảo trạng thái checkbox khi click
+                    jList_nv.repaint(); // Cập nhật giao diện JList 
+                    updateEmployeeTextField(); // Cập nhật Txf hiển thị danh sách nhân viên được chọn
+                    Filter();
+                }else if(index==0){
+                    for(int i=1;i<listCBB_NV.size();i++){
+                        nvCheckStates.set(i, false);
+                        updateEmployeeTextField(); // Cập nhật Txf hiển thị danh sách nhân viên được chọn
+                        Filter();
+                    }
+                }
+                   
+                for(boolean check: nvCheckStates){
+                    if (check){
+                        Check_CheckBox=true; // Có ít nhất 1 nút được chọn
+                        break;
+                    }
+                }
+                if(!Check_CheckBox){
+                    nvCheckStates.set(0,true); // Nếu không có checkbox nào đc chọn thì chọn Tất cả
+                     updateEmployeeTextField();
+                    Filter();
+                }
+            }
+        });
+
+        // Xử lý sự kiện thì Ấn vào JList KH
+        jList_kh.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = jList_kh.locationToIndex(e.getPoint());
+                boolean Check_CheckBox=false;
+                if (index > 0) {
+                    khCheckStates.set(0, false); // Khi chọn các cb khác tất cả thì tất cả set là false
+                    khCheckStates.set(index, !khCheckStates.get(index));
+                    jList_kh.repaint(); // Cập nhật giao diện JList
+                    updateCustomerTextField(); // Cập nhật Txf hiển thị danh sách khách được chọn
+                    Filter();
+                }else if(index ==0){ // Khi chọn cb tất cả thì tất cả các cb khác set là False
+                    for(int i=1;i<listCBB_KH.size();i++){
+                        khCheckStates.set(i, false);
+                        updateCustomerTextField(); // Cập nhật Txf hiển thị danh sách khách được chọn
+                        Filter();
+                    }
+                }
+                
+                for (boolean cb: khCheckStates){
+                    if (cb){
+                        Check_CheckBox=true;
+                        break;
+                    }
+                }
+                if(!Check_CheckBox){
+                    khCheckStates.set(0, true);
+                    updateCustomerTextField(); // Cập nhật Txf hiển thị danh sách khách được chọn
+                    Filter();
+                }
+            }
+        });
+    }
+    // Update txf NhanVien khi chọn checkbox và tắt checkbox 
+    private void updateEmployeeTextField() {
+        int NhanVien_Select_Count=0;
+        for (int i = 1; i < listCBB_NV.size(); i++) {        // Size này trả về số phần tử chứ không phải kích thước W H
+            if (nvCheckStates.get(i)) {                         // Bắt đầu từ 1 để bỏ qua cái lựa chọn tất cả
+                NhanVien_Select_Count+=1;
+            }
+        }
+        txfEmployee.setText(NhanVien_Select_Count > 0 ? NhanVien_Select_Count + " nhân viên được chọn" : "Tất cả"); 
+                                                                                        // Hiển thị danh sách hoặc "Tất cả" nếu không chọn
+    }
+
+        // Update txf Khách khi chọn checkbox và tắt checkbox 
+    private void updateCustomerTextField() {
+        int Khach_Select_Count=0;
+        for (int i = 1; i < listCBB_KH.size(); i++) {
+            if (khCheckStates.get(i)) {
+                Khach_Select_Count+=1;
+            }
+        }
+        txfCustomer.setText(Khach_Select_Count > 0 ? Khach_Select_Count + " khách được chọn" : "Tất cả"); 
+                                                                                                // Hiển thị danh sách hoặc "Tất cả" nếu không chọn
     }
 
     private JButton createToolBarButton(String text, String imageLink) {
@@ -598,56 +701,93 @@ public class PhieuXuatPanel extends JPanel {
         return listCBB_KH;
     }
 
-   public void Filter() {
-    pxBUS = new PhieuXuatBUS();
+    public void Filter() {
+        pxBUS = new PhieuXuatBUS();
 
-    jList_nv.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    jList_kh.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        // Lấy danh sách nhân viên được chọn từ checkbox
+        ArrayList<String> list_chosser_nv = new ArrayList<>();
+        for (int i = 0; i < listCBB_NV.size(); i++) {
+            if (nvCheckStates.get(i)) {
+                list_chosser_nv.add(listCBB_NV.get(i)); // Thêm nhân viên nếu trạng thái checkbox là True
+            }
+        }
 
-    ArrayList<String> list_chosser_nv = new ArrayList<>(jList_nv.getSelectedValuesList());
-    ArrayList<String> list_chosser_kh = new ArrayList<>(jList_kh.getSelectedValuesList());
+        // Lấy danh sách khách hàng được chọn từ checkbox
+        ArrayList<String> list_chosser_kh = new ArrayList<>();
+        for (int i = 0; i < listCBB_KH.size(); i++) {
+            if (khCheckStates.get(i)) {
+                list_chosser_kh.add(listCBB_KH.get(i)); // Nếu True thì thêm vào
+            }
+        }
 
-    // Xử lý ngày bắt đầu
-    Date dateS = dateStart.getDate();
-    Timestamp dateStartTimestamp = (dateS != null)
-            ? new Timestamp(dateS.getTime())
-            : Timestamp.valueOf("1970-01-01 00:00:00"); // Ngày nhỏ nhất
+        // Xử lý ngày bắt đầu
+        Date dateS = dateStart.getDate();
+        Timestamp dateStartTimestamp =new Timestamp(dateS.getTime());
 
-    // Xử lý ngày kết thúc
-    Date dateE = dateEnd.getDate();
-    Timestamp dateEndTimestamp = (dateE != null)
-            ? new Timestamp(dateE.getTime())
-            : Timestamp.valueOf("2100-12-31 23:59:59"); // Ngày lớn nhất
+        // Xử lý ngày kết thúc
+        Date dateE = dateEnd.getDate();
+        Timestamp dateEndTimestamp =new Timestamp(dateE.getTime());
+            
+        // Lấy khoảng giá
+        String minPrice = txfPriceStart.getText().trim();
+        String maxPrice = txfPriceEnd.getText().trim();
 
-    // Lấy khoảng giá
-    String minPrice = txfPriceStart.getText().trim();
-    String maxPrice = txfPriceEnd.getText().trim();
+        ArrayList<PhieuXuatDTO> List_sort = new ArrayList<>();
 
-    ArrayList<PhieuXuatDTO> List_sort = new ArrayList<>();
+        // Lọc dữ liệu
+        for (String nv : list_chosser_nv) {
+            for (String kh : list_chosser_kh) {
+                ArrayList<PhieuXuatDTO> List_PxFilter = pxBUS.Filter(nv, kh, dateStartTimestamp, dateEndTimestamp, minPrice, maxPrice);
+                List_sort.addAll(List_PxFilter);
+            }
+        }
 
-    // Lọc dữ liệu
-    for (String nv : list_chosser_nv) {
-        for (String kh : list_chosser_kh) {
-            ArrayList<PhieuXuatDTO> List_PxFilter = pxBUS.Filter(nv, kh, dateStartTimestamp, dateEndTimestamp, minPrice, maxPrice);
-            List_sort.addAll(List_PxFilter);
+        // Đổ dữ liệu lên bảng
+        dataPhieuXuat.setRowCount(0);
+        for (PhieuXuatDTO px : List_sort) {
+            String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
+            String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
+            String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
+            dataPhieuXuat.addRow(new Object[]{
+                    px.getMaphieu(),
+                    hoTenNv,
+                    hoTenKh,
+                    DateFormat.fomat(px.getThoigiantao().toString()),
+                    NumberFormatter.format(px.getTongTien()),
+                    trangThai
+            });
         }
     }
+    
+     // Lớp tạo giao diện cho mỗi mục trong JList, bao gồm checkbox và tên
+    private class CheckBoxKeBenJList extends JPanel implements ListCellRenderer<String> {
+        private JCheckBox checkBox; // Checkbox hiển thị trạng thái chọn
+        private JLabel label; // Nhãn hiển thị tên nhân viên hoặc khách hàng
+        private ArrayList<Boolean> checkStates; // Danh sách trạng thái checkbox
 
-    // Đổ dữ liệu lên bảng
-    dataPhieuXuat.setRowCount(0);
-    for (PhieuXuatDTO px : List_sort) {
-        String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
-        String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
-        String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-        dataPhieuXuat.addRow(new Object[]{
-                px.getMaphieu(),
-                hoTenNv,
-                hoTenKh,
-                DateFormat.fomat(px.getThoigiantao().toString()),
-                NumberFormatter.format(px.getTongTien()),
-                trangThai
-        });
+        public CheckBoxKeBenJList(ArrayList<Boolean> checkStates) {
+            this.checkStates = checkStates; // Lưu danh sách trạng thái
+            setLayout(new BorderLayout()); // Sử dụng BorderLayout để sắp xếp checkbox và nhãn
+            checkBox = new JCheckBox(); // Khởi tạo checkbox
+            label = new JLabel(); // Khởi tạo nhãn
+            add(checkBox, BorderLayout.WEST); // Đặt checkbox ở phía Tây
+            add(label, BorderLayout.CENTER); // Đặt nhãn ở trung tâm
+
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends String> list, String value, int index,
+                                                      boolean isSelected, boolean cellHasFocus) {
+            label.setText(value); // Cập nhật nội dung nhãn với tên
+            checkBox.setSelected(checkStates.get(index)); // Cập nhật   trạng thái checkbox
+            if (isSelected) {
+                setBackground(list.getSelectionBackground()); // Đặt màu nền khi được chọn
+                setForeground(list.getSelectionForeground()); // Đặt màu chữ khi được chọn
+            } else {
+                setBackground(list.getBackground()); // Đặt màu nền mặc định
+                setForeground(list.getForeground()); // Đặt màu chữ mặc định
+            }
+            return this; // Trả về panel chứa checkbox và nhãn
+        }
     }
-}
-
 }
