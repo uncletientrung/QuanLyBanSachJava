@@ -214,7 +214,7 @@ public class PhieuXuatPanel extends JPanel {
         txfCustomer.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                popupCustomer.show(txfCustomer, 0, txfCustomer.getHeight());
+                popupCustomer.show(txfCustomer, 0, txfCustomer.getHeight()); // Cú pháp show( thành phần neo, tọa độ x, tọa độ y)
             }
         });
 

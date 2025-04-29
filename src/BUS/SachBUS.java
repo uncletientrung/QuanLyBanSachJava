@@ -88,12 +88,12 @@ public class SachBUS {
         return  ListSort;
     }
     public ArrayList<SachDTO> LowToHighofNXB(ArrayList<SachDTO> sach){
-        ArrayList<SachDTO> result=new ArrayList<>(listSach);
+        ArrayList<SachDTO> result=new ArrayList<>(sach);
         result.sort(Comparator.comparing(SachDTO::getNamxuatban));
         return  result;
     }
     public ArrayList<SachDTO> HighToLowofNXB(ArrayList<SachDTO> sach){
-        ArrayList<SachDTO> result=new ArrayList<>(listSach);
+        ArrayList<SachDTO> result=sach;
         result.sort(Comparator.comparing(SachDTO::getNamxuatban).reversed());
         return result;
     }

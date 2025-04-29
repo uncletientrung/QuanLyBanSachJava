@@ -159,7 +159,7 @@ public void actionPerformed(ActionEvent e){
         }
         
     }
-    
+
     if(sukienCombobox.equals("Giá thấp đến cao ⬆")){
         sachBUS=new SachBUS();
         ArrayList<SachDTO> List_Sort=sachBUS.LowToHighofPrice(bf.getListSach());
@@ -181,11 +181,10 @@ public void actionPerformed(ActionEvent e){
         bf.FilterTableData(List_Sort);
     }
     if(sukienCombobox.equals("Tất cả")){
-        sachBUS=new SachBUS();
-        ArrayList<SachDTO> List_OLD=sachBUS.getSachAll();
-        bf.FilterTableData(List_OLD);
+        bf.getTxfFind().setText(""); // Chỉnh sửa txf Find lại thành "" khi ấn vào Tất cả
+        bf.refreshTableData();
     }
-    bf.refreshTableData();
+
 }
 
     @Override
@@ -199,7 +198,9 @@ public void actionPerformed(ActionEvent e){
     @Override
     public void removeUpdate(DocumentEvent e) {
         bf.FindTableData(bf.getTxfFind().getText());
+        
     }
+    
 
     @Override
     public void changedUpdate(DocumentEvent e) {

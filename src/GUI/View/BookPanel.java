@@ -17,6 +17,8 @@ import BUS.TacGiaBUS;
 import DTO.TheLoaiDTO;
 import BUS.TheLoaiBUS;
 import GUI.Format.NumberFormatter;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Comparator;
 
 public class BookPanel extends JPanel {
@@ -57,10 +59,13 @@ public class BookPanel extends JPanel {
         String[] List_Combobox = {"Tất cả", "Giá thấp đến cao ⬆", "Giá cao đến thấp ⬇", "NXB thấp đến cao ⬆", "NXB cao đến thấp ⬇"};
         cbbox = new JComboBox<String>(List_Combobox);
         cbbox.setPreferredSize(new Dimension(150, 35));
-
+        
+        String Text_placeholder = "Nhập mã hoặc tên sách....";
         txfFind = new JTextField("");
         txfFind.setPreferredSize(new Dimension(200, 35));
         txfFind.setForeground(Color.GRAY);
+
+        
 
         JButton btnFind = createToolBarButton("", "find.png");
         btnFind.setPreferredSize(new Dimension(50, 50));
@@ -219,6 +224,10 @@ public class BookPanel extends JPanel {
     }
 
     public void FindTableData(String text) {
+        if(txfFind.getText().equals("") && cbbox.getSelectedIndex()==0){
+            refreshTableData();
+            return;
+        }
         listSach = new SachBUS().search(text);
         dataBook.setRowCount(0);
         for (SachDTO s : listSach) {
