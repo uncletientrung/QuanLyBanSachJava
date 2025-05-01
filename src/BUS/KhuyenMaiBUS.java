@@ -6,8 +6,10 @@ package BUS;
 
 import DAO.KhuyenMaiDAO;
 import DTO.KhuyenMaiDTO;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -25,7 +27,7 @@ public class KhuyenMaiBUS {
     }
     
     public ArrayList<KhuyenMaiDTO> getAllKhuyenMai(){
-        return KhuyenMaiDAO.getInstance().selectAll();
+        return listKhuyenMai;
     }
     
     public ArrayList<KhuyenMaiDTO> timkiem(String keywords) {
@@ -110,12 +112,40 @@ public class KhuyenMaiBUS {
     public ArrayList<KhuyenMaiDTO> getActiveKhuyenMai(Date currentDate) {
         ArrayList<KhuyenMaiDTO> allKM = kmDAO.selectAll();
         ArrayList<KhuyenMaiDTO> activeKM = new ArrayList<>();
+        
+        Calendar cal = Calendar.getInstance(); // KHi tạo ra Km mãi nó lưu cả thời gian nữa nên ta nên set thời gian ngày chọn là 0 để nó đỡ bị
+                                                                // gặp trường hợp giờ khuyến mãi trước giờ phiếu xuất 
+        cal.setTime(currentDate);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Timestamp dateCreate= new Timestamp(cal.getTimeInMillis());
+        
         for (KhuyenMaiDTO km : allKM) {
-            if (!currentDate.before(km.getNgayBatDau()) && !currentDate.after(km.getNgayKetThuc())) {
+             System.err.println(km.getNgayKetThuc());
+            if (km.getNgayBatDau().compareTo(dateCreate)<=0 && km.getNgayKetThuc().compareTo(dateCreate)>=0) {
                 activeKM.add(km);
             }
         }
+        System.err.println(allKM);
+        System.err.println(dateCreate);
+        System.err.print(activeKM);
         return activeKM;
+    }
+    
+    public KhuyenMaiDTO getBestKm(int TongBill, Date dateCreateBill){
+        ArrayList<KhuyenMaiDTO> listkm=getActiveKhuyenMai(dateCreateBill);
+        
+        KhuyenMaiDTO result=null;
+        double phanTram=0;
+        for(KhuyenMaiDTO km: listkm){
+            if(km.getPhanTramGiam()>phanTram && km.getDieuKienToiThieu()<TongBill){
+                phanTram=km.getPhanTramGiam();
+                result=km;
+            }
+        }
+        return result;    
     }
     
  

@@ -13,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.awt.event.ActionListener;
-
+import GUI.ThongKe.ThongKe;
 /**
  *
  * @author DELL

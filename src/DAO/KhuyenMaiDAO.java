@@ -111,76 +111,34 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO>{
     }
 
 
-    @Override
     public ArrayList<KhuyenMaiDTO> selectAll() {
         ArrayList<KhuyenMaiDTO> danhSachKM = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
 
         try {
-            con = JDBCUtil.getConnection();
-            // Chỉ lấy các khuyến mãi còn hiệu lực
-            String sql = "SELECT * FROM khuyenmai WHERE ngaybatdau <= ? AND ngayketthuc >= ?";
-            pst = con.prepareStatement(sql);
-            Date currentDate = new Date();
-            pst.setDate(1, new java.sql.Date(currentDate.getTime()));
-            pst.setDate(2, new java.sql.Date(currentDate.getTime()));
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT * FROM khuyenmai";
+            PreparedStatement pst = con.prepareStatement(sql);
 
-            rs = pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int maKM = rs.getInt("makm");
-                String tenChuongTrinh = rs.getString("tenkm");
-                Date ngayBatDau = rs.getDate("ngaybatdau");
-                Date ngayKetThuc = rs.getDate("ngayketthuc");
+                String TenChuongTrinh = rs.getString("tenkm");
+                Date NgayBatDau = rs.getDate("ngaybatdau");
+                Date NgayKetThuc = rs.getDate("ngayketthuc");
                 double dieuKienToiThieu = rs.getDouble("dieukientoithieu");
                 double phanTramGiam = rs.getDouble("phantramgiam");
 
-                KhuyenMaiDTO doituongKM = new KhuyenMaiDTO(maKM, tenChuongTrinh, ngayBatDau, ngayKetThuc, dieuKienToiThieu, phanTramGiam);
+                KhuyenMaiDTO doituongKM = new KhuyenMaiDTO(maKM, TenChuongTrinh, NgayBatDau, NgayKetThuc, dieuKienToiThieu, phanTramGiam);
                 danhSachKM.add(doituongKM);
             }
+            JDBCUtil.closeConnection(con);
+
         } catch (SQLException e) {
             Logger.getLogger(KhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pst != null) pst.close();
-                if (con != null) JDBCUtil.closeConnection(con);
-            } catch (SQLException e) {
-                Logger.getLogger(KhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, e);
-            }
         }
 
         return danhSachKM;
     }
-//    public ArrayList<KhuyenMaiDTO> selectAll() {
-//        ArrayList<KhuyenMaiDTO> danhSachKM = new ArrayList<>();
-//
-//        try {
-//            Connection con = JDBCUtil.getConnection();
-//            String sql = "SELECT * FROM khuyenmai";
-//            PreparedStatement pst = con.prepareStatement(sql);
-//
-//            ResultSet rs = pst.executeQuery();
-//            while (rs.next()) {
-//                int maKM = rs.getInt("makm");
-//                String TenChuongTrinh = rs.getString("tenkm");
-//                Date NgayBatDau = rs.getDate("ngaybatdau");
-//                Date NgayKetThuc = rs.getDate("ngayketthuc");
-//                double dieuKienToiThieu = rs.getDouble("dieukientoithieu");
-//                double phanTramGiam = rs.getDouble("phantramgiam");
-//
-//                KhuyenMaiDTO doituongKM = new KhuyenMaiDTO(maKM, TenChuongTrinh, NgayBatDau, NgayKetThuc, dieuKienToiThieu, phanTramGiam);
-//                danhSachKM.add(doituongKM);
-//            }
-//            JDBCUtil.closeConnection(con);
-//
-//        } catch (SQLException e) {
-//            Logger.getLogger(KhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, e);
-//        }
-//
-//        return danhSachKM;
-//    }
 
 
     @Override

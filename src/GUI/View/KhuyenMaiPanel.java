@@ -43,7 +43,7 @@ public class KhuyenMaiPanel extends JPanel{
     private WorkFrame workFrame;    
     private DefaultTableModel tableModelKhuyenMai;
     //goi ham getnhomquyenall ben BUS de lay ra array list
-    public ArrayList<KhuyenMaiDTO> listkhuyenmai= new KhuyenMaiBUS().getAllKhuyenMai();
+    public ArrayList<KhuyenMaiDTO> listkhuyenmai;
     
     public KhuyenMaiPanel(){
         JPanel toolBar= new JPanel(new GridLayout(1,2));
@@ -124,11 +124,7 @@ public class KhuyenMaiPanel extends JPanel{
             
         });
         
-
-
-        
-        
-        
+  
         //tạo table ở giữa
         String[] columnKhuyenMai = {
             "Mã khuyến mãi", 
@@ -152,6 +148,7 @@ public class KhuyenMaiPanel extends JPanel{
         table.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
 
         // Thêm dữ liệu vào bảng GUI
+        listkhuyenmai=new KhuyenMaiBUS().getAllKhuyenMai();
         for (KhuyenMaiDTO km : listkhuyenmai) {
             tableModelKhuyenMai.addRow(new Object[] {
                 km.getMaKM(),
@@ -183,16 +180,12 @@ public class KhuyenMaiPanel extends JPanel{
         table.getColumnModel().getColumn(4).setPreferredWidth(150);  // Hóa đơn tối thiểu
         table.getColumnModel().getColumn(5).setPreferredWidth(120);  // % giảm giá
 
-        
-           
         JScrollPane scrollPane = new JScrollPane(table); 
         
         setLayout(new BorderLayout());
         toolBar_Left.add(btnAdd);
         toolBar_Left.add(btnUpdate);
         toolBar_Left.add(btndelete);
-        
-
         
         toolBar_Right.add(txfind);
         toolBar_Right.add(btnfind);
@@ -279,7 +272,7 @@ public class KhuyenMaiPanel extends JPanel{
         // Nếu table đang lưu String, bạn cần parse:
         if (valNgayBatDau instanceof String) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // hoặc "yyyy-MM-dd HH:mm:ss" tùy bạn
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // hoặc "yyyy-MM-dd HH:mm:ss" tùy bạn
                 ngayBatDau = sdf.parse((String) valNgayBatDau);
                 ngayKetThuc = sdf.parse((String) valNgayKetThuc);
             } catch (ParseException e) {
@@ -296,7 +289,22 @@ public class KhuyenMaiPanel extends JPanel{
 
         return new KhuyenMaiDTO(maKhuyenmai, tenChuongtrinh, ngayBatDau, ngayKetThuc, hoaDontoithieu, phantramgiam);
     }
-
+  
+    public void refreshTable(){
+        KhuyenMaiBUS kmBUS=new KhuyenMaiBUS();
+        listkhuyenmai=kmBUS.getAllKhuyenMai();
+        tableModelKhuyenMai.setRowCount(0);
+        for(KhuyenMaiDTO km: listkhuyenmai){
+            tableModelKhuyenMai.addRow(new Object[] {
+                km.getMaKM(),
+                km.getTenChuongTrinh(),
+                km.getNgayBatDau(),
+                km.getNgayKetThuc(),
+                km.getDieuKienToiThieu(),
+                km.getPhanTramGiam()
+            });
+        }
+    }
 
     
 }

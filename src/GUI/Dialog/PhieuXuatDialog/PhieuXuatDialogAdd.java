@@ -13,6 +13,7 @@ import DTO.KhachHangDTO;
 import BUS.KhachHangBUS;
 import BUS.KhuyenMaiBUS;
 import BUS.NhanVienBUS;
+import BUS.ThongKeBUS;
 import DTO.KhuyenMaiDTO;
 import DTO.TaiKhoanDTO;
 import GUI.WorkFrame;
@@ -102,6 +103,8 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     private DefaultTableModel dataBan;
     private TaiKhoanDTO taikhoan;
     private NhanVienBUS nvBUS=new NhanVienBUS();
+    private KhuyenMaiBUS kmBUS;
+    private ArrayList<KhuyenMaiDTO> listkm;
     /**
      * Creates new form test1
      */
@@ -136,7 +139,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfSoLuong = new javax.swing.JTextField();
         lbGiaBan = new javax.swing.JLabel();
         txfGiaBan = new javax.swing.JTextField();
-        btnThemChiTiet = createButton("Thêm", new Color(76, 175, 80)); // Xánh lá chuối
+        btnThemChiTiet = createButton("Thêm chi tiết", new Color(76, 175, 80)); // Xánh lá chuối
         lbListBan = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableListBan = new javax.swing.JTable();
@@ -170,7 +173,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         lbThanhTienV2 = new javax.swing.JLabel();
         txfThanhTienV2 = new javax.swing.JTextField();
         btnXoaV2 = createButton("Xóa", new Color(244, 67, 54)); // Màu đỏ
-        BtnXoaAllV2 = createButton("Xóa tất cả", new Color(244, 67, 54));
+        BtnXoaAllV2 = createButton("Làm mới", new Color(244, 67, 54));
         lbSDT = new javax.swing.JLabel();
         txfSDT = new javax.swing.JTextField();
 
@@ -255,7 +258,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
 
         txfGiaBan.setEditable(false);
 
-        btnThemChiTiet.setText("Thêm");
+        btnThemChiTiet.setText("Thêm chi tiết");
         btnThemChiTiet.setFont(new Font("Arial", Font.BOLD, 24));
         btnThemChiTiet.setPreferredSize(new Dimension(200, 46));
 
@@ -292,7 +295,8 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         txfTongTien.setEditable(false);
 
         lbGiamGia.setText("Giảm giá:");
-
+        txfGiamGia.setEditable(false);
+        
         lbThanhToan.setText("Thanh toán:");
 
         txfThanhToan.setEditable(false);
@@ -311,7 +315,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         btnXoaV2.setText("Xóa");
         btnXoaV2.setPreferredSize(new Dimension(110, 34));
 
-        BtnXoaAllV2.setText("Xóa tất cả");
+        BtnXoaAllV2.setText("Làm mới");
         BtnXoaAllV2.setPreferredSize(new Dimension(110, 34));
 
         lbTenSachV2.setText("Tên sách:");
@@ -762,119 +766,34 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         }
     }
     
-    // Biến cho cache khuyến mãi và debounce
-    private List<KhuyenMaiDTO> cachedKhuyenMai = null;
-    private Date lastCachedDate = null;
-    private long lastCalcBillTime = 0;
-    private static final long DEBOUNCE_DELAY = 200; // 200ms
 
-    // Hàm kiểm tra ngày giống nhau
-    private boolean isSameDay(Date date1, Date date2) {
-        if (date1 == null || date2 == null) return false;
-        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return localDate1.equals(localDate2);
-    }
-
-    // Hàm làm mới cache khuyến mãi
-    private void refreshKhuyenMaiCache(Date selectedDate) {
-        if (cachedKhuyenMai == null || lastCachedDate == null || !isSameDay(selectedDate, lastCachedDate)) {
-            KhuyenMaiBUS kmBus = new KhuyenMaiBUS();
-            cachedKhuyenMai = kmBus.getAllKhuyenMai();
-            lastCachedDate = selectedDate;
+    public void CalcBill(){
+        kmBUS=new KhuyenMaiBUS();
+        Date dateCreateBill= jDateChooser1.getDate();
+        int tongTien = 0;
+        int columnTong = 3;
+        for(int i=0;i<tableListBan.getRowCount();i++){
+             String value = tableListBan.getValueAt(i, columnTong).toString().trim();
+             tongTien+=Integer.parseInt(NumberFormatter.formatReverse(value));
         }
-    }
-
-    // Hàm lấy danh sách khuyến mãi còn hiệu lực
-    private List<KhuyenMaiDTO> getActiveKhuyenMai(Date selectedDate, double tongTien) {
-        refreshKhuyenMaiCache(selectedDate);
-        List<KhuyenMaiDTO> activeKM = new ArrayList<>();
-        for (KhuyenMaiDTO km : cachedKhuyenMai) {
-            if (!selectedDate.before(km.getNgayBatDau()) && !selectedDate.after(km.getNgayKetThuc())
-                && tongTien >= km.getDieuKienToiThieu()) {
- 
-                activeKM.add(km);
-            }
+        KhuyenMaiDTO bestKM= kmBUS.getBestKm(tongTien, dateCreateBill);
+        double giamGia=(bestKM!=null) ? bestKM.getPhanTramGiam() : 0.0;
+        double thanhtoan= tongTien - tongTien*giamGia/100;
+        
+        txfTongTien.setText(NumberFormatter.format(tongTien));
+        txfGiamGia.setText(NumberFormatter.format(tongTien*giamGia/100));
+        txfThanhToan.setText(NumberFormatter.format(thanhtoan));
+        
+        if(bestKM !=null){
+             txfTenKhuyenMai.setText(bestKM.getTenChuongTrinh());
+             txfPhanTramGiam.setText(bestKM.getPhanTramGiam()+"");
+        }else{
+             txfTenKhuyenMai.setText("");
+             txfPhanTramGiam.setText("");
         }
-        return activeKM;
+   
+        
     }
-
-    public void CalcBill() {
-    // Debounce để tránh gọi liên tục
-    long currentTime = System.currentTimeMillis();
-    if (currentTime - lastCalcBillTime < DEBOUNCE_DELAY) {
-        return;
-    }
-    lastCalcBillTime = currentTime;
-
-    int tongTien = 0;
-    int giamGia = 0;
-    int thanhToan = 0;
-    int columnTong = 3;
-
-    // Tính tổng tiền
-    for (int i = 0; i < tableListBan.getRowCount(); i++) {
-        String value = tableListBan.getValueAt(i, columnTong).toString().trim();
-        if (!value.isEmpty()) {
-            try {
-                tongTien += Integer.parseInt(NumberFormatter.formatReverse(value));
-            } catch (NumberFormatException e) {
-                // Bỏ qua lỗi
-            }
-        }
-    }
-
-    // Nếu người dùng nhập giảm giá thủ công thì ưu tiên
-    boolean coNhapGiamGia = false;
-    if (!txfGiamGia.getText().isEmpty()) {
-        try {
-            int giamGiaNhapTay = Integer.parseInt(NumberFormatter.formatReverse(txfGiamGia.getText()));
-            if (giamGiaNhapTay > 0) {
-                giamGia = giamGiaNhapTay;
-                coNhapGiamGia = true;
-            }
-        } catch (NumberFormatException e) {
-            // Bỏ qua lỗi, không có giảm giá hợp lệ
-        }
-    }
-
-    // Nếu không nhập giảm giá, tự tính theo khuyến mãi
-    if (!coNhapGiamGia && tongTien > 0) {
-        Date selectedDate = jDateChooser1.getDate();
-        if (selectedDate != null) {
-            List<KhuyenMaiDTO> danhSachKM = getActiveKhuyenMai(selectedDate, tongTien);
-            if (!danhSachKM.isEmpty()) {
-                // Tìm khuyến mãi tốt nhất
-                KhuyenMaiDTO bestKM = null;
-                double maxPhanTramGiam = 0;
-                for (KhuyenMaiDTO km : danhSachKM) {
-                    if (km.getPhanTramGiam() > maxPhanTramGiam) {
-                        maxPhanTramGiam = km.getPhanTramGiam();
-                        bestKM = km;
-                    }
-                }
-                if (bestKM != null) {
-                    giamGia = (int) (tongTien * bestKM.getPhanTramGiam() / 100.0);
-                    txfTenKhuyenMai.setText(bestKM.getTenChuongTrinh());
-                    txfPhanTramGiam.setText(String.valueOf(bestKM.getPhanTramGiam()));
-                }
-            } else {
-                // Không có khuyến mãi
-                txfTenKhuyenMai.setText("");
-                txfPhanTramGiam.setText("");
-            }
-        }
-    }
-
-    // Tính thành tiền
-    thanhToan = Math.max(tongTien - giamGia, 0);
-
-    // Cập nhật giao diện
-    txfTongTien.setText(NumberFormatter.format(tongTien));
-    txfGiamGia.setText(NumberFormatter.format(giamGia));
-    txfThanhToan.setText(NumberFormatter.format(thanhToan));
-}
-
 
     public boolean CheckEmptyRow() {
         if (tableListBan.getRowCount() == 0) {
@@ -921,7 +840,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
             // Đặt lại ngày mặc định (tùy chọn)
             jDateChooser1.setDate(new Date());
             // Gọi CalcBill để đảm bảo giao diện nhất quán
-            CalcBill();
+//            CalcBill();
         });
     }
 

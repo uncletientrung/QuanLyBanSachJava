@@ -56,8 +56,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
             PXDA.showNameKhandSDT();
     } else if (e.getDocument() == PXDA.getTxfTimSach().getDocument()) { // Nếu nhập vào ô tìm sách
             PXDA.FindBook(PXDA.getTxfTimSachText());
-    }else if(e.getDocument() == PXDA.getTxfGiamGia().getDocument()){
-        PXDA.CalcBill();
     }
     }
 
@@ -68,8 +66,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
             PXDA.showNameKhandSDT();
     } else if (e.getDocument() == PXDA.getTxfTimSach().getDocument()) { // Nếu nhập vào ô tìm sách
             PXDA.FindBook(PXDA.getTxfTimSachText());
-    }else if(e.getDocument() == PXDA.getTxfGiamGia().getDocument()){
-        PXDA.CalcBill();
     }
     }
 
@@ -80,8 +76,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
             PXDA.showNameKhandSDT();
     } else if (e.getDocument() == PXDA.getTxfTimSach().getDocument()) { // Nếu nhập vào ô tìm sách
             PXDA.FindBook(PXDA.getTxfTimSachText());
-    }else if(e.getDocument() == PXDA.getTxfGiamGia().getDocument()){
-        PXDA.CalcBill();
     }
     }
 
@@ -115,7 +109,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
        String sukien=e.getActionCommand();
        JTable tableSach=PXDA.getTableChonSach();
        JTable tableChiTiet=PXDA.getTableListBan();
-       if (sukien.equals("Thêm")){
+       if (sukien.equals("Thêm chi tiết")){
            if(!PXDA.getTxfKhachHang().getText().trim().isEmpty() && !PXDA.getTxtSoLuong().getText().trim().isEmpty()
            && !PXDA.gettTxfDonGia().getText().trim().isEmpty()  && tableSach.getSelectedRow() != -1){
                 String tenSach=tableSach.getValueAt(tableSach.getSelectedRow(), 1).toString();
@@ -183,7 +177,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
            JOptionPane.showMessageDialog(null, "Hãy chọn mục cần xóa!", "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
        }
-       if(sukien.equals("Xóa tất cả")){
+       if(sukien.equals("Làm mới")){
            if(PXDA.getDataBan().getRowCount()!=0){
                 PXDA.getDataBan().setRowCount(0);
                  PXDA.CalcBill();
