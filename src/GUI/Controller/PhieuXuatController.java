@@ -152,7 +152,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
                 PXDDetail = new PhieuXuatDialogDetail(WF, phieu);
                 PxP.refreshTablePx();
             } else {
-                JOptionPane.showMessageDialog(null, "Vui Lòng chọn Hóa đơn muốn xóa", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Vui Lòng chọn hóa đơn muốn xem chi tiêt", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         if (sukien.equals("Hủy bỏ")) {
@@ -164,7 +164,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
                 PXDD = new PhieuXuatDialogDelete(WF, phieu);
                 PxP.refreshTablePx();
             } else {
-                JOptionPane.showMessageDialog(null, "Vui Lòng chọn Hóa đơn muốn xóa", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Vui Lòng chọn hóa đơn muốn xóa", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         if (sukien.equals("Xuất Excel")) {

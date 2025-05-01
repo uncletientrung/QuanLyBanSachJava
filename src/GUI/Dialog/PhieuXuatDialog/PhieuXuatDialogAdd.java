@@ -173,7 +173,7 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
         lbThanhTienV2 = new javax.swing.JLabel();
         txfThanhTienV2 = new javax.swing.JTextField();
         btnXoaV2 = createButton("Xóa", new Color(244, 67, 54)); // Màu đỏ
-        BtnXoaAllV2 = createButton("Làm mới", new Color(244, 67, 54));
+        BtnXoaAllV2 = createButton("Làm mới", new Color(72, 118, 255));
         lbSDT = new javax.swing.JLabel();
         txfSDT = new javax.swing.JTextField();
 
@@ -658,6 +658,10 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     public void setTxfTongTien(JTextField txfTongTien) {
         this.txfTongTien = txfTongTien;
     }
+
+    public JTextField getTxfSoLuong() {
+        return txfSoLuong;
+    }
     
     public JTextField getTxfNhanVien() {
         return txfNhanVien;
@@ -817,7 +821,6 @@ public class PhieuXuatDialogAdd extends javax.swing.JPanel {
     }
     
     public void setUpDefault() {
-        long startTime = System.currentTimeMillis();
         SwingUtilities.invokeLater(() -> {
             // Đặt lại tất cả JTextField
             txfGiaBan.setText("");

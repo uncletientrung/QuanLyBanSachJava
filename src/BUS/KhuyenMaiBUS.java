@@ -123,14 +123,10 @@ public class KhuyenMaiBUS {
         Timestamp dateCreate= new Timestamp(cal.getTimeInMillis());
         
         for (KhuyenMaiDTO km : allKM) {
-             System.err.println(km.getNgayKetThuc());
             if (km.getNgayBatDau().compareTo(dateCreate)<=0 && km.getNgayKetThuc().compareTo(dateCreate)>=0) {
                 activeKM.add(km);
             }
         }
-        System.err.println(allKM);
-        System.err.println(dateCreate);
-        System.err.print(activeKM);
         return activeKM;
     }
     
