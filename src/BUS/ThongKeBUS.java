@@ -3,253 +3,159 @@ package BUS;
 
 import DAO.ChiTietPhieuNhapDAO;
 import DAO.ChiTietPhieuXuatDAO;
-import DAO.KhachHangDAO;
-import DAO.NhanVienDAO;
 import DAO.PhieuNhapDAO;
 import DAO.PhieuXuatDAO;
 import DAO.SachDAO;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.ChiTietPhieuXuatDTO;
 import DTO.KhachHangDTO;
-import DTO.NhanVienDTO;
+import DTO.NhaCungCapDTO;
 import DTO.PhieuNhapDTO;
 import DTO.PhieuXuatDTO;
 import DTO.SachDTO;
+import DTO.ThongKe.ThongKeDoanhThuDTO;
+import DTO.ThongKe.ThongKeKhachHangDTO;
+import DTO.ThongKe.ThongKeNhaCungCapDTO;
+import DTO.ThongKe.ThongKeTheoThangDTO;
+import DTO.ThongKe.ThongKeTonKhoDTO;
+import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
+import GUI.ThongKe.ThongKeTonKho;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
+
+
 
 
 public class ThongKeBUS {
     
-    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    
-    public ArrayList<Long> khtatca(){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(2000, 0, 1);
-        Date calendar2 = new Date();  
-        return khngay(calendar1.getTime(), calendar2);          
-    }
-
-    public ArrayList<Long> khngay(Date a,Date b){
-        ArrayList<KhachHangDTO> listkh=new KhachHangDAO().selectAll();
-        ArrayList<PhieuXuatDTO> listpx=new PhieuXuatDAO().selectAll();
-        ArrayList<PhieuNhapDTO> listpn=new PhieuNhapDAO().selectAll();
-        ArrayList<Long> thongke=new ArrayList();
-        
-        for(KhachHangDTO kh : listkh){
-            long hd = 0, sl = 0, tien = 0,ln=0;
-            String mas;
-            for(PhieuXuatDTO px : listpx)
-                if(px.getMakh()==kh.getMakh() && px.getThoigiantao().getTime()>=a.getTime() && px.getThoigiantao().getTime()<=b.getTime()){
-                    hd++;
-                    tien+=px.getTongTien();
-                    ArrayList<ChiTietPhieuXuatDTO> listctpx=new ChiTietPhieuXuatDAO().selectAll(String.valueOf(px.getMaphieu()));
-                    for(ChiTietPhieuXuatDTO ctpx : listctpx)
-                        sl+=ctpx.getSoluong();  
+    public static ArrayList<ThongKeTungNgayTrongThangDTO> getThongKe7NgayGanNhat(){
+        ArrayList<ThongKeTungNgayTrongThangDTO> temp=new ArrayList<>();
+        ArrayList<PhieuNhapDTO> pn=PhieuNhapDAO.getInstance().selectAll();
+        ArrayList<PhieuXuatDTO> px=PhieuXuatDAO.getInstance().selectAll();
+        LocalDate now=LocalDate.now();
+        LocalDate pass = now.minusDays(7);
+        for (LocalDate i = pass; i.isBefore(now) || i.isEqual(now); i = i.plusDays(1)){
+            int tiennhap=0,doanhthu=0,loinhuan=0;
+            for(PhieuNhapDTO j : pn){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.isEqual(i)){
+                    tiennhap+=j.getTongTien();
                 }
-            for(PhieuNhapDTO pn : listpn){
-                ArrayList<ChiTietPhieuNhapDTO> listctpn=new ChiTietPhieuNhapDAO().selectAll(String.valueOf(pn.getMaphieu()));
-                if(true)
-                for(ChiTietPhieuNhapDTO ctpn : listctpn)                  
-                        ln=ctpn.getDongia();
             }
-                         
-            thongke.add(hd);
-            thongke.add(tien);
-            thongke.add(sl);
-            thongke.add(tien-ln*sl);
-        }
-        return thongke;
-    }
-    
-    public ArrayList<Long> khthang(int a,int b,int c,int d){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(c, a, 1); 
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(d, b, 1); 
-        return khngay(calendar1.getTime(), calendar2.getTime());
-    }
-    
-    public ArrayList<Long> khquy(int a,int b,int c,int d){
-        return khthang(a*3+1 ,b*3+1, c, d);
-     }
-      
-    public ArrayList<Long> khnam(int c,int d){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(c, 0, 1); 
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(d, 0, 1); 
-        return khngay(calendar1.getTime(), calendar2.getTime());
-    }
-     
-    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa      
-
-     
-    public ArrayList<Long> nvtatca(){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(2000, 0, 1);
-        Date calendar2 = new Date();  
-        return nvngay(calendar1.getTime(), calendar2);          
-    }
-
-    public ArrayList<Long> nvngay(Date a,Date b){
-        ArrayList<NhanVienDTO> listkh=new NhanVienDAO().selectAll();
-        ArrayList<PhieuXuatDTO> listpx=new PhieuXuatDAO().selectAll();
-        ArrayList<PhieuNhapDTO> listpn=new PhieuNhapDAO().selectAll();
-        ArrayList<Long> thongke=new ArrayList();
-        
-        for(NhanVienDTO kh : listkh){
-            long hd = 0, sl = 0, tien = 0,ln=0;
-            String mas;
-            for(PhieuXuatDTO px : listpx)
-                if(px.getManv()==kh.getManv() && px.getThoigiantao().getTime()>=a.getTime() && px.getThoigiantao().getTime()<=b.getTime()){
-                    hd++;
-                    tien+=px.getTongTien();
-                    ArrayList<ChiTietPhieuXuatDTO> listctpx=new ChiTietPhieuXuatDAO().selectAll(String.valueOf(px.getMaphieu()));
-                    for(ChiTietPhieuXuatDTO ctpx : listctpx)
-                        sl+=ctpx.getSoluong();  
+            for(PhieuXuatDTO j : px){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.isEqual(i)){
+                    doanhthu+=j.getTongTien();
+                    
                 }
-            for(PhieuNhapDTO pn : listpn){
-                ArrayList<ChiTietPhieuNhapDTO> listctpn=new ChiTietPhieuNhapDAO().selectAll(String.valueOf(pn.getMaphieu()));
-                if(true)
-                for(ChiTietPhieuNhapDTO ctpn : listctpn)                  
-                        ln=ctpn.getDongia();
             }
-                         
-            thongke.add(hd);
-            thongke.add(tien);
-            thongke.add(sl);
-            thongke.add(tien-ln*sl);
+            Date a= Date.from(i.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            temp.add(new ThongKeTungNgayTrongThangDTO(a,tiennhap,doanhthu,loinhuan));
         }
-        return thongke;
+        return temp;
+    }
+   
+    public static ArrayList<ThongKeTonKhoDTO> getTonKho(){
+        ArrayList<ThongKeTonKhoDTO> temp=new ArrayList<>();
+        ArrayList<SachDTO> s=new SachDAO().selectAll();
+        int stt=1;
+        for(SachDTO i : s){
+            if(i.getSoluongton()>0){
+                temp.add(new ThongKeTonKhoDTO(i.getMasach(),i.getTensach(),i.getManxb(),i.getMatacgia(),i.getMatheloai(),i.getSoluongton(),i.getNamxuatban(),i.getDongia(),stt));
+                stt+=1;
+            }
+        }
+        return temp;
     }
     
-    public ArrayList<Long> nvthang(int a,int b,int c,int d){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(c, a, 1); 
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(d, b, 1);    
-        return nvngay(calendar1.getTime(), calendar2.getTime());
-    }
-    
-    public ArrayList<Long> nvquy(int a,int b,int c,int d){
-        return nvthang(a*3+1 ,b*3+1, c, d);
-     }
-      
-    public ArrayList<Long> nvnam(int c,int d){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(c, 0, 1); 
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(d, 0, 1); 
-        return khngay(calendar1.getTime(), calendar2.getTime());
-    }
-     
-    public ArrayList<Long> statca(){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(2000, 0, 1);
-        Date calendar2 = new Date();  
-        return sngay(calendar1.getTime(), calendar2);          
-    }
-
-    public ArrayList<Long> sngay(Date a,Date b){
-        ArrayList<SachDTO> listkh=new SachDAO().selectAll();
-        ArrayList<PhieuXuatDTO> listpx=new PhieuXuatDAO().selectAll();
-        ArrayList<PhieuNhapDTO> listpn=new PhieuNhapDAO().selectAll();
-        ArrayList<Long> thongke=new ArrayList();
+    public static ArrayList<ThongKeNhaCungCapDTO> getThongKeNhaCungCap(LocalDate a,LocalDate b){
+        ArrayList<ThongKeNhaCungCapDTO> temp=new ArrayList<>();
+        ArrayList<PhieuNhapDTO> pn=PhieuNhapDAO.getInstance().selectAll();
         
-        for(SachDTO kh : listkh){
-            long hd = 0, sl = 0, tien = 0,ln=0;           
-            for(PhieuXuatDTO px : listpx)
-                if(px.getThoigiantao().getTime()>=a.getTime() && px.getThoigiantao().getTime()<=b.getTime()){
-                    ArrayList<ChiTietPhieuXuatDTO> listctpx=new ChiTietPhieuXuatDAO().selectAll(String.valueOf(px.getMaphieu()));
-                    for(ChiTietPhieuXuatDTO ctpx : listctpx)
-                        if(kh.getMasach().equals(ctpx.getMasach())){
-                            sl+=ctpx.getSoluong();
-                            tien+=ctpx.getDongia();
+        for(NhaCungCapDTO j : new NhaCungCapBUS().getNhaCungCapAll()){
+            int tien=0,sl=0;
+            for(PhieuNhapDTO i : pn){
+                LocalDate date = i.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.equals(b)||date.equals(a)||(date.isAfter(a)&&date.isBefore(b))){
+                    if(i.getMancc()==j.getMancc()){
+                        tien+=i.getTongTien();
+                        for(ChiTietPhieuNhapDTO k : new ChiTietPhieuNhapDAO().selectAll(String.valueOf(i.getMaphieu()))){
+                            sl+=k.getSoluong();
                         }
+                    }
                 }
-           
-                
-            
-            
-            thongke.add(hd);
-            thongke.add(tien);
-            thongke.add(sl);
-            thongke.add(tien-ln*sl);
+            }
+            temp.add(new ThongKeNhaCungCapDTO(j.getMancc(),j.getTenncc(),sl,tien));
         }
-        return thongke;
+        return temp;
     }
     
-    public ArrayList<Long> sthang(int a,int b,int c,int d){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(c, a, 1); 
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(d, b, 1);    
-        return sngay(calendar1.getTime(), calendar2.getTime());
+    public static ArrayList<ThongKeKhachHangDTO> getThongKeKhachHang(LocalDate a,LocalDate b){
+        ArrayList<ThongKeKhachHangDTO> temp=new ArrayList<>();
+        for(KhachHangDTO i : new KhachHangBUS().getKhachHangAll()){
+            int stt=1;
+            int hd=0,sl=0;
+            long tien=0;
+            for(PhieuXuatDTO j : PhieuXuatDAO.getInstance().selectAll()){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.equals(b)||date.equals(a)||(date.isAfter(a)&&date.isBefore(b))){
+                    if(i.getMakh()==j.getMakh()){
+                        hd++;
+                        tien+=j.getTongTien();
+                        for(ChiTietPhieuXuatDTO k : ChiTietPhieuXuatDAO.getInstance().selectAll(String.valueOf(j.getMaphieu()))){
+                            sl+=k.getSoluong();
+                        }
+                    }
+                }
+            }
+            temp.add(new ThongKeKhachHangDTO(i.getMakh(),i.getHokh()+" "+i.getTenkh(),hd,tien,sl,stt));
+            stt++;
+        }
+        return temp;
     }
     
-    public ArrayList<Long> squy(int a,int b,int c,int d){
-        return sthang(a*3+1 ,b*3+1, c, d);
-     }
-      
-    public ArrayList<Long> snam(int c,int d){
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(c, 0, 1); 
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(d, 0, 1); 
-        return sngay(calendar1.getTime(), calendar2.getTime());
+    public static ArrayList<ThongKeTheoThangDTO> getThongKeTheoThang(int nam){
+        ArrayList<ThongKeTheoThangDTO> temp=new ArrayList<>();
+        LocalDate start=LocalDate.of(nam, 1, 1);
+        LocalDate end=LocalDate.of(nam, 12, 31);
+        
+        for (LocalDate i = start; i.isBefore(end) || i.isEqual(end); i = i.plusMonths(1)){
+            int tiennhap=0,doanhthu=0,loinhuan=0;
+            LocalDate lastDayOfMonth = i.plusMonths(1).minusDays(1);
+            for(PhieuNhapDTO j : PhieuNhapDAO.getInstance().selectAll()){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.isEqual(i)||date.isEqual(lastDayOfMonth)||(date.isBefore(lastDayOfMonth)&&date.isAfter(i))){
+                    tiennhap+=j.getTongTien();
+                }
+            }
+            for(PhieuXuatDTO j : PhieuXuatDAO.getInstance().selectAll()){
+               LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.isEqual(i)||date.isEqual(lastDayOfMonth)||(date.isBefore(lastDayOfMonth)&&date.isAfter(i))){
+                    doanhthu+=j.getTongTien();
+                    
+                }
+            }
+            
+            temp.add(new ThongKeTheoThangDTO(i.getMonthValue(),tiennhap,doanhthu,loinhuan));
+        }
+        return temp;
     }
     
-    // sap xep
-    
-    public ArrayList <Object[]> TheoHoTen(ArrayList <Object[]> list,boolean t){
-        if(t)  Collections.sort(list, (o1, o2) -> ((String)o1[2]).compareTo((String)o2[2]));
-        else   Collections.sort(list, (o1, o2) -> ((String)o2[2]).compareTo((String)o1[2]));
-        return list;
+    public static ArrayList<ThongKeDoanhThuDTO> getThongKeTheoNam(int nam1,int nam2){
+        ArrayList<ThongKeDoanhThuDTO> temp=new ArrayList<>();
+        for(int i=nam1;i<=nam2;i++){
+            long tiennhap=0,doanhthu=0,loinhuan=0;
+            for(ThongKeTheoThangDTO j : getThongKeTheoThang(i)){
+                tiennhap+=j.getChiphi();
+                doanhthu+=j.getDoanhthu();
+                loinhuan+=j.getLoinhuan();
+            }
+            temp.add(new ThongKeDoanhThuDTO(i,tiennhap,doanhthu,loinhuan));
+        
+        }
+        return temp;
     }
-    
-     public ArrayList <Object[]> TheoMa(ArrayList <Object[]> list,boolean t){
-        if(t) Collections.sort(list, (o1, o2) -> Integer.compare((int)o1[1], (int)o2[1]));
-        else  Collections.sort(list, (o1, o2) -> Integer.compare((int)o2[1], (int)o1[1]));
-        return list;
-    }
-     
-     public ArrayList <Object[]> TheoSTT(ArrayList <Object[]> list,boolean t){
-        if(t) Collections.sort(list, (o1, o2) -> Integer.compare((int)o1[0], (int)o2[0]));
-        else  Collections.sort(list, (o1, o2) -> Integer.compare((int)o2[0], (int)o1[0]));
-        return list;
-    }
-    
-    public ArrayList <Object[]> TheoHoaDon(ArrayList <Object[]> list,boolean t){
-        if(t) Collections.sort(list, (o1, o2) -> Long.compare((Long)o1[3], (Long)o2[3]));
-        else  Collections.sort(list, (o1, o2) -> Long.compare((Long)o2[3], (Long)o1[3]));
-        return list;
-    }
-         
-    public ArrayList <Object[]> TheoSach(ArrayList <Object[]> list,boolean t){
-        if(t) Collections.sort(list, (o1, o2) -> Long.compare((Long)o1[4], (Long)o2[4]));
-        else  Collections.sort(list, (o1, o2) -> Long.compare((Long)o2[4], (Long)o1[4]));
-        return list;
-    }
-    
-    public ArrayList <Object[]> TheoDoanhThu(ArrayList <Object[]> list,boolean t){
-        if(t) Collections.sort(list, (o1, o2) -> Long.compare((Long)o1[5], (Long)o2[5]));
-        else  Collections.sort(list, (o1, o2) -> Long.compare((Long)o2[5], (Long)o1[5]));
-        return list;
-    }
-    
-    public ArrayList <Object[]> TheoLN(ArrayList <Object[]> list,boolean t){
-        if(t) Collections.sort(list, (o1, o2) -> Long.compare((Long)o1[6], (Long)o2[6]));
-        else  Collections.sort(list, (o1, o2) -> Long.compare((Long)o2[6], (Long)o1[6]));
-        return list;
-    }
-    
-     public ArrayList <Object[]> TheoMas(ArrayList <Object[]> list,boolean t){
-        if(t)  Collections.sort(list, (o1, o2) -> ((String)o1[1]).compareTo((String)o2[1]));
-        else   Collections.sort(list, (o1, o2) -> ((String)o2[1]).compareTo((String)o1[1]));
-        return list;
-    }
-    
 }
