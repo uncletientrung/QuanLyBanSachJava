@@ -158,4 +158,51 @@ public class ThongKeBUS {
         }
         return temp;
     }
+    
+    public static ArrayList<ThongKeTungNgayTrongThangDTO> getThongKeTuNgayDenNgay(Date a,Date b){
+        ArrayList<ThongKeTungNgayTrongThangDTO> temp=new ArrayList<>();
+        LocalDate from = a.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate to = b.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        for( LocalDate i =from;i.isBefore(to)||i.isEqual(to);i=i.plusDays(1)){
+            int tiennhap=0,doanhthu=0,loinhuan=0;
+            for(PhieuXuatDTO j : new PhieuXuatBUS().getAll()){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.equals(i)){
+                    doanhthu+=j.getTongTien();
+                }
+            }
+            for(PhieuNhapDTO j : new PhieuNhapBUS().getAll()){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.equals(i)){
+                    tiennhap+=j.getTongTien();
+                }
+            }
+            Date date = Date.from(i.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            temp.add(new ThongKeTungNgayTrongThangDTO(date,tiennhap,doanhthu,loinhuan));
+        }
+        return temp;
+    }
+    
+    public static ArrayList<ThongKeTungNgayTrongThangDTO> getThongKeTungNgayTrongThang(int t,int n){
+        ArrayList<ThongKeTungNgayTrongThangDTO> temp=new ArrayList<>();
+        LocalDate from = LocalDate.of(n, t, 1);
+        for( LocalDate i =from;i.isBefore(from.plusMonths(1).minusDays(1))||i.isEqual(from.plusMonths(1).minusDays(1)) ;i=i.plusDays(1)){
+            int tiennhap=0,doanhthu=0,loinhuan=0;
+            for(PhieuXuatDTO j : new PhieuXuatBUS().getAll()){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.equals(i)){
+                    doanhthu+=j.getTongTien();
+                }
+            }
+            for(PhieuNhapDTO j : new PhieuNhapBUS().getAll()){
+                LocalDate date = j.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(date.equals(i)){
+                    tiennhap+=j.getTongTien();
+                }
+            }
+            Date date = Date.from(i.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            temp.add(new ThongKeTungNgayTrongThangDTO(date,tiennhap,doanhthu,loinhuan));
+        }
+        return temp;
+    }
 }
