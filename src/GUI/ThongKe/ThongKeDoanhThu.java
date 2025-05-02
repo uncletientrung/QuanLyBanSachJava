@@ -13,10 +13,10 @@ import javax.swing.JTabbedPane;
 public class ThongKeDoanhThu extends JPanel {
 
     JTabbedPane tabbedPane;
-    //ThongKeDoanhThuTrongThang thongketrongthang;
-    //ThongKeDoanhThuTungNam thongketungnam;
+    ThongKeDoanhThuTrongThang thongketrongthang;
+    ThongKeDoanhThuTungNam thongketungnam;
     ThongKeDoanhThuTungThang thongkedoanhthutungthang;
-    //ThongKeDoanhThuTuNgayDenNgay thongkedoanhthutungaydenngay;
+    ThongKeDoanhThuTuNgayDenNgay thongkedoanhthutungaydenngay;
     Color BackgroundColor = new Color(240, 247, 250);
     ThongKeBUS thongkeBUS;
 
@@ -29,17 +29,17 @@ public class ThongKeDoanhThu extends JPanel {
         this.setLayout(new GridLayout(1, 1));
         this.setBackground(BackgroundColor);
 
-       //thongketrongthang = new ThongKeDoanhThuTrongThang(thongkeBUS);
-        //thongketungnam = new ThongKeDoanhThuTungNam(thongkeBUS);
+       thongketrongthang = new ThongKeDoanhThuTrongThang();
+        thongketungnam = new ThongKeDoanhThuTungNam();
         thongkedoanhthutungthang = new ThongKeDoanhThuTungThang();
-        //thongkedoanhthutungaydenngay = new ThongKeDoanhThuTuNgayDenNgay(thongkeBUS);
+        thongkedoanhthutungaydenngay = new ThongKeDoanhThuTuNgayDenNgay();
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setOpaque(false);
-        //tabbedPane.addTab("Thống kê theo năm", thongketungnam);
+        tabbedPane.addTab("Thống kê theo năm", thongketungnam);
         tabbedPane.addTab("Thống kê từng tháng trong năm", thongkedoanhthutungthang);
-       // tabbedPane.addTab("Thống kê từng ngày trong tháng", thongketrongthang);
-        //tabbedPane.addTab("Thống kê từ ngày đến ngày", thongkedoanhthutungaydenngay);
+        tabbedPane.addTab("Thống kê từng ngày trong tháng", thongketrongthang);
+        tabbedPane.addTab("Thống kê từ ngày đến ngày", thongkedoanhthutungaydenngay);
 
         this.add(tabbedPane);
     }

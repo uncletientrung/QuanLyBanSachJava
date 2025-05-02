@@ -53,9 +53,9 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
     private JScrollPane scrollTableThongKe;
     private DefaultTableModel tblModel;
 
-    public ThongKeDoanhThuTuNgayDenNgay(ThongKeBUS thongkeBUS) {
-        this.thongkeBUS = thongkeBUS;
-        listSp = thongkeBUS.getTonKho();
+    public ThongKeDoanhThuTuNgayDenNgay() {
+        
+        listSp = new ThongKeBUS().getTonKho();
         initComponent();
 
     }
@@ -134,10 +134,8 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
                 try {
                     if (validateSelectDate()) {
                         if (dateFrom.getDate() != null && dateTo.getDate() != null) {
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                            String start = formatter.format(dateFrom.getDate());
-                            String end = formatter.format(dateTo.getDate());
-                            loadThongKeTungNgayTrongThang(start, end);
+                            
+                            loadThongKeTungNgayTrongThang(dateFrom.getDate(), dateTo.getDate());
                         } else {
                             JOptionPane.showMessageDialog(null, "Vui lòng chọn đầy đủ thông tin");
                         }
@@ -183,8 +181,8 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
         return true;
     }
 
-    public void loadThongKeTungNgayTrongThang(String start, String end) {
-        ArrayList<ThongKeTungNgayTrongThangDTO> list = thongkeBUS.getThongKeTuNgayDenNgay(start, end);
+    public void loadThongKeTungNgayTrongThang(Date start, Date end) {
+        ArrayList<ThongKeTungNgayTrongThangDTO> list = new ThongKeBUS().getThongKeTuNgayDenNgay(start, end);
         tblModel.setRowCount(0);
         for (int i = 0; i < list.size(); i++) {
             tblModel.addRow(new Object[]{
