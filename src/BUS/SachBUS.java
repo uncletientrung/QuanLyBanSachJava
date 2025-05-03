@@ -140,4 +140,14 @@ public class SachBUS {
         return maSach.matches("S\\d+"); // Kiểm tra định dạnh S + Number
     }
 
+    public String getTenSachById(String maSach){
+        String result="";
+        for(SachDTO sach: listSach){
+            if(sach.getMasach().equals(maSach)){
+                result=sach.getTensach();
+                return result;
+            }
+        }
+        return result;
+    } 
 }
