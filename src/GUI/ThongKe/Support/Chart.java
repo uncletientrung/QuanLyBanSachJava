@@ -27,70 +27,38 @@ public class Chart extends javax.swing.JPanel {
                 return model.get(index).getLabel();
             }
 
-            @Override
-            public void renderSeries(BlankPlotChart chart, Graphics2D g2, SeriesSize size, int index) {
-                double totalSeriesWidth = (seriesSize * legends.size()) + (seriesSpace * (legends.size() - 1));
-                double x = (size.getWidth() - totalSeriesWidth) / 2;
-                for (int i = 0; i < legends.size(); i++) {
-                    ModelLegend legend = legends.get(i);
-                    GradientPaint gra = new GradientPaint(0, 0, new Color(86, 195, 250), 0, (int) (size.getY() + size.getHeight()), legend.getColor());
-                    g2.setPaint(gra);
-                    double seriesValues = chart.getSeriesValuesOf(model.get(index).getValues()[i], size.getHeight());
-                    g2.fillRect((int) (size.getX() + x), (int) (size.getY() + size.getHeight() - seriesValues), seriesSize, (int) seriesValues);
-                    x += seriesSpace + seriesSize;
-                }
-            }
-
-            @Override
-public void renderSeries(BlankPlotChart chart, Graphics2D g2, SeriesSize size, int index, List<Path2D.Double> gra) {
+       
+           @Override
+public void renderSeries(BlankPlotChart chart, Graphics2D g2, SeriesSize size, int index) {
     double totalSeriesWidth = (seriesSize * legends.size()) + (seriesSpace * (legends.size() - 1));
     double x = (size.getWidth() - totalSeriesWidth) / 2;
+
     for (int i = 0; i < legends.size(); i++) {
         ModelLegend legend = legends.get(i);
-        double seriesValues = chart.getSeriesValuesOf(model.get(index).getValues()[i], size.getHeight());
+        g2.setColor(legend.getColor());  // 🚩 Luôn dùng đúng màu gốc, không đổi
 
-        Path2D.Double path = new Path2D.Double();
-        double px = size.getX() + x;
-        double py = size.getY() + size.getHeight() - seriesValues;
-        path.moveTo(px, py);
-        path.lineTo(px + seriesSize, py);
-        path.lineTo(px + seriesSize, size.getY() + size.getHeight());
-        path.lineTo(px, size.getY() + size.getHeight());
-        path.closePath();
+        double seriesValue = chart.getSeriesValuesOf(model.get(index).getValues()[i], size.getHeight());
 
-        gra.add(path);
-
-        GradientPaint graColor = new GradientPaint(0, 0, new Color(86, 195, 250), 0, (int) (size.getY() + size.getHeight()), legend.getColor());
-        g2.setPaint(graColor);
-        g2.fill(path);
-
+        g2.fillRect(
+            (int) (size.getX() + x),
+            (int) (size.getY() + size.getHeight() - seriesValue),
+            seriesSize,
+            (int) seriesValue
+        );
         x += seriesSpace + seriesSize;
     }
 }
 
 
             @Override
+public void renderSeries(BlankPlotChart chart, Graphics2D g2, SeriesSize size, int index, List<Path2D.Double> gra) {
+   
+}
+
+
+            @Override
 public boolean mouseMoving(BlankPlotChart chart, MouseEvent evt, Graphics2D g2, SeriesSize size, int index) {
-    double totalSeriesWidth = (seriesSize * legends.size()) + (seriesSpace * (legends.size() - 1));
-    double x = (size.getWidth() - totalSeriesWidth) / 2;
-    boolean mouseOver = false;
-
-    for (int i = 0; i < legends.size(); i++) {
-        double px = size.getX() + x;
-        double py = size.getY();
-        double pw = seriesSize;
-        double ph = size.getHeight();
-
-        if (evt.getX() >= px && evt.getX() <= px + pw && evt.getY() >= py && evt.getY() <= py + ph) {
-            mouseOver = true;
-            g2.setColor(new Color(0, 0, 0, 50)); // Highlight màu đen trong suốt
-            g2.fillRect((int) px, (int) py, (int) pw, (int) ph);
-        }
-
-        x += seriesSpace + seriesSize;
-    }
-
-    return mouseOver;
+return false;
 }
 
 
