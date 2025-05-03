@@ -6,6 +6,7 @@ import java.util.Date;
 import DTO.KhuyenMaiDTO;
 import GUI.View.KhuyenMaiPanel;
 import com.toedter.calendar.JDateChooser;
+import GUI.Format.DateFormat;
 
 public class KhuyenMaiDialogUpdate extends JDialog {
     private JTextField txTenChuongTrinh, txHoaDonToiThieu, txPhanTramGiam;
@@ -63,12 +64,7 @@ public class KhuyenMaiDialogUpdate extends JDialog {
         txHoaDonToiThieu.setPreferredSize(new Dimension(200, 30));
         txPhanTramGiam.setPreferredSize(new Dimension(200, 30));
         
-        // Hiển thị dữ liệu từ đối tượng khuyến mãi lên form
-        txTenChuongTrinh.setText(khuyenMai.getTenChuongTrinh());
-        txHoaDonToiThieu.setText(String.valueOf(khuyenMai.getDieuKienToiThieu()));
-        txPhanTramGiam.setText(String.valueOf(khuyenMai.getPhanTramGiam()));
-        dateNgayBatDau.setDate(khuyenMai.getNgayBatDau());
-        dateNgayKetThuc.setDate(khuyenMai.getNgayKetThuc());
+     
 
         gbc.gridx = 0; gbc.gridy = 0;
         pn_input.add(lb_tenChuongTrinh, gbc);
@@ -102,6 +98,15 @@ public class KhuyenMaiDialogUpdate extends JDialog {
 
         pn_button.add(btnXacNhan);
         pn_button.add(btnHuy);
+        
+        // Hiển thị dữ liệu từ đối tượng khuyến mãi lên form
+        txTenChuongTrinh.setText(khuyenMai.getTenChuongTrinh());
+        txHoaDonToiThieu.setText(String.valueOf(khuyenMai.getDieuKienToiThieu()));
+        txPhanTramGiam.setText(String.valueOf(khuyenMai.getPhanTramGiam()));
+        dateNgayBatDau.setDateFormatString("dd-MM-yyyy");
+        dateNgayKetThuc.setDateFormatString("dd-MM-yyyy");
+        dateNgayBatDau.setDate(khuyenMai.getNgayBatDau());
+        dateNgayKetThuc.setDate(khuyenMai.getNgayKetThuc());
 
         // ======= Thêm vào dialog =======
         add(titlePanel, BorderLayout.NORTH);

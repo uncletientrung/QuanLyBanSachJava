@@ -13,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.awt.event.ActionListener;
-
+import GUI.ThongKe.ThongKe;
 /**
  *
  * @author DELL
@@ -176,7 +176,7 @@ public class WorkFrame extends JFrame {
         PanelCard.add(new TaiKhoanPanel(), "Tài khoản");
         PanelCard.add(new KhachhangPanel(), "Khách hàng");
         PanelCard.add(new KhuyenMaiPanel(), "Khuyến mãi");
-        PanelCard.add(new ThongKepanel(this,ChiTietQuyenDAO.getInstance().getDanhSachChucNang(taiKhoan.getManhomquyen())), "Thống kê");
+        PanelCard.add(new ThongKe(), "Thống kê");
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);

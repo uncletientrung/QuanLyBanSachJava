@@ -56,8 +56,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
             PXDA.showNameKhandSDT();
     } else if (e.getDocument() == PXDA.getTxfTimSach().getDocument()) { // Nếu nhập vào ô tìm sách
             PXDA.FindBook(PXDA.getTxfTimSachText());
-    }else if(e.getDocument() == PXDA.getTxfGiamGia().getDocument()){
-        PXDA.CalcBill();
     }
     }
 
@@ -68,8 +66,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
             PXDA.showNameKhandSDT();
     } else if (e.getDocument() == PXDA.getTxfTimSach().getDocument()) { // Nếu nhập vào ô tìm sách
             PXDA.FindBook(PXDA.getTxfTimSachText());
-    }else if(e.getDocument() == PXDA.getTxfGiamGia().getDocument()){
-        PXDA.CalcBill();
     }
     }
 
@@ -80,8 +76,6 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
             PXDA.showNameKhandSDT();
     } else if (e.getDocument() == PXDA.getTxfTimSach().getDocument()) { // Nếu nhập vào ô tìm sách
             PXDA.FindBook(PXDA.getTxfTimSachText());
-    }else if(e.getDocument() == PXDA.getTxfGiamGia().getDocument()){
-        PXDA.CalcBill();
     }
     }
 
@@ -115,14 +109,20 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
        String sukien=e.getActionCommand();
        JTable tableSach=PXDA.getTableChonSach();
        JTable tableChiTiet=PXDA.getTableListBan();
-       if (sukien.equals("Thêm")){
+       if (sukien.equals("Thêm chi tiết")){
            if(!PXDA.getTxfKhachHang().getText().trim().isEmpty() && !PXDA.getTxtSoLuong().getText().trim().isEmpty()
            && !PXDA.gettTxfDonGia().getText().trim().isEmpty()  && tableSach.getSelectedRow() != -1){
                 String tenSach=tableSach.getValueAt(tableSach.getSelectedRow(), 1).toString();
                 // Kiểm tra sách đã thêm vào bên tablechi tiết chưa
                 for(int i=0; i< tableChiTiet.getRowCount();i++){
                     if(tableChiTiet.getValueAt(i, 0).toString().equals(tenSach)){
-                         JOptionPane.showMessageDialog(null, "Sách đã được thêm vào danh sách!!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                        int SoLuongCurrent= Integer.parseInt(tableChiTiet.getValueAt(i, 1).toString());
+                        int SoLuongCongThem=Integer.parseInt(PXDA.getTxfSoLuong().getText().toString());
+                        int DonGiaSach=Integer.parseInt(NumberFormatter.formatReverse(tableChiTiet.getValueAt(i, 2).toString()));
+                         tableChiTiet.setValueAt(SoLuongCurrent+SoLuongCongThem, i, 1);
+                         tableChiTiet.setValueAt((SoLuongCurrent+SoLuongCongThem)*DonGiaSach, i, 3);
+                         PXDA.CalcBill();
+                         
                          return;
                     }
                 }
@@ -183,7 +183,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
            JOptionPane.showMessageDialog(null, "Hãy chọn mục cần xóa!", "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
        }
-       if(sukien.equals("Xóa tất cả")){
+       if(sukien.equals("Làm mới")){
            if(PXDA.getDataBan().getRowCount()!=0){
                 PXDA.getDataBan().setRowCount(0);
                  PXDA.CalcBill();
@@ -192,7 +192,7 @@ public class PhieuXuatDialogAdd_Controller implements DocumentListener,ListSelec
                 PXDA.setUpBlock(true); // truyền lại True để mở khóa
                 PXDA.refreshTableChonSach();
            }else{
-               JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để xóa", "Thông báo", JOptionPane.ERROR_MESSAGE);
+               JOptionPane.showMessageDialog(null, "Danh sách bán chưa có gì để làm mới", "Thông báo", JOptionPane.ERROR_MESSAGE);
            }
            
        }

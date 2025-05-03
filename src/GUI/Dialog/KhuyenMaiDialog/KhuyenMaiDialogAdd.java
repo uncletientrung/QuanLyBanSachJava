@@ -83,8 +83,6 @@ public class KhuyenMaiDialogAdd extends JDialog{
         txHoaDonToiThieu = new JTextField(20);
         txPhanTramGiam = new JTextField(20);
 
-        dcNgayBatDau.setDateFormatString("dd/MM/yyyy");
-        dcNgayKetThuc.setDateFormatString("dd/MM/yyyy");
 
         Dimension fieldSize = new Dimension(200, 30);
         txTenChuongTrinh.setPreferredSize(fieldSize);
@@ -125,6 +123,10 @@ public class KhuyenMaiDialogAdd extends JDialog{
 
         pn_button.add(btnXacNhan);
         pn_button.add(btnHuy);
+        dcNgayBatDau.setDateFormatString("dd-MM-yyyy");
+        dcNgayKetThuc.setDateFormatString("dd-MM-yyyy");
+        dcNgayBatDau.setDate(new Date());
+        dcNgayKetThuc.setDate(new Date());
 
         // ======= Thêm vào dialog =======
         add(titlePanel, BorderLayout.NORTH);

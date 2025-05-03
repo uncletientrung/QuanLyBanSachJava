@@ -51,7 +51,7 @@ public class KhuyenMaiController implements ActionListener,ListSelectionListener
         dialog.setController(controller);
         dialog.setVisible(true);
         
-        
+        kmpn.refreshTable();
     }
         if("Sửa".equals(action)){
         
@@ -65,28 +65,30 @@ public class KhuyenMaiController implements ActionListener,ListSelectionListener
         KhuyenMaiDialogUpdate_Controller controller= new KhuyenMaiDialogUpdate_Controller(dialog, kmpn);
         dialog.setController(controller);
         dialog.setVisible(true);
+        kmpn.refreshTable();
     }
         if("Xóa".equals(action)){
             KhuyenMaiDTO khuyenmaiDTOcanxoa = kmpn.getSelectedKhuyenmai();
-        if (khuyenmaiDTOcanxoa == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhà cung cấp để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Mở dialog xác nhận xóa
-        KhuyenMaiDialogDelete dialog = new KhuyenMaiDialogDelete(wk, khuyenmaiDTOcanxoa);
-        dialog.setVisible(true);
-
-        // Nếu người dùng xác nhận xóa thì thực hiện xóa
-        if (dialog.isXacNhan()) {
-            boolean result = khuyenmaiBUS.deleteKhuyenMai(khuyenmaiDTOcanxoa.getMaKM());
-            if (result) {
-                JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                kmpn.capNhatBang(khuyenmaiBUS.getAllKhuyenMai());
-            } else {
-                JOptionPane.showMessageDialog(null, "Xóa thất bại! Nhóm quyền có thể đang được sử dụng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            if (khuyenmaiDTOcanxoa == null) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn nhà cung cấp để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        }
+
+            // Mở dialog xác nhận xóa
+            KhuyenMaiDialogDelete dialog = new KhuyenMaiDialogDelete(wk, khuyenmaiDTOcanxoa);
+            dialog.setVisible(true);
+
+            // Nếu người dùng xác nhận xóa thì thực hiện xóa
+            if (dialog.isXacNhan()) {
+                boolean result = khuyenmaiBUS.deleteKhuyenMai(khuyenmaiDTOcanxoa.getMaKM());
+                if (result) {
+                    JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    kmpn.capNhatBang(khuyenmaiBUS.getAllKhuyenMai());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Xóa thất bại! Nhóm quyền có thể đang được sử dụng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            kmpn.refreshTable();
     
         }
     }

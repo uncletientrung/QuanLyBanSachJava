@@ -1,0 +1,428 @@
+
+package GUI.ThongKe;
+
+import BUS.KhachHangBUS;
+import BUS.ThongKeBUS;
+import DTO.KhachHangDTO;
+
+import DTO.ThongKe.ThongKeKhachHangDTO;
+import GUI.Dialog.KhachHangDialog.KhachHangDialogDetail_Controller;
+import GUI.ThongKe.Support.ButtonCustom;
+import GUI.ThongKe.Support.Formater;
+import GUI.ThongKe.Support.InputDate;
+import GUI.ThongKe.Support.InputForm;
+import GUI.ThongKe.Support.JTableExporter;
+import GUI.ThongKe.Support.PanelBorderRadius;
+import GUI.ThongKe.Support.TableSorter;
+
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.sql.Date;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
+
+    PanelBorderRadius nhapxuat_left, nhapxuat_center;
+    JTable tblKH;
+    JScrollPane scrollTblTonKho;
+    DefaultTableModel tblModel;
+    InputForm tenkhachhang;
+    InputDate start_date, end_date;
+    ButtonCustom export, reset;
+    ThongKeBUS thongkebus;
+    ArrayList<ThongKeKhachHangDTO> list;
+
+    public ThongKeKhachHang() {
+       
+        list =new ThongKeBUS().getThongKeKhachHang(LocalDate.of(2000,1,1),  LocalDate.now());
+        initComponent();
+        loadDataTable(list);
+    }
+
+    public void initComponent() {
+        this.setLayout(new BorderLayout(10, 10));
+        this.setOpaque(false);
+        this.setBorder(new EmptyBorder(10, 10, 10, 10));
+        nhapxuat_left = new PanelBorderRadius();
+        nhapxuat_left.setPreferredSize(new Dimension(300, 100));
+        nhapxuat_left.setLayout(new BorderLayout());
+        nhapxuat_left.setBorder(new EmptyBorder(0, 0, 0, 5));
+        JPanel left_content = new JPanel(new GridLayout(4, 1));
+        left_content.setPreferredSize(new Dimension(300, 360));
+        nhapxuat_left.add(left_content, BorderLayout.NORTH);
+
+        tenkhachhang = new InputForm("Tìm kiếm khách hàng");
+        tenkhachhang.getTxtForm().putClientProperty("JTextField.showClearButton", true);
+        tenkhachhang.getTxtForm().addKeyListener(this);
+        start_date = new InputDate("Từ ngày");
+        end_date = new InputDate("Đến ngày");
+        start_date.getDateChooser().addPropertyChangeListener(this);
+        end_date.getDateChooser().addPropertyChangeListener(this);
+        JPanel btn_layout = new JPanel(new BorderLayout());
+        JPanel btninner = new JPanel(new GridLayout(1, 2));
+        btninner.setOpaque(false);
+        btn_layout.setPreferredSize(new Dimension(30, 36));
+        btn_layout.setBorder(new EmptyBorder(20, 10, 0, 10));
+        btn_layout.setBackground(Color.white);
+        export = new ButtonCustom("Xuất Excel", "excel", 14);
+        reset = new ButtonCustom("Làm mới", "danger", 14);
+
+        export.addActionListener(this);
+        reset.addActionListener(this);
+
+        btninner.add(export);
+        btninner.add(reset);
+        btn_layout.add(btninner, BorderLayout.NORTH);
+
+        left_content.add(tenkhachhang);
+        left_content.add(start_date);
+        left_content.add(end_date);
+        left_content.add(btn_layout);
+
+        nhapxuat_center = new PanelBorderRadius();
+        BoxLayout boxly = new BoxLayout(nhapxuat_center, BoxLayout.Y_AXIS);
+        nhapxuat_center.setLayout(boxly);
+
+        tblKH = new JTable();
+        scrollTblTonKho = new JScrollPane();
+        tblModel = new DefaultTableModel();
+        String[] header = new String[]{"STT", "Mã khách hàng", "Tên khách hàng", "Số lượng phiếu", "Tổng số tiền","Tổng số sách"};
+        tblModel.setColumnIdentifiers(header);
+        tblKH.setModel(tblModel);
+        tblKH.setAutoCreateRowSorter(true);
+        tblKH.setDefaultEditor(Object.class, null);
+        scrollTblTonKho.setViewportView(tblKH);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tblKH.setDefaultRenderer(Object.class, centerRenderer);
+        tblKH.setFocusable(false);
+        tblKH.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tblKH.getColumnModel().getColumn(1).setPreferredWidth(50);
+        tblKH.getColumnModel().getColumn(2).setPreferredWidth(200);
+        
+        TableSorter.configureTableColumnSorter(tblKH, 0, TableSorter.INTEGER_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tblKH, 1, TableSorter.INTEGER_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tblKH, 2, TableSorter.STRING_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tblKH, 3, TableSorter.INTEGER_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tblKH, 4, TableSorter.VND_CURRENCY_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tblKH, 5, TableSorter.INTEGER_COMPARATOR);
+        
+        nhapxuat_center.add(scrollTblTonKho);
+        
+        tblKH.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Clicked(evt);
+            }
+        });
+        
+        this.add(nhapxuat_left, BorderLayout.WEST);
+        this.add(nhapxuat_center, BorderLayout.CENTER);
+    }
+
+    public boolean validateSelectDate() throws ParseException {
+        java.util.Date time_start = start_date.getDate();
+        java.util.Date time_end = end_date.getDate();
+
+        java.util.Date current_date = new java.util.Date();
+        if (time_start != null && time_start.after(current_date)) {
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+            start_date.getDateChooser().setCalendar(null);
+            return false;
+        }
+        if (time_end != null && time_end.after(current_date)) {
+            JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+            end_date.getDateChooser().setCalendar(null);
+            return false;
+        }
+        if (time_start != null && time_end != null && time_start.after(time_end)) {
+            JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+            end_date.getDateChooser().setCalendar(null);
+            return false;
+        }
+        return true;
+    }
+
+    public void Fillter() throws ParseException {
+        if (validateSelectDate()) {
+            String input = tenkhachhang.getText() != null ? tenkhachhang.getText() : "";
+            java.util.Date time_start = start_date.getDate() != null ? start_date.getDate() : new java.util.Date(0);
+            java.util.Date time_end = end_date.getDate() != null ? end_date.getDate() : new java.util.Date(System.currentTimeMillis());
+            LocalDate localStart = time_start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate localEnd = time_end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            this.list = new ThongKeBUS().getThongKeKhachHang(localStart,localEnd);
+            loadDataTable(list);
+        }
+    }
+
+    public void loadDataTable(ArrayList<ThongKeKhachHangDTO> result) {
+        tblModel.setRowCount(0);
+        int k = 1;
+        for (ThongKeKhachHangDTO i : result) {
+            tblModel.addRow(new Object[]{
+                k, i.getMakh(), i.getTenkh(), i.getSoluongphieu(), Formater.FormatVND(i.getTongtien()),i.getTongsach()
+            });
+            k++;
+        }
+    }
+
+    public void resetForm() throws ParseException {
+        tenkhachhang.setText("");
+        start_date.getDateChooser().setCalendar(null);
+        end_date.getDateChooser().setCalendar(null);
+        Fillter();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == export) {
+            try {
+                JTableExporter.exportJTableToExcel(tblKH);
+            } catch (IOException ex) {
+                Logger.getLogger(ThongKeKhachHang.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (source == reset) {
+            try {
+                resetForm();
+            } catch (ParseException ex) {
+                Logger.getLogger(ThongKeKhachHang.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+         if(tenkhachhang.getDocument().isEmpty()){
+            loadDataTable(list);
+        }
+        else{
+            ArrayList<ThongKeKhachHangDTO> temp=new ArrayList<>();
+            for(ThongKeKhachHangDTO i : list){
+                if(String.valueOf(i.getMakh()).contains(tenkhachhang.getDocument()) ||
+                   i.getTenkh().toUpperCase().contains(tenkhachhang.getDocument().toUpperCase())){
+                    temp.add(i);
+                }
+            }
+            loadDataTable(temp);
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        try {
+            Fillter();
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(ThongKeKhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
+     private void Clicked(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+        if (evt.getClickCount() == 2) {
+            if (tblKH.getSelectedRow() == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn khach hang");
+            } else {
+                int i =  (int) tblKH.getValueAt(tblKH.getSelectedRow(), 0);
+                new ThongKeKhachHang.KhachHangDialogDetail(new JFrame(), list.get(i-1));
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    public class KhachHangDialogDetail extends JDialog{
+    private JTextField txfMa,txfHo,txfTen,txfEmail,txfNgaySinh,txfSdt;
+    public KhachHangDialogDetail(JFrame parent,ThongKeKhachHangDTO a) {
+        super(parent, "Danh mục  xem chi tiết", true);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout(10, 10));
+
+        // Tiêu đề
+        JLabel titleLabel = new JLabel("THÔNG TIN CHI TIẾT", SwingConstants.CENTER);
+        Font titleFont = new Font("Arial", Font.BOLD, 25);
+        titleLabel.setFont(titleFont);
+        titleLabel.setForeground(Color.WHITE);
+        
+        JPanel titlePanel = new JPanel(new BorderLayout()); 
+        titlePanel.setBackground(new Color(72, 118, 255));
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
+        add(titlePanel, BorderLayout.NORTH);
+        
+        // Panel chứa nội dung chính
+        JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        
+        // Panel chứa các label và text field - bố cục ngang
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        
+        Font labelFont = new Font("Arial", Font.BOLD, 14);
+        Font fieldFont = new Font("Arial", Font.PLAIN, 14);
+        
+        // Các Label và TextField
+        JLabel lbMa=new JLabel("Mã : ");            lbMa.setFont(labelFont);
+        JLabel lbHo = new JLabel("ho:");        lbHo.setFont(labelFont);
+        JLabel lbTen= new JLabel("ten:");            lbTen.setFont(labelFont);
+        JLabel lbEmail = new JLabel("email:");     lbEmail.setFont(labelFont);
+        JLabel lbNgaySinh = new JLabel("ngay sinh:");  lbNgaySinh.setFont(labelFont);
+        JLabel lbSdt = new JLabel("sdt:");        lbSdt.setFont(labelFont);
+        
+
+        txfMa= createTextField(fieldFont);
+        txfMa.setEditable(false); // Không cho chỉnh sửa mã sách
+        txfHo = createTextField(fieldFont);
+        txfHo.setEditable(false);
+        txfTen = createTextField(fieldFont);
+        txfTen.setEditable(false);
+        txfEmail = createTextField(fieldFont);
+        txfEmail.setEditable(false);
+        txfNgaySinh = createTextField(fieldFont);
+        txfNgaySinh.setEditable(false);
+        txfSdt = createTextField(fieldFont);
+        txfSdt.setEditable(false);
+        
+        txfMa.setText(String.valueOf(a.getMakh()));
+        for(KhachHangDTO i : new KhachHangBUS().getKhachHangAll()){
+            if(i.getMakh()==a.getMakh()){
+                txfHo.setText(i.getHokh());
+        txfTen.setText(i.getTenkh());
+        txfNgaySinh.setText(String.valueOf(i.getNgaysinh()));
+        txfSdt.setText(i.getSdt());
+        txfEmail.setText(i.getemail());
+            }
+        }
+        
+        
+        // Hàng 1 chứa 4 trường đầu
+        JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        row1Panel.add(createFieldPanel(lbMa, txfMa));
+        row1Panel.add(createFieldPanel(lbHo, txfHo));
+        row1Panel.add(createFieldPanel(lbTen, txfTen));
+        row1Panel.add(createFieldPanel(lbEmail, txfEmail));
+        
+        // Hàng 2 chứa 3 trường còn lại
+        JPanel row2Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        row2Panel.add(createFieldPanel(lbNgaySinh, txfNgaySinh));
+        row2Panel.add(createFieldPanel(lbSdt, txfSdt));
+        
+        
+        formPanel.add(row1Panel);
+        formPanel.add(row2Panel);
+        
+        contentPanel.add(formPanel, BorderLayout.CENTER);
+        add(contentPanel, BorderLayout.CENTER);
+        
+       
+      
+        
+        pack(); // Điều chỉnh kích thước tự động dựa trên nội dung
+        setLocationRelativeTo(parent); // Hiển thị giữa màn hình
+        this.setVisible(true);
+    }
+    
+    private JPanel createFieldPanel(JLabel label, JTextField textField) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(textField, BorderLayout.CENTER);
+        return panel;
+    }
+    
+    private JTextField createTextField(Font font) {
+        JTextField textField = new JTextField(20);
+        textField.setFont(font);
+        textField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(180, 180, 180)),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        return textField;
+    }
+    
+    private JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    
+                // Xác định màu nền dựa trên trạng thái của button
+                Color actualBgColor = bgColor;
+                if (getModel().isPressed()) {
+                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                } else if (getModel().isRollover()) {
+                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                }
+                // Vẽ hình tròn làm nền
+                g2.setColor(actualBgColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
+    
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+        };
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
+        button.setPreferredSize(new Dimension(140, 40));
+    
+        return button;
+    }
+
+}
+}
