@@ -238,10 +238,18 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
 
     @Override
     public void keyReleased(KeyEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            java.util.logging.Logger.getLogger(ThongKeKhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+         if(tenkhachhang.getDocument().isEmpty()){
+            loadDataTable(list);
+        }
+        else{
+            ArrayList<ThongKeKhachHangDTO> temp=new ArrayList<>();
+            for(ThongKeKhachHangDTO i : list){
+                if(String.valueOf(i.getMakh()).contains(tenkhachhang.getDocument()) ||
+                   i.getTenkh().toUpperCase().contains(tenkhachhang.getDocument().toUpperCase())){
+                    temp.add(i);
+                }
+            }
+            loadDataTable(temp);
         }
     }
 

@@ -98,8 +98,8 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
         lblChonNamBatDau = new JLabel("Từ năm");
         lblChonNamKetThuc = new JLabel("Đến năm");
 
-        yearchooser_start = new JTextField("");
-        yearchooser_end = new JTextField("");
+        yearchooser_start = new JTextField("",10);
+        yearchooser_end = new JTextField("",10);
 
         PlainDocument doc_start = (PlainDocument) yearchooser_start.getDocument();
         doc_start.setDocumentFilter(new NumericDocumentFilter());

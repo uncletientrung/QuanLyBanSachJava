@@ -220,10 +220,18 @@ public class ThongKeNhaCungCap extends JPanel implements ActionListener, KeyList
 
     @Override
     public void keyReleased(KeyEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            java.util.logging.Logger.getLogger(ThongKeNhaCungCap.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+       if(tenkhachhang.getDocument().isEmpty()){
+            loadDataTable(list);
+        }
+        else{
+            ArrayList<ThongKeNhaCungCapDTO> temp=new ArrayList<>();
+            for(ThongKeNhaCungCapDTO i : list){
+                if(String.valueOf(i.getMancc()).contains(tenkhachhang.getDocument()) ||
+                   i.getTenncc().toUpperCase().contains(tenkhachhang.getDocument().toUpperCase())){
+                    temp.add(i);
+                }
+            }
+            loadDataTable(temp);
         }
     }
 

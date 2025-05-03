@@ -71,27 +71,30 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
         this.setLayout(new BorderLayout(10, 10));
         this.setOpaque(false);
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
+
         nhapxuat_left = new PanelBorderRadius();
         nhapxuat_left.setPreferredSize(new Dimension(300, 100));
         nhapxuat_left.setLayout(new BorderLayout());
         nhapxuat_left.setBorder(new EmptyBorder(0, 0, 0, 5));
+        nhapxuat_left.setOpaque(false); // Thêm cái này
+
         JPanel left_content = new JPanel(new GridLayout(4, 1));
         left_content.setPreferredSize(new Dimension(300, 360));
+        left_content.setOpaque(false); // Quan trọng
         nhapxuat_left.add(left_content, BorderLayout.NORTH);
 
         tensanpham = new InputForm("Tìm kiếm sản phẩm");
         tensanpham.getTxtForm().putClientProperty("JTextField.showClearButton", true);
-        
-
         tensanpham.getTxtForm().addKeyListener(this);
-       
 
         JPanel btn_layout = new JPanel(new BorderLayout());
-        JPanel btninner = new JPanel(new GridLayout(1, 2));
-        btninner.setOpaque(false);
         btn_layout.setPreferredSize(new Dimension(30, 36));
         btn_layout.setBorder(new EmptyBorder(20, 10, 0, 10));
-        btn_layout.setBackground(Color.white);
+        btn_layout.setOpaque(false); // Đừng set white
+
+        JPanel btninner = new JPanel(new GridLayout(1, 2));
+        btninner.setOpaque(false);
+
         export = new ButtonCustom("Xuất Excel", "excel", 14);
         reset = new ButtonCustom("Làm mới", "danger", 14);
 
@@ -103,10 +106,10 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
         btn_layout.add(btninner, BorderLayout.NORTH);
 
         left_content.add(tensanpham);
-       
         left_content.add(btn_layout);
 
         nhapxuat_center = new PanelBorderRadius();
+        nhapxuat_center.setOpaque(false);
         BoxLayout boxly = new BoxLayout(nhapxuat_center, BoxLayout.Y_AXIS);
         nhapxuat_center.setLayout(boxly);
 
@@ -210,7 +213,19 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
 
     @Override
     public void keyReleased(KeyEvent e) {
-        
+        if(tensanpham.getDocument().isEmpty()){
+            loadDataTalbe(listSp);
+        }
+        else{
+            ArrayList<ThongKeTonKhoDTO> temp=new ArrayList<>();
+            for(ThongKeTonKhoDTO i : listSp){
+                if(i.getMasach().toUpperCase().contains(tensanpham.getDocument().toUpperCase()) ||
+                   i.getTensach().toUpperCase().contains(tensanpham.getDocument().toUpperCase())){
+                    temp.add(i);
+                }
+            }
+            loadDataTalbe(temp);
+        }
     }
 
     @Override
@@ -258,9 +273,9 @@ public class BookDialogDetail extends JDialog{
         // Các Label và TextField
         JLabel lbMasach=new JLabel("Mã sách: ");            lbMasach.setFont(labelFont);
         JLabel lbTensach = new JLabel("Tên sách:");        lbTensach.setFont(labelFont);
-        JLabel lbManxb = new JLabel("Mã NXB:");            lbManxb.setFont(labelFont);
-        JLabel lbMatacgia = new JLabel("Mã tác giả:");     lbMatacgia.setFont(labelFont);
-        JLabel lbMatheloai = new JLabel("Mã thể loại:");  lbMatheloai.setFont(labelFont);
+        JLabel lbManxb = new JLabel("Tên NXB:");            lbManxb.setFont(labelFont);
+        JLabel lbMatacgia = new JLabel("Tên tác giả:");     lbMatacgia.setFont(labelFont);
+        JLabel lbMatheloai = new JLabel("Tên thể loại:");  lbMatheloai.setFont(labelFont);
         JLabel lbSoluong = new JLabel("Số lượng:");        lbSoluong.setFont(labelFont);
         JLabel lbNamxuatban = new JLabel("Năm xuất bản:"); lbNamxuatban.setFont(labelFont);
         JLabel lbDongia = new JLabel("Đơn giá:");          lbDongia.setFont(labelFont);
