@@ -35,7 +35,7 @@ public class ThongKeTongQuan extends JPanel {
     ArrayList<ThongKeTungNgayTrongThangDTO> dataset;
     String[][] getSt = {
         {"Sản phẩm hiện có trong kho", "book-and-person-summer-svgrepo-com.svg", Integer.toString(SachDAO.getInstance().selectAll().size())},
-        {"Khách từ trước đến nay", "stafff.svg", Integer.toString(KhachHangDAO.getInstance().selectAll().size())},
+        {"Khách từ trước đến nay", "stafff.svg", Integer.toString(KhachHangDAO.selectAll().size())},
         {"Nhân viên đang hoạt động", "customerr.svg", Integer.toString(NhanVienDAO.getInstance().selectAll().size())}};
 
     public ThongKeTongQuan() {
