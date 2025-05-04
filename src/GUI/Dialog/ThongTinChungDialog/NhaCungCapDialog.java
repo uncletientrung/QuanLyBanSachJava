@@ -49,7 +49,7 @@ public class NhaCungCapDialog extends JDialog{
 
     public NhaCungCapDialog(JFrame parent) {
         super(parent, "Quản lý Nhà Cung Cấp", true);
-        setSize(1300, 800);
+        setSize(800, 600);
         setResizable(false);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần

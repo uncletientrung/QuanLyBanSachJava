@@ -16,15 +16,18 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
  * @author Minnie
  */
-public class PhieuNhapController implements ActionListener, ChangeListener{
+public class PhieuNhapController implements ActionListener, ChangeListener,DocumentListener{
     
     private PhieuNhapPanel pnp;
     private WorkFrame wf;
@@ -44,17 +47,31 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         String evt = e.getActionCommand();
+        String evtCbb=pnp.getCbbox().getSelectedItem().toString();
         switch (evt) {
             case "Trang chủ":    
                 pnp.getPanelCenter().removeAll(); // Xóa tất cả các thành phần hiện tại trong tab
+                pnp.getBtndelete().setVisible(true);
+                pnp.getBtndetail().setVisible(true);
+                pnp.getBtnexport().setVisible(true);         
+                pnp.getToolBar_Righ().setVisible(true);
                 pnp.getScrollPanePhieuNhap().setViewportView(pnp.getTablePhieuNhap());
+                
                 pnp.getPanelCenter().setLayout(new GridLayout(1,1));
                 pnp.getPanelCenter().add(pnp.getScrollPanePhieuNhap());
                 pnp.refreshTablePn();
+                
+                pnp.getCbbox().setSelectedIndex(0);
+                pnp.getTxfFind().setText("");
                 break;
             case "Thêm":
-                System.out.println("Nut them da duoc nhan chon");
+                
                 pnp.getPanelCenter().removeAll(); // Xóa tất cả các thành phần hiện tại trong tab
+                pnp.getBtndelete().setVisible(false);
+                pnp.getBtndetail().setVisible(false);
+                pnp.getBtnexport().setVisible(false);
+                pnp.getToolBar_Righ().setVisible(false);
+                
                 pnp.getPanelCenter().setLayout(new BorderLayout()); // Đặt layout cho tab
                 
                 // Thêm AddPanel vào PanelCenter
@@ -132,15 +149,47 @@ public class PhieuNhapController implements ActionListener, ChangeListener{
             default:
                 break;
         }
+        if(evtCbb.equals("Hóa đơn thấp đến cao ⬆")){
+            pnBUS=new PhieuNhapBUS();
+            ArrayList<PhieuNhapDTO> list_Sort=pnBUS.LowToHighofBill(pnp.getListpn());
+            pnp.FilterTableData(list_Sort);
+        }else if(evtCbb.equals("Hóa đơn cao đến thấp ⬇")){
+            pnBUS=new PhieuNhapBUS();
+            ArrayList<PhieuNhapDTO> list_Sort=pnBUS.HighToLowofBill(pnp.getListpn());
+            pnp.FilterTableData(list_Sort);
+        }else if(evtCbb.equals("Ngày tạo thấp đến cao ⬆")){
+            pnBUS=new PhieuNhapBUS();
+            ArrayList<PhieuNhapDTO> list_Sort=pnBUS.LowToHighofDate(pnp.getListpn());
+            pnp.FilterTableData(list_Sort);
+        }else if(evtCbb.equals("Ngày tạo cao đến thấp ⬇")){
+            pnBUS=new PhieuNhapBUS();
+            ArrayList<PhieuNhapDTO> list_Sort=pnBUS.HighToLowofDate(pnp.getListpn());
+            pnp.FilterTableData(list_Sort);
+        }else if(evtCbb.equals("Tất cả")){
+            pnp.getTxfFind().setText("");
+            pnp.refreshTablePn();
+        }
        
     }
     
-    
-
-
     @Override
     public void stateChanged(ChangeEvent e) {
         
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        pnp.FindTableData(pnp.getTxfFind().getText());
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+       pnp.FindTableData(pnp.getTxfFind().getText());
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        pnp.FindTableData(pnp.getTxfFind().getText());   
     }
     
     

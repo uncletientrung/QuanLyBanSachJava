@@ -7,7 +7,9 @@ package BUS;
 import DAO.*;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.PhieuNhapDTO;
+import DTO.SachDTO;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -18,6 +20,8 @@ public class PhieuNhapBUS {
     public static SachDAO sDAO;
     private final ChiTietPhieuNhapDAO ctpnDAO = ChiTietPhieuNhapDAO.getInstance();
     public ArrayList<PhieuNhapDTO> list_pn;
+    private NhanVienBUS nvBUS;
+    private NhaCungCapBUS nccBUS;
     
     public PhieuNhapBUS(){
         pnDAO = PhieuNhapDAO.getInstance();
@@ -84,4 +88,41 @@ public class PhieuNhapBUS {
         }
         return result;
     }
+    public ArrayList<PhieuNhapDTO> search(String text){
+        ArrayList<PhieuNhapDTO> result=new  ArrayList<PhieuNhapDTO>();
+        nvBUS =new NhanVienBUS();
+        nccBUS=new NhaCungCapBUS();
+        text=text.toLowerCase();
+        for(PhieuNhapDTO pn: list_pn){
+            String fullNameNV=nvBUS.getHoTenNVById(pn.getManv());
+            String nameNCC=nccBUS.getTenNCC(pn.getMancc());
+            String maPN=String.valueOf(pn.getMaphieu()); // Chuyeenr qua String để dùng hàm contains
+            if(fullNameNV.toLowerCase().contains(text)|| nameNCC.toLowerCase().contains(text)||maPN.toLowerCase().contains(text)){
+                result.add(pn);
+            }
+        }
+        return result;
+    }
+    public ArrayList<PhieuNhapDTO> LowToHighofBill(ArrayList<PhieuNhapDTO> list_can_sort){
+        ArrayList<PhieuNhapDTO> ListSort=list_can_sort;
+        ListSort.sort(Comparator.comparingLong(PhieuNhapDTO::getTongTien));
+        return  ListSort;
+    }
+    public ArrayList<PhieuNhapDTO> HighToLowofBill(ArrayList<PhieuNhapDTO> list_can_sort){
+        ArrayList<PhieuNhapDTO> ListSort=list_can_sort;
+        ListSort.sort(Comparator.comparingLong(PhieuNhapDTO::getTongTien).reversed());
+        return  ListSort;
+    }
+    public ArrayList<PhieuNhapDTO> LowToHighofDate(ArrayList<PhieuNhapDTO> list_can_sort){
+        ArrayList<PhieuNhapDTO> ListSort=list_can_sort;
+        ListSort.sort(Comparator.comparing(PhieuNhapDTO::getThoigiantao));
+        return  ListSort;
+    }
+    public ArrayList<PhieuNhapDTO> HighToLowofDate(ArrayList<PhieuNhapDTO> list_can_sort){
+        ArrayList<PhieuNhapDTO> ListSort=list_can_sort;
+        ListSort.sort(Comparator.comparing(PhieuNhapDTO::getThoigiantao).reversed());
+        return  ListSort;
+    }
+    
+    
 }

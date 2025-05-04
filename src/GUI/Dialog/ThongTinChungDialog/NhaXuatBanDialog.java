@@ -48,7 +48,7 @@ public class NhaXuatBanDialog extends JDialog{
 
     public NhaXuatBanDialog(JFrame parent) {
         super(parent, "Quản lý Nhà Xuất Bản", true);
-        setSize(1300, 800);
+        setSize(800, 600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10)); // Khoảng cách giữa các phần
 

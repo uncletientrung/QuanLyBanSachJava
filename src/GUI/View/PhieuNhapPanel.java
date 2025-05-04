@@ -4,7 +4,11 @@
  */
 package GUI.View;
 import BUS.*;
+import DTO.NhaXuatBanDTO;
 import DTO.PhieuNhapDTO;
+import DTO.SachDTO;
+import DTO.TacGiaDTO;
+import DTO.TheLoaiDTO;
 import GUI.Controller.PhieuNhapController;
 import GUI.Dialog.PhieuNhapDialog.AddPanel;
 import GUI.Format.DateFormat;
@@ -15,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Minnie
  */
 public class PhieuNhapPanel extends JPanel{
-    public ArrayList<PhieuNhapDTO> listpn;
+    private ArrayList<PhieuNhapDTO> listpn;
     private PhieuNhapBUS pnBUS;
     private JTextField txfFind;
     private JComboBox<String> cbbox;
@@ -35,20 +40,28 @@ public class PhieuNhapPanel extends JPanel{
     private JPanel PanelCenter;
     private JScrollPane SPPhieuNhap;
     private JTabbedPane tabbedPane;
-    
+    private JButton btnHome;
+    private JButton btnAdd;
+    private JButton btndelete;
+    private JButton btndetail;
+    private JButton btnexport;
+    private JPanel toolBar_Right;
+    private JButton btnfind;
+            
+            
     public PhieuNhapPanel(){
         // Tạo Panel toolBar cho thanh công cụ trên cùng
         JPanel toolBar = new JPanel(new GridLayout(1, 2));
         JPanel toolBar_Left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
-        JPanel toolBar_Right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 30));
+        toolBar_Right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 30));
         Font font = new Font("Arial", Font.BOLD, 16);
 
         // Tạo các nút CRUD cho JPanel toolBar_Left
-        JButton btnHome = createToolBarButton("Trang chủ", "home.png");
-        JButton btnAdd = createToolBarButton("Thêm", "insert1.png");
-        JButton btndelete = createToolBarButton("Hủy bỏ", "delete.png");
-        JButton btndetail = createToolBarButton("Chi tiết", "detail1.png");
-        JButton btnexport = createToolBarButton("Xuất Excel", "export_excel.png");
+        btnHome = createToolBarButton("Trang chủ", "home.png");
+        btnAdd = createToolBarButton("Thêm", "insert1.png");
+        btndelete = createToolBarButton("Hủy bỏ", "delete.png");
+        btndetail = createToolBarButton("Chi tiết", "detail1.png");
+        btnexport = createToolBarButton("Xuất Excel", "export_excel.png");
         btnHome.setFont(font);
         btnAdd.setFont(font);
         btndelete.setFont(font);
@@ -56,7 +69,7 @@ public class PhieuNhapPanel extends JPanel{
         btnexport.setFont(font);
         
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
-        String[] List_Combobox = {"Tất cả", "Giá thấp đến cao ⬆", "Giá cao đến thấp ⬇", "NXB thấp đến cao ⬆", "NXB cao đến thấp ⬇"};
+        String[] List_Combobox = {"Tất cả", "Hóa đơn thấp đến cao ⬆", "Hóa đơn cao đến thấp ⬇", "Ngày tạo thấp đến cao ⬆", "Ngày tạo cao đến thấp ⬇"};
         cbbox = new JComboBox<String>(List_Combobox);
         cbbox.setPreferredSize(new Dimension(150, 35));
         
@@ -64,7 +77,7 @@ public class PhieuNhapPanel extends JPanel{
         txfFind.setPreferredSize(new Dimension(200, 35));
         txfFind.setForeground(Color.GRAY);
         
-        JButton btnfind = createToolBarButton("", "find.png");
+        btnfind = createToolBarButton("", "find.png");
         btnfind.setPreferredSize(new Dimension(50, 50));
         
         //Tạo JTable cho PhieuNhapPanel
@@ -136,9 +149,13 @@ public class PhieuNhapPanel extends JPanel{
         btndelete.addActionListener(action);
         btnexport.addActionListener(action);
         btnHome.addActionListener(action);
+        cbbox.addActionListener(action);
         
         tabbedPane = new JTabbedPane();
         tabbedPane.addChangeListener((ChangeListener)action);
+        
+        // Thêm document Listener vào txf find
+        txfFind.getDocument().addDocumentListener((DocumentListener) action);
     }
     
    private JButton createToolBarButton(String text,String imageLink) {
@@ -167,11 +184,48 @@ public class PhieuNhapPanel extends JPanel{
                     NumberFormatter.format(pn.getTongTien())});
         }
    }
+   
+   public void FindTableData(String text) {
+        if(txfFind.getText().equals("") && cbbox.getSelectedIndex()==0){
+            refreshTablePn();
+            return;
+        }
+        listpn = new PhieuNhapBUS().search(text);
+        dataPhieuNhap.setRowCount(0);
+        for (PhieuNhapDTO pn : listpn) {
+            String hoTenNV = nvBUS.getHoTenNVById(pn.getManv());
+            String hoTenNCC = nccBUS.getTenNCC(pn.getMancc());
+            if (pn.getTrangthai() == 1 )
+            // Thay đổi dữ liệu trong bảng
+              dataPhieuNhap.addRow(new Object[]{pn.getMaphieu(), hoTenNV, hoTenNCC, DateFormat.fomat(pn.getThoigiantao().toString()), 
+                    NumberFormatter.format(pn.getTongTien())});
+        }
+    }
+   
+   public void FilterTableData(ArrayList<PhieuNhapDTO> list_Sort) {
+        dataPhieuNhap.setRowCount(0);
+        for (PhieuNhapDTO pn : listpn) {
+            String hoTenNV = nvBUS.getHoTenNVById(pn.getManv());
+            String hoTenNCC = nccBUS.getTenNCC(pn.getMancc());
+            if (pn.getTrangthai() == 1 )
+            // Thay đổi dữ liệu trong bảng
+              dataPhieuNhap.addRow(new Object[]{pn.getMaphieu(), hoTenNV, hoTenNCC, DateFormat.fomat(pn.getThoigiantao().toString()), 
+                    NumberFormatter.format(pn.getTongTien())});
+        }
+    }
 
+    public JPanel getToolBar_Righ() {
+        return toolBar_Right;
+    }
+
+    public JButton getBtnfind() {
+        return btnfind;
+    }
+    
     public JTable getTablePhieuNhap(){
          return tablePhieuNhap;
     }
-
+    
     public JScrollPane getScrollPanePhieuNhap(){
         return SPPhieuNhap;
     }
@@ -191,4 +245,39 @@ public class PhieuNhapPanel extends JPanel{
     public void setSPPhieuNhap(JScrollPane sp){
         this.SPPhieuNhap = sp;
     }
+
+    public JTextField getTxfFind() {
+        return txfFind;
+    }
+    
+
+    public JComboBox<String> getCbbox() {
+        return cbbox;
+    }
+
+    public ArrayList<PhieuNhapDTO> getListpn() {
+        return listpn;
+    }
+    
+
+    public JButton getBtnAdd() {
+        return btnAdd;
+    }
+
+    public JButton getBtnHome() {
+        return btnHome;
+    }
+
+    public JButton getBtnexport() {
+        return btnexport;
+    }
+
+    public JButton getBtndelete() {
+        return btndelete;
+    }
+
+    public JButton getBtndetail() {
+        return btndetail;
+    }
+    
 }
