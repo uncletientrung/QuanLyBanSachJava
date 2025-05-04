@@ -10,10 +10,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class GuiSupport {
     
@@ -72,7 +74,7 @@ public class GuiSupport {
         panel.add(textField, BorderLayout.CENTER);
         return panel;
     }
-
+     
     // GUI phan class KhachHangPanel
     public JButton createToolBarButton(String text, String imageLink) {
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/GUI/Image/" + imageLink));
