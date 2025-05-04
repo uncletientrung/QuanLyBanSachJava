@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -62,21 +63,14 @@ public void actionPerformed(ActionEvent e){
         int selectRow = tableB.getSelectedRow();
 
         if (selectRow >= 0) {  // Kiểm tra xem có hàng nào đang được chọn không
-            String ma = tableB.getValueAt(selectRow, 0).toString();
-            String ho= tableB.getValueAt(selectRow, 1).toString();
-            String ten = tableB.getValueAt(selectRow, 2).toString();
-            String email = tableB.getValueAt(selectRow, 3).toString();
-            String ngaysinh = tableB.getValueAt(selectRow, 4).toString();
-            String sdt = tableB.getValueAt(selectRow, 5).toString();
-           
-
-            // Mở hộp thoại sửa và hiển thị thông tin
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+            for(KhachHangDTO i: khf.getListKhachHang() )
+                if(i.getMakh()==(int) tableB.getValueAt(selectRow, 0)){
+                    khdu = new KhachHangDialogUpdate(wk,i);                 
+                    khf.refreshTableData();
+                    break;
+                }
         
-            khdu = new KhachHangDialogUpdate(wk);
-            khdu.ShowInfo(ma, ho, ten, email,ngaysinh, sdt); // Cập nhật dữ liệu trước
-            khdu.setVisible(true); // Hiển thị hộp thoại sau
-            khf.refreshTableData();
+            
             
         } else {
             JOptionPane.showMessageDialog(null, "Hãy chọn một khach hang!", "Thông báo", JOptionPane.ERROR_MESSAGE);
@@ -103,18 +97,12 @@ public void actionPerformed(ActionEvent e){
         JTable tableB = khf.getTable();
         int selectRow = tableB.getSelectedRow();
         System.out.println("Ok");
-        if (selectRow >= 0) {  // Kiểm tra xem có hàng nào đang được chọn không
-             String ma = tableB.getValueAt(selectRow, 0).toString();
-            String ho= tableB.getValueAt(selectRow, 1).toString();
-            String ten = tableB.getValueAt(selectRow, 2).toString();
-            String email = tableB.getValueAt(selectRow, 3).toString();
-            String ngaysinh = tableB.getValueAt(selectRow, 4).toString();
-            String sdt = tableB.getValueAt(selectRow, 5).toString();
-
-            // Mở hộp thoại sửa và hiển thị thông tin
-            khdd = new KhachHangDialogDetail(wk);
-            khdd.ShowInfo(ma, ho, ten, email, ngaysinh,sdt); // Cập nhật dữ liệu trước
-            khdd.setVisible(true); // Hiển thị hộp thoại sau
+        if (selectRow >= 0) { 
+            for(KhachHangDTO i: khf.getListKhachHang() )
+                if(i.getMakh()==(int) tableB.getValueAt(selectRow, 0)){
+                    khdd = new KhachHangDialogDetail(wk,i);
+                    break;
+                }
             
         } else {
             JOptionPane.showMessageDialog(null, "Hãy chọn một khach hang! ","Thông báo", JOptionPane.ERROR_MESSAGE);
