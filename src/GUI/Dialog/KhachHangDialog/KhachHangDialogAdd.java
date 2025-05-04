@@ -163,7 +163,7 @@ public class KhachHangDialogAdd extends JDialog{
         else if("sdt".isEmpty()){
             
         }
-        else if(new KhachHangBUS().add(new KhachHangDTO(KhachHangDAO.getInstance().getAutoIncrement(),txfHo.getText(),txfTen.getText(),txfEmail.getText(),ngaysinh.getDate(),txfSdt.getText()))){
+        else if(new KhachHangBUS().add(new KhachHangDTO(KhachHangBUS.getAutoIncrement(),txfHo.getText(),txfTen.getText(),txfEmail.getText(),ngaysinh.getDate(),txfSdt.getText()))){
             JOptionPane.showMessageDialog(null, "Thêm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         }
