@@ -141,11 +141,11 @@ public class PhieuXuatPanel extends JPanel {
         });
 
         JLabel lblDateStart = new JLabel("Từ:");
-        dateStart = new JDateChooser();
+        dateStart = new JDateChooser(new Date());
         dateStart.setPreferredSize(new Dimension(100, 30));
 
         JLabel lblDateEnd = new JLabel("Đến:");
-        dateEnd = new JDateChooser();
+        dateEnd = new JDateChooser(new Date());
         dateEnd.setPreferredSize(new Dimension(100, 30));
 
         // Thêm vào toolBar_Right (Hàng 1)
