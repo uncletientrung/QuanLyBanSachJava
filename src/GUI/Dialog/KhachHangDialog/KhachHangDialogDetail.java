@@ -1,22 +1,32 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package GUI.Dialog.KhachHangDialog;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import javax.swing.event.AncestorListener;
+import DTO.KhachHangDTO;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
-/**
- *
- * @author DELL
- */
 public class KhachHangDialogDetail extends JDialog{
-    private JTextField txfMa,txfHo,txfTen,txfEmail,txfNgaySinh,txfSdt;
-    public KhachHangDialogDetail(JFrame parent) {
-        super(parent, "Danh mục  xem chi tiết", true);
+    private JTextField txfMa;
+    private JTextField txfHo;
+    private JTextField txfTen;
+    private JTextField txfEmail;
+    private JTextField txfNgaySinh;
+    private JTextField txfSdt;
+    
+    public KhachHangDialogDetail(JFrame parent,KhachHangDTO a) {
+        super(parent, "Danh mục xem chi tiết", true);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 10));
@@ -45,40 +55,37 @@ public class KhachHangDialogDetail extends JDialog{
         Font fieldFont = new Font("Arial", Font.PLAIN, 14);
         
         // Các Label và TextField
-        JLabel lbMa=new JLabel("Mã : ");            lbMa.setFont(labelFont);
-        JLabel lbHo = new JLabel("ho:");        lbHo.setFont(labelFont);
-        JLabel lbTen= new JLabel("ten:");            lbTen.setFont(labelFont);
-        JLabel lbEmail = new JLabel("email:");     lbEmail.setFont(labelFont);
-        JLabel lbNgaySinh = new JLabel("ngay sinh:");  lbNgaySinh.setFont(labelFont);
-        JLabel lbSdt = new JLabel("sdt:");        lbSdt.setFont(labelFont);
-        
+        JLabel lbMa=new JLabel("Mã: ");                      lbMa.setFont(labelFont);
+        JLabel lbHo = new JLabel("ho:");                     lbHo.setFont(labelFont);
+        JLabel lbTen= new JLabel("ten:");                    lbTen.setFont(labelFont);
+        JLabel lbEmail = new JLabel("email:");               lbEmail.setFont(labelFont);
+        JLabel lbNgaySinh = new JLabel("ngày sinh:");        lbNgaySinh.setFont(labelFont);
+        JLabel lbSdt = new JLabel("số điện thoại:");         lbSdt.setFont(labelFont);
 
-        txfMa= createTextField(fieldFont);
-        txfMa.setEditable(false); // Không cho chỉnh sửa mã sách
-        txfHo = createTextField(fieldFont);
+        txfMa= GuiSupport.createTextField(fieldFont);
+        txfMa.setEditable(false); 
+        txfHo = GuiSupport.createTextField(fieldFont);
         txfHo.setEditable(false);
-        txfTen = createTextField(fieldFont);
+        txfTen = GuiSupport.createTextField(fieldFont);
         txfTen.setEditable(false);
-        txfEmail = createTextField(fieldFont);
+        txfEmail = GuiSupport.createTextField(fieldFont);
         txfEmail.setEditable(false);
-        txfNgaySinh = createTextField(fieldFont);
+        txfNgaySinh = GuiSupport.createTextField(fieldFont);
         txfNgaySinh.setEditable(false);
-        txfSdt = createTextField(fieldFont);
+        txfSdt = GuiSupport.createTextField(fieldFont);
         txfSdt.setEditable(false);
-        
-        
+     
         // Hàng 1 chứa 4 trường đầu
         JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-        row1Panel.add(createFieldPanel(lbMa, txfMa));
-        row1Panel.add(createFieldPanel(lbHo, txfHo));
-        row1Panel.add(createFieldPanel(lbTen, txfTen));
-        row1Panel.add(createFieldPanel(lbEmail, txfEmail));
+        row1Panel.add(GuiSupport.createFieldPanel(lbMa, txfMa));
+        row1Panel.add(GuiSupport.createFieldPanel(lbHo, txfHo));
+        row1Panel.add(GuiSupport.createFieldPanel(lbTen, txfTen));
+        row1Panel.add(GuiSupport.createFieldPanel(lbEmail, txfEmail));
         
         // Hàng 2 chứa 3 trường còn lại
         JPanel row2Panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-        row2Panel.add(createFieldPanel(lbNgaySinh, txfNgaySinh));
-        row2Panel.add(createFieldPanel(lbSdt, txfSdt));
-        
+        row2Panel.add(GuiSupport.createFieldPanel(lbNgaySinh, txfNgaySinh));
+        row2Panel.add(GuiSupport.createFieldPanel(lbSdt, txfSdt));      
         
         formPanel.add(row1Panel);
         formPanel.add(row2Panel);
@@ -89,86 +96,29 @@ public class KhachHangDialogDetail extends JDialog{
         // Panel chứa các nút
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JButton deleteButton = createButton("Đóng", new Color(72, 118, 255));
+        JButton deleteButton = GuiSupport.createButton("Đóng", new Color(72, 118, 255));
         buttonPanel.add(deleteButton);
         
         add(buttonPanel, BorderLayout.SOUTH);
-        // Thêm ActionListener vào nút
-        ActionListener action=new KhachHangDialogDetail_Controller(this);
-        deleteButton.addActionListener(action);
         
-        pack(); // Điều chỉnh kích thước tự động dựa trên nội dung
-        setLocationRelativeTo(parent); // Hiển thị giữa màn hình
+        // SU KIEN       
+        deleteButton.addActionListener((ActionEvent e) -> {
+            this.dispose();
+        });
         
-    }
-    
-    private JPanel createFieldPanel(JLabel label, JTextField textField) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(textField, BorderLayout.CENTER);
-        return panel;
-    }
-    
-    private JTextField createTextField(Font font) {
-        JTextField textField = new JTextField(20);
-        textField.setFont(font);
-        textField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(180, 180, 180)),
-            BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-        return textField;
-    }
-    
-    private JButton createButton(String text, Color bgColor) {
-        JButton button = new JButton(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    
-                // Xác định màu nền dựa trên trạng thái của button
-                Color actualBgColor = bgColor;
-                if (getModel().isPressed()) {
-                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
-                } else if (getModel().isRollover()) {
-                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
-                }
-                // Vẽ hình tròn làm nền
-                g2.setColor(actualBgColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
-    
-                super.paintComponent(g2);
-                g2.dispose();
-            }
-        };
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setPreferredSize(new Dimension(140, 40));
-    
-        return button;
-    }
-    public void ShowInfo(String ma,String ho,String ten,String email,String ns,String sdt){
-        System.err.println(ma);
-        txfMa.setText(ma);
-        txfHo.setText(ho);
-        txfTen.setText(ten);
-        txfNgaySinh.setText(ns);
-        txfSdt.setText(sdt);
-        txfEmail.setText(email);
+        // set thong tin
+        txfMa.setText(String.valueOf(a.getMakh()));
+        txfHo.setText(a.getHokh());
+        txfTen.setText(a.getTenkh());
+        txfEmail.setText(a.getemail());
+        txfSdt.setText(a.getSdt());
         
-    }
-
-     public void ShowInfo2(String ma,String ho,String ten,String email,String ns,String sdt){
-        System.err.println(ma);
-        txfMa.setText(ma);
-        txfHo.setText(ho);
-        txfTen.setText(ten);
-        txfNgaySinh.setText(ns);
-        txfSdt.setText(sdt);
-        txfEmail.setText(email);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        txfNgaySinh.setText(sdf.format(a.getNgaysinh()));
+        
+        pack(); 
+        setLocationRelativeTo(parent); 
         this.setVisible(true);
     }
+    
 }
