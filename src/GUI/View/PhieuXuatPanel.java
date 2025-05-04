@@ -141,11 +141,11 @@ public class PhieuXuatPanel extends JPanel {
         });
 
         JLabel lblDateStart = new JLabel("Từ:");
-        dateStart = new JDateChooser(new Date());
+        dateStart = new JDateChooser();
         dateStart.setPreferredSize(new Dimension(100, 30));
 
         JLabel lblDateEnd = new JLabel("Đến:");
-        dateEnd = new JDateChooser(new Date());
+        dateEnd = new JDateChooser();
         dateEnd.setPreferredSize(new Dimension(100, 30));
 
         // Thêm vào toolBar_Right (Hàng 1)
@@ -702,62 +702,56 @@ public class PhieuXuatPanel extends JPanel {
     }
 
     public void Filter() {
-        pxBUS = new PhieuXuatBUS();
+    pxBUS = new PhieuXuatBUS();
 
-        // Lấy danh sách nhân viên được chọn từ checkbox
-        ArrayList<String> list_chosser_nv = new ArrayList<>();
-        for (int i = 0; i < listCBB_NV.size(); i++) {
-            if (nvCheckStates.get(i)) {
-                list_chosser_nv.add(listCBB_NV.get(i)); // Thêm nhân viên nếu trạng thái checkbox là True
-            }
-        }
+    jList_nv.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    jList_kh.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        // Lấy danh sách khách hàng được chọn từ checkbox
-        ArrayList<String> list_chosser_kh = new ArrayList<>();
-        for (int i = 0; i < listCBB_KH.size(); i++) {
-            if (khCheckStates.get(i)) {
-                list_chosser_kh.add(listCBB_KH.get(i)); // Nếu True thì thêm vào
-            }
-        }
+    ArrayList<String> list_chosser_nv = new ArrayList<>(jList_nv.getSelectedValuesList());
+    ArrayList<String> list_chosser_kh = new ArrayList<>(jList_kh.getSelectedValuesList());
 
-        // Xử lý ngày bắt đầu
-        Date dateS = dateStart.getDate();
-        Timestamp dateStartTimestamp =new Timestamp(dateS.getTime());
+    // Xử lý ngày bắt đầu
+    Date dateS = dateStart.getDate();
+    Timestamp dateStartTimestamp = (dateS != null)
+            ? new Timestamp(dateS.getTime())
+            : Timestamp.valueOf("1970-01-01 00:00:00"); // Ngày nhỏ nhất
 
-        // Xử lý ngày kết thúc
-        Date dateE = dateEnd.getDate();
-        Timestamp dateEndTimestamp =new Timestamp(dateE.getTime());
-            
-        // Lấy khoảng giá
-        String minPrice = txfPriceStart.getText().trim();
-        String maxPrice = txfPriceEnd.getText().trim();
+    // Xử lý ngày kết thúc
+    Date dateE = dateEnd.getDate();
+    Timestamp dateEndTimestamp = (dateE != null)
+            ? new Timestamp(dateE.getTime())
+            : Timestamp.valueOf("2100-12-31 23:59:59"); // Ngày lớn nhất
 
-        ArrayList<PhieuXuatDTO> List_sort = new ArrayList<>();
+    // Lấy khoảng giá
+    String minPrice = txfPriceStart.getText().trim();
+    String maxPrice = txfPriceEnd.getText().trim();
 
-        // Lọc dữ liệu
-        for (String nv : list_chosser_nv) {
-            for (String kh : list_chosser_kh) {
-                ArrayList<PhieuXuatDTO> List_PxFilter = pxBUS.Filter(nv, kh, dateStartTimestamp, dateEndTimestamp, minPrice, maxPrice);
-                List_sort.addAll(List_PxFilter);
-            }
-        }
+    ArrayList<PhieuXuatDTO> List_sort = new ArrayList<>();
 
-        // Đổ dữ liệu lên bảng
-        dataPhieuXuat.setRowCount(0);
-        for (PhieuXuatDTO px : List_sort) {
-            String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
-            String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
-            String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
-            dataPhieuXuat.addRow(new Object[]{
-                    px.getMaphieu(),
-                    hoTenNv,
-                    hoTenKh,
-                    DateFormat.fomat(px.getThoigiantao().toString()),
-                    NumberFormatter.format(px.getTongTien()),
-                    trangThai
-            });
+    // Lọc dữ liệu
+    for (String nv : list_chosser_nv) {
+        for (String kh : list_chosser_kh) {
+            ArrayList<PhieuXuatDTO> List_PxFilter = pxBUS.Filter(nv, kh, dateStartTimestamp, dateEndTimestamp, minPrice, maxPrice);
+            List_sort.addAll(List_PxFilter);
         }
     }
+
+    // Đổ dữ liệu lên bảng
+    dataPhieuXuat.setRowCount(0);
+    for (PhieuXuatDTO px : List_sort) {
+        String hoTenNv = nvBUS.getHoTenNVById(px.getManv());
+        String hoTenKh = khBUS.getFullNameKHById(px.getMakh());
+        String trangThai = (px.getTrangthai() == 1) ? "Đã xử lý" : "Chưa được xử lý";
+        dataPhieuXuat.addRow(new Object[]{
+                px.getMaphieu(),
+                hoTenNv,
+                hoTenKh,
+                DateFormat.fomat(px.getThoigiantao().toString()),
+                NumberFormatter.format(px.getTongTien()),
+                trangThai
+        });
+    }
+}
     
      // Lớp tạo giao diện cho mỗi mục trong JList, bao gồm checkbox và tên
     private class CheckBoxKeBenJList extends JPanel implements ListCellRenderer<String> {

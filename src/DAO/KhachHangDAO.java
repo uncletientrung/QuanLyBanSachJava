@@ -1,17 +1,30 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DAO;
-
+import connectDB.JDBCUtil;
+import java.util.ArrayList;
 import  DTO.KhachHangDTO;
 import connectDB.JDBCUtil;
+import DTO.TaiKhoanDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+/**
+ *
+ * @author DELL
+ */
 
 public class KhachHangDAO {
-    
-    public static int insert(KhachHangDTO a){
+    public static KhachHangDAO getInstance(){
+        return new KhachHangDAO();
+    }
+    public int insert(KhachHangDTO a){
         int result=0;
         try{
              Connection con= (Connection) JDBCUtil.getConnection();
@@ -27,12 +40,11 @@ public class KhachHangDAO {
              result=pst.executeUpdate();
              JDBCUtil.closeConnection(con);
         }catch(Exception e){
-            System.out.println("LỖI SQL HÀM insert Ở CLASS KhachHangDAO");
+            Logger.getLogger(KhachHangDAO.class.getName()).log(Level.SEVERE, null, e);
         }        
         return result;
     }
-    
-    public static int update(KhachHangDTO a){
+    public int update(KhachHangDTO a){
         int result=0;
         try{
             Connection con= (Connection) JDBCUtil.getConnection();
@@ -47,12 +59,12 @@ public class KhachHangDAO {
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch(Exception e){
-            System.out.println("LỖI SQL HÀM update Ở CLASS KhachHangDAO");
+            Logger.getLogger(KhachHangDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return  result;
     }
     
-    public static int delete(String a){
+    public int delete(String a){
         int result=0;
         try{
             Connection con= (Connection) JDBCUtil.getConnection();
@@ -62,14 +74,14 @@ public class KhachHangDAO {
             result=pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch(Exception e){
-            System.out.println("LỖI SQL HÀM delete Ở CLASS KhachHangDAO");
+            Logger.getLogger(KhachHangDAO.class.getName()).log(Level.SEVERE,null,e);
         }
         return  result;
     }
     
     public static ArrayList<KhachHangDTO> selectAll(){
+        ArrayList<KhachHangDTO> result= new ArrayList<>();
         try{
-            ArrayList<KhachHangDTO> result= new ArrayList<>();
             Connection con=(Connection) JDBCUtil.getConnection();
             String sql=" SELECT *  FROM khachhang";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
@@ -87,11 +99,10 @@ public class KhachHangDAO {
                 result.add(a);
             }
             JDBCUtil.closeConnection(con);
-            return result;
         }catch(Exception e){
-            System.out.println("LỖI SQL HÀM selectAll Ở CLASS KhachHangDAO");
-            return null;
+            Logger.getLogger(KhachHangDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return result;
     }
     
     public KhachHangDTO selectById(String ma){
@@ -124,5 +135,23 @@ public class KhachHangDAO {
         return result;
     }
     
+    public int getAutoIncrement(){
+        int result=-1;
+        try{
+            Connection con=(Connection) JDBCUtil.getConnection();
+            String sql= "Select Auto_Increment From Information_Schema.tables Where Table_Schema = 'quanlibansach' and Table_name = 'khachhang'";
+             PreparedStatement pst= (PreparedStatement) con.prepareStatement(sql);
+             ResultSet rs=(ResultSet) pst.executeQuery();
+             while(rs.next()){
+                 result=rs.getInt("Auto_Increment");
+             }
+             if(result==-1){
+                 System.out.println("No data, try again!");
+             }
+        }catch (Exception e) {
+            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return  result;
+    }
     
 }

@@ -6,6 +6,7 @@ import BUS.ThongKeBUS;
 import DTO.KhachHangDTO;
 
 import DTO.ThongKe.ThongKeKhachHangDTO;
+import GUI.Dialog.KhachHangDialog.KhachHangDialogDetail_Controller;
 import GUI.ThongKe.Support.ButtonCustom;
 import GUI.ThongKe.Support.Formater;
 import GUI.ThongKe.Support.InputDate;

@@ -1,26 +1,20 @@
+
 package GUI.Dialog.KhachHangDialog;
 
-import BUS.KhachHangBUS;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import javax.swing.text.LabelView;
 
+/**
+ *
+ * @author DELL
+ */
 public class KhachHangDialogDelete extends JDialog{
-    private String ma;
-    
-    public KhachHangDialogDelete(JFrame parent,String ma) { 
+     private String ma;
+     public KhachHangDialogDelete(JFrame parent,String ma) { // Truyền tham số masach vào để xóa  
         super(parent, "Danh mục xóa Khach hang", true);
-        this.ma=ma; 
-        
+        this.ma=ma; // Phải viết sau super (Mọi hàm Constructor phải viết super trước rồi tới mấy cái cần làm)
         setSize(350,150);
         setLocationRelativeTo(null);
         
@@ -28,39 +22,61 @@ public class KhachHangDialogDelete extends JDialog{
         Font font=new Font("Arial", Font.BOLD, 18);
         JPanel panelMain=new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel lbIcon=new JLabel(UIManager.getIcon("OptionPane.informationIcon"));
-        JLabel lbNotice= new JLabel("Bạn có chắn chắn muốn xóa khách hàng này không!!");
+        JLabel lbNotice= new JLabel("Bạn có chắn chắn muốn xóa khach hang này không!!");
         lbNotice.setFont(font);
         panelMain.add(lbIcon);panelMain.add(lbNotice);
         
         //Panel phía dưới phải
         JPanel panelFoot=new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btndelete=GuiSupport.createButton("Xóa",new Color(244, 67, 54));
-        JButton btnclose=GuiSupport.createButton("Đóng",new Color(156, 156, 156));
+        JButton btndelete=createButton("Xóa",new Color(244, 67, 54));
+        JButton btnclose=createButton("Đóng",new Color(156, 156, 156));
         panelFoot.add(btndelete);panelFoot.add(btnclose);
  
         // Thêm 2 Panel trên vào Panel tổng
-        setLayout(new BorderLayout());
-        add(panelMain,BorderLayout.CENTER);
-        add(panelFoot,BorderLayout.SOUTH);
+         setLayout(new BorderLayout());
+         add(panelMain,BorderLayout.CENTER);
+         add(panelFoot,BorderLayout.SOUTH);
+         // Thêm sự kiên vào 2 nút
+         ActionListener action =new KhachHangDialogDelete_Controller(this);
+         btndelete.addActionListener(action);
+         btnclose.addActionListener(action);
          
-         // SU KIEN
-       
-        btndelete.addActionListener((ActionEvent e) -> {
-            if(new KhachHangBUS().deleteById(Integer.parseInt(ma))){
-                JOptionPane.showMessageDialog(null, "Xóa khách hàng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "database không cho phép xóa", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-         
-        btnclose.addActionListener((ActionEvent e) -> {
-            this.dispose();
-        });
-         
-        pack(); 
-        setVisible(true);
+         pack(); // Dùng để căn chỉnh kích thước tự động với các phẩn tử bên trong
+         setVisible(true);
     }
+     private JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     
+                // Xác định màu nền dựa trên trạng thái của button
+                Color actualBgColor = bgColor;
+                if (getModel().isPressed()) {
+                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                } else if (getModel().isRollover()) {
+                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                }
+                // Vẽ hình tròn làm nền
+                g2.setColor(actualBgColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
+    
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+        };
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
+        button.setPreferredSize(new Dimension(80, 30));
+    
+        return button;
+    }
+     public String getMa(){
+         return ma;
+     }
 }
