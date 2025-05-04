@@ -72,5 +72,18 @@ public class GuiSupport {
         panel.add(textField, BorderLayout.CENTER);
         return panel;
     }
-     
+
+    // GUI phan class KhachHangPanel
+    public JButton createToolBarButton(String text, String imageLink) {
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/GUI/Image/" + imageLink));
+        JButton button = new JButton(text, imageIcon); // Đặt ảnh và chữ
+        button.setHorizontalTextPosition(SwingConstants.CENTER); // Căn chữ vào giữa
+        button.setVerticalTextPosition(SwingConstants.BOTTOM); // Đặt chữ dưới ảnh
+        button.setFocusPainted(false); // Bỏ viền khi click
+        button.setBorderPainted(false); // Ẩn viền nút
+        button.setBackground(new Color(240, 240, 240)); // Màu nền nhẹ
+        return button;
+    }
+
+    
 }
