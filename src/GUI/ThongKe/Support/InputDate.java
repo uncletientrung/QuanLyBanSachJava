@@ -5,7 +5,7 @@
 package GUI.ThongKe.Support;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JTextFieldDateEditor;
+//import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -71,8 +71,8 @@ public class InputDate extends JPanel {
         this.date.setDate(date);
     }
 
-    public void setDisable() {
-        JTextFieldDateEditor editor = (JTextFieldDateEditor) date.getDateEditor();
-        editor.setEditable(false);
-    }
+//    public void setDisable() {
+//        JTextFieldDateEditor editor = (JTextFieldDateEditor) date.getDateEditor();
+//        editor.setEditable(false);
+//    }
 }

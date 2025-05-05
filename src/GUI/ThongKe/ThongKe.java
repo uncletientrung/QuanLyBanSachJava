@@ -15,7 +15,7 @@ public final class ThongKe extends JPanel {
     JTabbedPane tabbedPane;
     JPanel tongquan, nhacungcap, khachhang, doanhthu;
     ThongKeTonKho nhapxuat;
-    Color BackgroundColor = new Color(240, 247, 250);
+    Color BackgroundColor = new Color(72, 118, 255); // Màu xanh
     ThongKeBUS thongkeBUS = new ThongKeBUS();
 
     public ThongKe() {
