@@ -32,6 +32,7 @@ public class PhieuNhapBUS {
     public ArrayList<PhieuNhapDTO> getAll(){
         this.list_pn = pnDAO.selectAll();
         return this.list_pn;
+        
     }
 
     public int getLastMaPhieuNhap(){
@@ -48,7 +49,7 @@ public class PhieuNhapBUS {
         pnDAO.insert(pn);
         ctpnDAO.insert(list_ctpn);
         for(ChiTietPhieuNhapDTO ctpn: list_ctpn){
-            int soluong =- (ctpn.getSoluong());
+            int soluong = (ctpn.getSoluong());
             sDAO.UpdateSoLuong(ctpn.getMasach(), soluong);
         }
         list_pn.add(pn); // Thêm phiếu nhập vào mảng sau khi thêm vào database

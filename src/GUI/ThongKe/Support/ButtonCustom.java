@@ -37,7 +37,7 @@ public class ButtonCustom extends JButton {
         this.putClientProperty("JButton.buttonType", "borderless");
         this.setBackground(javax.swing.UIManager.getDefaults().getColor(color));
         this.setFont(new java.awt.Font(FlatRobotoFont.FAMILY, 0, fontsize));
-        this.setForeground(new java.awt.Color(255, 255, 255));
+        this.setForeground(new java.awt.Color(0, 0, 255));
         this.setCursor(new Cursor(Cursor.HAND_CURSOR));
         this.setPreferredSize(new Dimension(width, height));
     }

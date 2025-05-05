@@ -16,9 +16,9 @@ import javax.swing.border.EmptyBorder;
 
 public class itemTaskbar extends JPanel implements MouseListener {
 
-    Color FontColor = new Color(96, 125, 139);
+    Color FontColor = new Color(0, 0, 0);
     Color ColorBlack = new Color(26, 26, 26);
-    Color DefaultColor = new Color(255, 255, 255);
+    Color DefaultColor = new Color(207, 159, 255);
     JLabel lblIcon, pnlContent, pnlSoLuong, pnlContent1;
     JPanel right;
     JLabel img;
@@ -150,7 +150,7 @@ public class itemTaskbar extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (!isSelected) {
-            setBackground(new Color(255, 255, 255));
+            setBackground(new Color(207, 159, 255));
         }
     }
 }

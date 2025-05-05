@@ -16,10 +16,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.ComponentUI;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
 public final class InputForm extends JPanel {
 
     private JLabel lblTitle;

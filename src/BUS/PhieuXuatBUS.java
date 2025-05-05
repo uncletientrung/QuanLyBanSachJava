@@ -10,6 +10,8 @@ import DTO.ChiTietPhieuXuatDTO;
 import DTO.PhieuXuatDTO;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Month;
 /**
  *
  * @author DELL
@@ -81,6 +83,19 @@ public class PhieuXuatBUS {
         }
         return result;
     }
+    
+//    public int tongtientheoNam(int nam){
+//        int result=0;
+//        LocalDate dateS=LocalDate.of(nam, 1, 1);
+//        LocalDate dateE=LocalDate.of(nam, 12, 31);
+//        for (PhieuXuatDTO px: list_px ){
+//            LocalDate date= px.getThoigiantao().toLocalDateTime().toLocalDate();
+//            if(date.compareTo(dateS)>=0 && date.compareTo(dateE)<=0){
+//                result+=px.getTongTien();
+//            }
+//        }
+//        return result;
+//    } 
 }
     
 

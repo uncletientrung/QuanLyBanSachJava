@@ -14,6 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import javax.swing.JLabel;
@@ -34,7 +35,7 @@ public class ThongKeTongQuan extends JPanel {
     private DefaultTableModel tblModel;
     ArrayList<ThongKeTungNgayTrongThangDTO> dataset;
     String[][] getSt = {
-        {"Sản phẩm hiện có trong kho", "book-and-person-summer-svgrepo-com.svg", Integer.toString(SachDAO.getInstance().selectAll().size())},
+        {"Sách hiện có trong kho", "book.svg", Integer.toString(SachDAO.getInstance().selectAll().size())},
         {"Khách từ trước đến nay", "stafff.svg", Integer.toString(KhachHangDAO.getInstance().selectAll().size())},
         {"Nhân viên đang hoạt động", "customerr.svg", Integer.toString(NhanVienDAO.getInstance().selectAll().size())}};
 
@@ -57,6 +58,7 @@ public class ThongKeTongQuan extends JPanel {
                 i.getNgay(), new Formater().FormatVND(i.getChiphi()), Formater.FormatVND(i.getDoanhthu()), Formater.FormatVND(i.getLoinhuan())
             });
         }
+        tableThongKe.setRowHeight(28); // Chỉnh kích thước table  thống kê
     }
 
     private void initComponent() {

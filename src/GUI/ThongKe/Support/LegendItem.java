@@ -17,7 +17,6 @@ public class LegendItem extends javax.swing.JPanel {
         lbName = new javax.swing.JLabel();
 
         lbColor.setText("labelColor1");
-
         lbName.setForeground(new java.awt.Color(100, 100, 100));
         lbName.setText("Name");
 

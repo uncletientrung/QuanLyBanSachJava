@@ -1,6 +1,7 @@
 package GUI.ThongKe.Support;
 
 import GUI.ThongKe.Support.BlankChart.ModelLegend2;
+import java.awt.Color;
 
 public class LegendItem2 extends javax.swing.JPanel {
 

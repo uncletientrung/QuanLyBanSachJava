@@ -20,6 +20,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,8 +58,9 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
     JScrollPane scrollTblTonKho;
     DefaultTableModel tblModel;
     InputForm tensanpham;
-    ButtonCustom export, reset;
+    JButton export, reset;
     ArrayList<ThongKeTonKhoDTO> listSp;
+    private Font font=new Font("Arial", Font.BOLD, 14);
    
 
     public ThongKeTonKho() {
@@ -86,17 +88,18 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
         tensanpham = new InputForm("Tìm kiếm sản phẩm");
         tensanpham.getTxtForm().putClientProperty("JTextField.showClearButton", true);
         tensanpham.getTxtForm().addKeyListener(this);
+        tensanpham.getLblTitle().setFont(font);
 
         JPanel btn_layout = new JPanel(new BorderLayout());
         btn_layout.setPreferredSize(new Dimension(30, 36));
         btn_layout.setBorder(new EmptyBorder(20, 10, 0, 10));
         btn_layout.setOpaque(false); // Đừng set white
 
-        JPanel btninner = new JPanel(new GridLayout(1, 2));
+        JPanel btninner = new JPanel(new GridLayout(1, 2,10,10));
         btninner.setOpaque(false);
 
-        export = new ButtonCustom("Xuất Excel", "excel", 14);
-        reset = new ButtonCustom("Làm mới", "danger", 14);
+        export = createButton("Xuất Excel", new Color(76, 175, 80)); // Sửa lại Jbutton
+        reset = createButton("Làm mới", new Color(72, 118, 255));
 
         export.addActionListener(this);
         reset.addActionListener(this);
@@ -125,6 +128,7 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblTonKho.setDefaultRenderer(Object.class, centerRenderer);
+        tblTonKho.setRowHeight(30);
         tblTonKho.setFocusable(false);
         tblTonKho.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblTonKho.getColumnModel().getColumn(1).setPreferredWidth(10);
@@ -132,7 +136,7 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
 
         TableSorter.configureTableColumnSorter(tblTonKho, 0, TableSorter.INTEGER_COMPARATOR);
         TableSorter.configureTableColumnSorter(tblTonKho, 1, TableSorter.STRING_COMPARATOR);
-         TableSorter.configureTableColumnSorter(tblTonKho, 2, TableSorter.STRING_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tblTonKho, 2, TableSorter.STRING_COMPARATOR);
         TableSorter.configureTableColumnSorter(tblTonKho, 3, TableSorter.INTEGER_COMPARATOR);
        
 
@@ -161,21 +165,13 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
         }
     }
 
-
-
     public void resetForm() throws ParseException {
         tensanpham.setText("");
-        
-        
     }
-
-   
-
+    
     private void loadDataTalbe(ArrayList<ThongKeTonKhoDTO> list) {
-        tblModel.setRowCount(0);
-   
-        for (ThongKeTonKhoDTO i : list) {
-            
+        tblModel.setRowCount(0);   
+        for (ThongKeTonKhoDTO i : list) {    
             tblModel.addRow(new Object[]{
                 i.getStt(), i.getMasach(),i.getTensach(), i.getSoluongton()
             });
@@ -195,6 +191,7 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
         } else if (source == reset) {
             try {
                 resetForm();
+                loadDataTalbe(new ThongKeBUS().getTonKho());
             } catch (ParseException ex) {
                 Logger.getLogger(ThongKeTonKho.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -235,9 +232,6 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
     
     
     
-    
-
-
 public class BookDialogDetail extends JDialog{
     private JTextField txfMasach,txfTensach,txfManxb,txfMatacgia,txfMatheloai,txfSoluong,txfNamxuatban,txfDongia,stt;
     
@@ -321,7 +315,7 @@ public class BookDialogDetail extends JDialog{
         contentPanel.add(formPanel, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
         
-          txfMasach.setText(a.getMasach());
+        txfMasach.setText(a.getMasach());
         txfTensach.setText(a.getTensach());
         txfManxb.setText(a.getManxb());
         txfMatacgia.setText(a.getMatacgia());
@@ -356,7 +350,10 @@ public class BookDialogDetail extends JDialog{
         return textField;
     }
     
-    private JButton createButton(String text, Color bgColor) {
+ 
+    }
+
+        public JButton createButton(String text, Color bgColor) {
         JButton button = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -385,10 +382,9 @@ public class BookDialogDetail extends JDialog{
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setPreferredSize(new Dimension(140, 40));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     
         return button;
     }
-    
-}
 
 }

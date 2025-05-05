@@ -56,13 +56,18 @@ public class InputDate extends JPanel {
     public Date getDate() throws ParseException {
         Date dt = date.getDate();
         if (dt != null) {
-            String txt_date = dateFormat.format(dt);
-            return dateFormat.parse(txt_date);
+//            String txt_date = dateFormat.format(dt);
+//            return dateFormat.parse(txt_date);
+            return dt;
         } else {
             return null;
         }
     }
 
+    public JLabel getLbltitle() {
+        return lbltitle;
+    }
+    
     public void setDate(JDateChooser date) {
         this.date = date;
     }

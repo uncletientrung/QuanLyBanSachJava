@@ -203,6 +203,7 @@ public class ThongKeBUS {
                 }
             }
             Date date = Date.from(i.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            loinhuan=doanhthu-tiennhap;
             temp.add(new ThongKeTungNgayTrongThangDTO(date,tiennhap,doanhthu,loinhuan));
         }
         return temp;
@@ -228,44 +229,71 @@ public class ThongKeBUS {
             Date date = Date.from(i.atStartOfDay(ZoneId.systemDefault()).toInstant());
             temp.add(new ThongKeTungNgayTrongThangDTO(date,tiennhap,doanhthu,loinhuan));
         }
-        ArrayList<Integer> list=getthongketheoquy(2025);
         return temp;
     }
+//    
+//    public static ArrayList<Integer> getthongketheoquy(int nam){
+//        ArrayList<Integer> result= new ArrayList<>();
+//        int quy1=0,quy2=0,quy3,quy4=0;
+//        LocalDate DateS= LocalDate.of(nam, 1, 1);
+//        LocalDate DateE=LocalDate.of(nam,12, 31);
+//        int loinhuan=0;
+//        ArrayList<PhieuXuatDTO> list_px=new PhieuXuatDAO().selectAll();
+//        for(LocalDate i=DateS ; i.isBefore(DateE)|| i.equals(DateE); i= i.plusMonths(1) ){
+//            LocalDate LastDayofMoth=i.plusMonths(1).minusDays(1);
+//            for(PhieuXuatDTO px: list_px){
+//                LocalDate datePX=px.getThoigiantao().toLocalDateTime().toLocalDate();
+//                if(datePX.compareTo(i) >=0 && datePX.compareTo(LastDayofMoth)<=0){
+//                    loinhuan+=px.getTongTien();
+//                }
+//            }
+//            if(LastDayofMoth.getMonthValue()==3){
+//                quy1=loinhuan;
+//                result.add(quy1);
+//                loinhuan=0;
+//            }else if(LastDayofMoth.getMonthValue()==6){
+//                quy2=loinhuan;
+//                result.add(quy2);
+//                loinhuan=0;
+//            }else if(LastDayofMoth.getMonthValue()==(9)){
+//                quy3=loinhuan;
+//                result.add(quy3);
+//                loinhuan=0;
+//            }else if(LastDayofMoth.getMonthValue()==(12)){
+//                quy4=loinhuan;
+//                result.add(quy4);
+//                loinhuan=0;
+//            }
+//        }
+//        return  result;
+//    }
+    // Thống kê từng này trong năm, tháng
+//    public static ArrayList<ThongKeTungNgayTrongThangDTO> abc(int moth, int year){
+//        ArrayList<ThongKeTungNgayTrongThangDTO> result= new ArrayList<>();
+//        LocalDate dateS=LocalDate.of(year, moth, 1);
+//        LocalDate dateE=dateS.plusMonths(1).minusDays(1);
+//        ArrayList<PhieuXuatDTO> list_px=new PhieuXuatDAO().selectAll();
+//        ArrayList<PhieuNhapDTO> list_pn=new PhieuNhapDAO().selectAll();
+//        for(LocalDate i=dateS; i.compareTo(dateE)<=0;i=i.plusDays(1)){
+//            long chiphi=0,doanhthu=0,loinhuan=0;
+//            for (PhieuXuatDTO px: list_px){
+//                LocalDate date_px=px.getThoigiantao().toLocalDateTime().toLocalDate();
+//                if(date_px.equals(i)){
+//                    doanhthu+=px.getTongTien();
+//                }
+//            }
+//            for(PhieuNhapDTO pn: list_pn){
+//                LocalDate date_px=pn.getThoigiantao().toLocalDateTime().toLocalDate();
+//                if(date_px.equals(i)){
+//                    chiphi+=pn.getTongTien();
+//                }
+//            }
+//            loinhuan=doanhthu-chiphi;
+//            Date d=Date.from(i.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//            result.add(new ThongKeTungNgayTrongThangDTO(d,(int)chiphi,(int)doanhthu,(int)loinhuan));
+//        }
+//        return result;
+//    }
     
-    public static ArrayList<Integer> getthongketheoquy(int nam){
-        ArrayList<Integer> result= new ArrayList<>();
-        int quy1=0,quy2=0,quy3,quy4=0;
-        LocalDate DateS= LocalDate.of(nam, 1, 1);
-        LocalDate DateE=LocalDate.of(nam,12, 31);
-        int loinhuan=0;
-        ArrayList<PhieuXuatDTO> list_px=new PhieuXuatDAO().selectAll();
-        for(LocalDate i=DateS ; i.isBefore(DateE)|| i.equals(DateE); i= i.plusMonths(1) ){
-            LocalDate LastDayofMoth=i.plusMonths(1).minusDays(1);
-            for(PhieuXuatDTO px: list_px){
-                LocalDate datePX=px.getThoigiantao().toLocalDateTime().toLocalDate();
-                if(datePX.compareTo(i) >=0 && datePX.compareTo(LastDayofMoth)<=0){
-                    loinhuan+=px.getTongTien();
-                }
-            }
-            if(LastDayofMoth.getMonthValue()==3){
-                quy1=loinhuan;
-                result.add(quy1);
-                loinhuan=0;
-            }else if(LastDayofMoth.getMonthValue()==6){
-                quy2=loinhuan;
-                result.add(quy2);
-                loinhuan=0;
-            }else if(LastDayofMoth.getMonthValue()==(9)){
-                quy3=loinhuan;
-                result.add(quy3);
-                loinhuan=0;
-            }else if(LastDayofMoth.getMonthValue()==(12)){
-                quy4=loinhuan;
-                result.add(quy4);
-                loinhuan=0;
-            }
-        }
-        System.err.println(result.toString());
-        return  result;
-    }
+    
 }

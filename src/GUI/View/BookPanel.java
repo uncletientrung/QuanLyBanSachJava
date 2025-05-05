@@ -128,7 +128,7 @@ public class BookPanel extends JPanel {
         tableBook.getColumnModel().getColumn(5).setPreferredWidth(30);
         tableBook.getColumnModel().getColumn(6).setPreferredWidth(30);
         tableBook.getColumnModel().getColumn(7).setPreferredWidth(60);
-
+        
         // Tạo ScrollPane cho Table để tên cột column hiện
         JScrollPane SPBook = new JScrollPane(tableBook);
 
