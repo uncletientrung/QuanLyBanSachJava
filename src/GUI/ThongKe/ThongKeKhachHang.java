@@ -41,10 +41,11 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.sql.Date;
+import java.util.Date;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -63,9 +64,10 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
     DefaultTableModel tblModel;
     InputForm tenkhachhang;
     InputDate start_date, end_date;
-    ButtonCustom export, reset;
+    JButton export, reset;
     ThongKeBUS thongkebus;
     ArrayList<ThongKeKhachHangDTO> list;
+    private Font font=new Font("Arial", Font.BOLD, 14);
 
     public ThongKeKhachHang() {
        
@@ -89,18 +91,25 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
         tenkhachhang = new InputForm("Tìm kiếm khách hàng");
         tenkhachhang.getTxtForm().putClientProperty("JTextField.showClearButton", true);
         tenkhachhang.getTxtForm().addKeyListener(this);
+        tenkhachhang.getLblTitle().setFont(font); // Thêm font
+        
         start_date = new InputDate("Từ ngày");
         end_date = new InputDate("Đến ngày");
+        
+         start_date.getLbltitle().setFont(font); // Thêm font
+        end_date.getLbltitle().setFont(font); // Thêm font
+        
         start_date.getDateChooser().addPropertyChangeListener(this);
         end_date.getDateChooser().addPropertyChangeListener(this);
         JPanel btn_layout = new JPanel(new BorderLayout());
-        JPanel btninner = new JPanel(new GridLayout(1, 2));
+        JPanel btninner = new JPanel(new GridLayout(1, 2,10,10));
         btninner.setOpaque(false);
         btn_layout.setPreferredSize(new Dimension(30, 36));
         btn_layout.setBorder(new EmptyBorder(20, 10, 0, 10));
         btn_layout.setBackground(Color.white);
-        export = new ButtonCustom("Xuất Excel", "excel", 14);
-        reset = new ButtonCustom("Làm mới", "danger", 14);
+        
+        export = createButton("Xuất Excel", new Color(76, 175, 80)); // Sửa lại thành createButton 
+        reset = createButton("Làm mới", new Color(72, 118, 255)); // Sửa lại thành createButton 
 
         export.addActionListener(this);
         reset.addActionListener(this);
@@ -131,6 +140,7 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblKH.setDefaultRenderer(Object.class, centerRenderer);
         tblKH.setFocusable(false);
+        tblKH.setRowHeight(30);
         tblKH.getColumnModel().getColumn(0).setPreferredWidth(10);
         tblKH.getColumnModel().getColumn(1).setPreferredWidth(50);
         tblKH.getColumnModel().getColumn(2).setPreferredWidth(200);
@@ -153,6 +163,12 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
         
         this.add(nhapxuat_left, BorderLayout.WEST);
         this.add(nhapxuat_center, BorderLayout.CENTER);
+        
+        // Cài đặt ngày mặc định của dateS và dateE
+        Calendar cal=Calendar.getInstance();
+        cal.set(2025, Calendar.JANUARY,1);
+        start_date.getDateChooser().setDate(cal.getTime());
+        end_date.getDateChooser().setDate(new Date());
     }
 
     public boolean validateSelectDate() throws ParseException {
@@ -162,17 +178,19 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
         java.util.Date current_date = new java.util.Date();
         if (time_start != null && time_start.after(current_date)) {
             JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            start_date.getDateChooser().setCalendar(null);
+            Calendar cal=Calendar.getInstance();
+            cal.set(2025, Calendar.JANUARY,1);
+            start_date.getDateChooser().setDate(cal.getTime());
             return false;
         }
         if (time_end != null && time_end.after(current_date)) {
             JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            end_date.getDateChooser().setCalendar(null);
+            end_date.getDateChooser().setDate(new Date());
             return false;
         }
         if (time_start != null && time_end != null && time_start.after(time_end)) {
             JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            end_date.getDateChooser().setCalendar(null);
+            end_date.getDateChooser().setDate(new Date());
             return false;
         }
         return true;
@@ -203,8 +221,11 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
 
     public void resetForm() throws ParseException {
         tenkhachhang.setText("");
-        start_date.getDateChooser().setCalendar(null);
-        end_date.getDateChooser().setCalendar(null);
+        Calendar cal = Calendar.getInstance(); // Cài lại ngày bắt đầu  khi ấn reset
+        cal.set(2025, Calendar.JANUARY, 1);
+        start_date.getDateChooser().setDate(cal.getTime());
+        end_date.getDateChooser().setDate(new Date());
+        list = new ThongKeBUS().getThongKeKhachHang(LocalDate.of(2025,1,1), LocalDate.now()); // Reset lại table khi reset
         Fillter();
     }
 
@@ -425,4 +446,37 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
     }
 
 }
+    public JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    
+                // Xác định màu nền dựa trên trạng thái của button
+                Color actualBgColor = bgColor;
+                if (getModel().isPressed()) {
+                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                } else if (getModel().isRollover()) {
+                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                }
+                // Vẽ hình tròn làm nền
+                g2.setColor(actualBgColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
+    
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+        };
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
+        button.setPreferredSize(new Dimension(140, 40));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+    
+        return button;
+    }
 }
