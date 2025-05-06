@@ -670,13 +670,6 @@ public class AddPanel extends JPanel{
                 JOptionPane.showMessageDialog(this, "Số lượng nhập không hợp lệ!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            // Kiểm tra số lượng tồn
-            int soLuongTonInt = Integer.parseInt(soLuongTon.replace(",", ""));
-            if (soLuongNhap > soLuongTonInt) {
-                JOptionPane.showMessageDialog(this, "Số lượng nhập không được vượt quá số lượng tồn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
             
             // Tính thành tiền
             int giaNhap = Integer.parseInt(txfGiaNhap.getText().trim());
@@ -867,6 +860,7 @@ public class AddPanel extends JPanel{
                     list_ctpn.add(ctpn);
                 }
                 phieuNhapBUS.insert(pnNew, list_ctpn);
+                
                 boolean success = true; 
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Nhập hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -908,15 +902,18 @@ public class AddPanel extends JPanel{
                 dialog.setVisible(true);
 
         // Sau khi hiển thị thông tin, reset dữ liệu
-        dialog.dispose();
         // Cập nhật hiển thị số lượng được nhập thêm cho sách trong bảng jTable4
-        for (ChiTietPhieuNhapDTO ctpn : list_ctpn) {
-            String maSach = ctpn.getMasach();
-            int soLuongNhap = ctpn.getSoluong();
-            sachBUS.updateSoLuongTon(maSach, soLuongNhap); // Cập nhật số lượng tồn trong cơ sở dữ liệu
-        }
-        
-
+                for (ChiTietPhieuNhapDTO ctpn : list_ctpn) {
+                    for (SachDTO sach : listSach) {
+                            if (sach.getMasach().equals(ctpn.getMasach())) {
+                                int soLuongTon = sach.getSoluongton() + ctpn.getSoluong();
+                                sach.setSoluongton(soLuongTon);
+                                jTable4.setValueAt(NumberFormatter.format(soLuongTon), listSach.indexOf(sach), 3); // Cập nhật số lượng tồn trong bảng
+                                break;
+                            }
+                        }
+                    }
+        dialog.dispose();
         model.setRowCount(0);
         txfMaPhieuNhap.setText(String.valueOf(Integer.parseInt(maPhieuNhap) + 1)); // Tăng mã phiếu nhập
         lbThanhTien.setText("0đ");

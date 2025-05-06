@@ -150,13 +150,4 @@ public class SachBUS {
         }
         return result;
     }
-
-    public void updateSoLuongTon(String maSach, int soLuongTon){
-        for(SachDTO sach: listSach){
-            if(sach.getMasach().equals(maSach)){
-                sach.setSoluongton(soLuongTon);
-                sDAO.update(sach);
-            }
-        }
-    }
 }

@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+
 public class PhieuNhapDialogAdd extends JDialog {
     public PhieuNhapDialogAdd(Frame parent, String maPhieuNhap, String nhanVienNhap, String nhaCungCap, int tongTien, ArrayList<Object[]> chiTietPhieuNhap) {
         super(parent, "Thông tin phiếu nhập", true);
@@ -52,7 +53,6 @@ public class PhieuNhapDialogAdd extends JDialog {
 
         JButton btnClose = new JButton("Đóng");
         btnClose.addActionListener(e -> {
-            setVisible(false);
             dispose();
         });
 
