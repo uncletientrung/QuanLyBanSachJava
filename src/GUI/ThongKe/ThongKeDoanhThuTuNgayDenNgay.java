@@ -14,16 +14,23 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -52,11 +59,14 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
     private JTable tableThongKe;
     private JScrollPane scrollTableThongKe;
     private DefaultTableModel tblModel;
-
+    private Font font=new Font("Arial", Font.BOLD, 12);
+    private Date currentDate= new Date();
     public ThongKeDoanhThuTuNgayDenNgay() {
         
         listSp = new ThongKeBUS().getTonKho();
         initComponent();
+
+        loadThongKeTungNgayTrongThang(currentDate, currentDate);
 
     }
 
@@ -67,29 +77,27 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
 
         pnl_top = new JPanel(new FlowLayout());
         JLabel lblFrom = new JLabel("Từ ngày");
+        lblFrom.setFont(font);
         dateFrom = new JDateChooser();
+        dateFrom.setPreferredSize(new Dimension(100, 25));
         dateFrom.setDateFormatString("dd/MM/yyyy");
         JLabel lblTo = new JLabel("Đến ngày");
+        lblTo.setFont(font);
         dateTo = new JDateChooser();
+        dateTo.setPreferredSize(new Dimension(100, 25));
         dateTo.setDateFormatString("dd/MM/yyyy");
-        btnThongKe = new JButton("Thống kê");
-        btnReset = new JButton("Làm mới");
-        btnExport = new JButton("Xuất Excel");
+        btnThongKe = createButton("Thống kê",new Color(72, 118, 255));
+        btnReset = createButton("Làm mới",new Color(72, 118, 255));
+        btnExport = createButton("Xuất Excel", new Color(76, 175, 80));
         pnl_top.add(lblFrom);
         pnl_top.add(dateFrom);
         pnl_top.add(lblTo);
         pnl_top.add(dateTo);
         pnl_top.add(btnThongKe);
-        pnl_top.add(btnExport);
         pnl_top.add(btnReset);
+        pnl_top.add(btnExport);
 
-        btnExport.addActionListener((ActionEvent e) -> {
-            try {
-                JTableExporter.exportJTableToExcel(tableThongKe);
-            } catch (IOException ex) {
-                Logger.getLogger(ThongKeDoanhThuTuNgayDenNgay.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+
 
         dateFrom.addPropertyChangeListener("date", e -> {
             Date date = (Date) e.getNewValue();
@@ -117,6 +125,7 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
         String[] header = new String[]{"Ngày", "Chi phí", "Doanh thu", "Lợi nhuận"};
         tblModel.setColumnIdentifiers(header);
         tableThongKe.setModel(tblModel);
+        tableThongKe.setRowHeight(37);
         tableThongKe.setAutoCreateRowSorter(true);
         tableThongKe.setDefaultEditor(Object.class, null);
         scrollTableThongKe.setViewportView(tableThongKe);
@@ -127,7 +136,17 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
         scrollTableThongKe.setPreferredSize(new Dimension(0, 350));
         this.add(pnl_top, BorderLayout.NORTH);
         this.add(scrollTableThongKe, BorderLayout.CENTER);
+        
+        dateTo.setDate(currentDate);
+        dateFrom.setDate(currentDate);
 
+        btnExport.addActionListener((ActionEvent e) -> {
+            try {
+                JTableExporter.exportJTableToExcel(tableThongKe);
+            } catch (IOException ex) {
+                Logger.getLogger(ThongKeDoanhThuTuNgayDenNgay.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         btnThongKe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -150,32 +169,38 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
         btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dateFrom.setDate(null);
-                dateTo.setDate(null);
-                tblModel.setRowCount(0);
+                dateFrom.setDate(currentDate);
+                dateTo.setDate(currentDate);
+                loadThongKeTungNgayTrongThang(dateFrom.getDate(), dateTo.getDate());
             }
 
         });
     }
 
-    public boolean validateSelectDate() throws ParseException {
+    public boolean validateSelectDate() throws ParseException {     
         Date time_start = dateFrom.getDate();
         Date time_end = dateTo.getDate();
-
         Date current_date = new Date();
+        
+        // Bug ngày  DateE luôn bé hơn DateS
+        LocalDate dateS=time_start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dateE=time_end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        
         if (time_start != null && time_start.after(current_date)) {
             JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            dateFrom.setCalendar(null);
+            dateFrom.setDate(current_date);
             return false;
         }
         if (time_end != null && time_end.after(current_date)) {
             JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            dateTo.setCalendar(null);
+            dateTo.setDate(current_date);
             return false;
         }
-        if (time_start != null && time_end != null && time_start.after(time_end)) {
+        if (time_start != null && time_end != null && dateS.isAfter(dateE)) {
+            System.err.println(time_start);
+            System.err.println(time_end);
             JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            dateTo.setCalendar(null);
+            dateTo.setDate(current_date);
             return false;
         }
         return true;
@@ -189,5 +214,38 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
                 list.get(i).getNgay(), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
             });
         }
+    }
+    public JButton createButton(String text, Color bgColor) {
+            JButton button = new JButton(text) {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                    // Xác định màu nền dựa trên trạng thái của button
+                    Color actualBgColor = bgColor;
+                    if (getModel().isPressed()) {
+                        actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                    } else if (getModel().isRollover()) {
+                        actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                    }
+                    // Vẽ hình tròn làm nền
+                    g2.setColor(actualBgColor);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10); // Bo tròn góc 15px
+
+                    super.paintComponent(g2);
+                    g2.dispose();
+                }
+            };
+            button.setFont(new Font("Arial", Font.BOLD, 11));
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setBorderPainted(false);
+            button.setContentAreaFilled(false);
+            button.setOpaque(false);
+            button.setPreferredSize(new Dimension(100, 25));
+            button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+            return button;
     }
 }

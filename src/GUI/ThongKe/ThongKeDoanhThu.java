@@ -17,7 +17,7 @@ public class ThongKeDoanhThu extends JPanel {
     ThongKeDoanhThuTungNam thongketungnam;
     ThongKeDoanhThuTungThang thongkedoanhthutungthang;
     ThongKeDoanhThuTuNgayDenNgay thongkedoanhthutungaydenngay;
-    Color BackgroundColor = new Color(240, 247, 250);
+    Color BackgroundColor = new Color(72, 118, 255); // Màu xanh
     ThongKeBUS thongkeBUS;
 
     public ThongKeDoanhThu(ThongKeBUS thongkeBUS) {
@@ -29,7 +29,7 @@ public class ThongKeDoanhThu extends JPanel {
         this.setLayout(new GridLayout(1, 1));
         this.setBackground(BackgroundColor);
 
-       thongketrongthang = new ThongKeDoanhThuTrongThang();
+        thongketrongthang = new ThongKeDoanhThuTrongThang();
         thongketungnam = new ThongKeDoanhThuTungNam();
         thongkedoanhthutungthang = new ThongKeDoanhThuTungThang();
         thongkedoanhthutungaydenngay = new ThongKeDoanhThuTuNgayDenNgay();

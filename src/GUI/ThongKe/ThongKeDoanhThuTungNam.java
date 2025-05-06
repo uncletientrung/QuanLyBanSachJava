@@ -16,6 +16,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -23,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -54,11 +59,12 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
     private DefaultTableModel tblModel;
     private ArrayList<ThongKeDoanhThuDTO> dataset;
     private int current_year;
+    private Font font=new Font("Arial", Font.BOLD, 12);
 
     public ThongKeDoanhThuTungNam() {
         
         this.current_year = LocalDate.now().getYear();
-        this.dataset = new ThongKeBUS().getThongKeTheoNam(current_year - 5, current_year);
+        this.dataset = new ThongKeBUS().getThongKeTheoNam(current_year - 6, current_year);
         initComponent();
         loadDataTalbe(dataset);
     }
@@ -75,9 +81,9 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
     public void loadDataChart(ArrayList<ThongKeDoanhThuDTO> list) {
         pnlChart.removeAll();
         chart = new Chart();
-        chart.addLegend("Vốn", new Color(245, 189, 135));
-        chart.addLegend("Doanh thu", new Color(135, 189, 245));
-        chart.addLegend("Lợi nhuận", new Color(189, 135, 245));
+        chart.addLegend("Vốn", new Color(12, 84, 175));
+        chart.addLegend("Doanh thu", new Color(54, 4, 143));
+        chart.addLegend("Lợi nhuận", new Color(211, 84, 0));
         for (ThongKeDoanhThuDTO i : dataset) {
             chart.addData(new ModelChart("Năm " + i.getThoigian(), new double[]{i.getVon(), i.getDoanhthu(), i.getLoinhuan()}));
         }
@@ -96,19 +102,24 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
         pnl_top = new JPanel(new FlowLayout());
         JLabel lblChonNamBatDau, lblChonNamKetThuc;
         lblChonNamBatDau = new JLabel("Từ năm");
+        lblChonNamBatDau.setFont(font);
         lblChonNamKetThuc = new JLabel("Đến năm");
+        lblChonNamKetThuc.setFont(font);
 
         yearchooser_start = new JTextField("",10);
+        yearchooser_start.setPreferredSize(new Dimension(100, 25));
         yearchooser_end = new JTextField("",10);
+        yearchooser_end.setPreferredSize(new Dimension(100, 25));
+        
 
         PlainDocument doc_start = (PlainDocument) yearchooser_start.getDocument();
         doc_start.setDocumentFilter(new NumericDocumentFilter());
         PlainDocument doc_end = (PlainDocument) yearchooser_end.getDocument();
         doc_end.setDocumentFilter(new NumericDocumentFilter());
 
-        btnthongke = new JButton("Thống kê");
-        btnreset = new JButton("Làm mới");
-        btnexport = new JButton("Xuất excel");
+        btnthongke = createButton("Thống kê",new Color(72, 118, 255));
+        btnreset = createButton("Làm mới",new Color(72, 118, 255));
+        btnexport = createButton("Xuất Excel", new Color(76, 175, 80));
         btnthongke.addActionListener(this);
         btnreset.addActionListener(this);
         btnexport.addActionListener(this);
@@ -133,6 +144,7 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
         String[] header = new String[]{"Năm", "Vốn", "Doanh thu", "Lợi nhuận"};
         tblModel.setColumnIdentifiers(header);
         tableThongKe.setModel(tblModel);
+        tableThongKe.setRowHeight(37);  // THêm kích thước hieght
         tableThongKe.setAutoCreateRowSorter(true);
         tableThongKe.setDefaultEditor(Object.class, null);
         scrollTableThongKe.setViewportView(tableThongKe);
@@ -181,7 +193,7 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
         } else if (source == btnreset) {
             yearchooser_start.setText("");
             yearchooser_end.setText("");
-            this.dataset = new ThongKeBUS().getThongKeTheoNam(current_year - 5, current_year);
+            this.dataset = new ThongKeBUS().getThongKeTheoNam(current_year - 6, current_year);
             loadDataChart(dataset);
             loadDataTalbe(dataset);
         } else if (source == btnexport) {
@@ -191,5 +203,38 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
                 Logger.getLogger(ThongKeDoanhThuTungNam.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    public JButton createButton(String text, Color bgColor) {
+            JButton button = new JButton(text) {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                    // Xác định màu nền dựa trên trạng thái của button
+                    Color actualBgColor = bgColor;
+                    if (getModel().isPressed()) {
+                        actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                    } else if (getModel().isRollover()) {
+                        actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                    }
+                    // Vẽ hình tròn làm nền
+                    g2.setColor(actualBgColor);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10); // Bo tròn góc 15px
+
+                    super.paintComponent(g2);
+                    g2.dispose();
+                }
+            };
+            button.setFont(new Font("Arial", Font.BOLD, 11));
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setBorderPainted(false);
+            button.setContentAreaFilled(false);
+            button.setOpaque(false);
+            button.setPreferredSize(new Dimension(100, 25));
+            button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+            return button;
     }
 }
