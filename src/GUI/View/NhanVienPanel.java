@@ -35,13 +35,11 @@ public class NhanVienPanel extends JPanel {
         JButton btndelete = createToolBarButton("Xóa", "trash.png");
         JButton btndetail = createToolBarButton("Chi tiết", "detail1.png");
         JButton btnexport = createToolBarButton("Xuất Excel", "export_excel.png");
-        JButton btnImport = createToolBarButton("Nhập Excel", "import_excel.png");
         btnAdd.setFont(font);
         btnUpdate.setFont(font);
         btndelete.setFont(font);
         btndetail.setFont(font);
         btnexport.setFont(font);
-        btnImport.setFont(font);
 
         // Tạo phần tìm kiếm cho JPanel toolBar_Right
         String[] List_Combobox = {"Tất cả", "Họ tên", "Số điện thoại"};
@@ -103,7 +101,6 @@ public class NhanVienPanel extends JPanel {
         toolBar_Left.add(btndelete);
         toolBar_Left.add(btndetail);
         toolBar_Left.add(btnexport);
-        toolBar_Left.add(btnImport);
 
         // Thêm các thành phần vào toolBar_Right
         toolBar_Right.add(cbbox);
@@ -129,7 +126,6 @@ public class NhanVienPanel extends JPanel {
         btndelete.addActionListener(action);
         btndetail.addActionListener(action);
         btnexport.addActionListener(action);
-        btnImport.addActionListener(action); // Thêm sự kiện cho nút Nhập Excel
         cbbox.addActionListener(action);
 
         // Thêm sự kiện DocumentListener
