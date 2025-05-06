@@ -51,7 +51,10 @@ public class PhieuNhapDialogAdd extends JDialog {
         JScrollPane scrollPane = new JScrollPane(table);
 
         JButton btnClose = new JButton("Đóng");
-        btnClose.addActionListener(e -> dispose());
+        btnClose.addActionListener(e -> {
+            setVisible(false);
+            dispose();
+        });
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(btnClose);

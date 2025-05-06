@@ -17,6 +17,10 @@ import GUI.Format.NumberFormatter;
 import GUI.WorkFrame;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JButton;
@@ -29,7 +33,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -40,10 +43,10 @@ import javax.swing.table.DefaultTableModel;
  * @author Minnie
  */
 public class AddPanel extends JPanel{
-    private NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-    private SachBUS sachBUS = new SachBUS();
-    private NhanVienBUS nvBUS = new NhanVienBUS();
-    private TacGiaBUS tacgiaBUS = new TacGiaBUS();
+    private NhaCungCapBUS nccBUS;
+    private SachBUS sachBUS;
+    private NhanVienBUS nvBUS;
+    private TacGiaBUS tacgiaBUS;
     private DefaultTableModel dataBook;
     private ArrayList<SachDTO> listSach;
     private JTable tableChonSach;
@@ -53,6 +56,10 @@ public class AddPanel extends JPanel{
    
     
     public AddPanel() {
+        nccBUS = new NhaCungCapBUS();
+        sachBUS = new SachBUS();
+        nvBUS = new NhanVienBUS();
+        tacgiaBUS = new TacGiaBUS();
         initComponents();
     }
 
@@ -89,9 +96,9 @@ public class AddPanel extends JPanel{
         txfGiaNhap = new javax.swing.JTextField();
         lbSoLuong = new javax.swing.JLabel();
         txfSoLuong = new javax.swing.JTextField();
-        btnSua = new javax.swing.JButton();
-        btnXoa = new javax.swing.JButton();
-        btnThem = new javax.swing.JButton();
+        btnSua = createButton("Sửa", new Color(255, 215, 0)); // Gold color
+        btnXoa = createButton("Bỏ chọn", new Color(139, 0, 0)); // Đỏ đô
+        btnThem = createButton("Thêm vào phiếu", new Color(76, 175, 80));
         jPanel2 = new javax.swing.JPanel();
         lbMaPhieuNhap = new javax.swing.JLabel();
         txfMaPhieuNhap = new javax.swing.JTextField();
@@ -99,7 +106,7 @@ public class AddPanel extends JPanel{
         lbNhanVienNhap = new javax.swing.JLabel();
         lbNCC = new javax.swing.JLabel();
         lbTongTien = new javax.swing.JLabel();
-        btnNhap = new javax.swing.JButton();
+        btnNhap = createButton("NHẬP HÀNG", new Color(76, 175, 80));
         lbThanhTien = new javax.swing.JLabel();
         cbboxNCC = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
@@ -426,7 +433,6 @@ public class AddPanel extends JPanel{
 
         btnNhap.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnNhap.setActionCommand("btnNhap");
-        btnNhap.setText("NHẬP HÀNG");
         btnNhap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNhapActionPerformed(evt);
@@ -474,7 +480,7 @@ public class AddPanel extends JPanel{
                                 .addComponent(lbTongTien)
                                 .addGap(18, 18, 18)
                                 .addComponent(lbThanhTien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(btnNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 18, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -891,9 +897,6 @@ public class AddPanel extends JPanel{
                     chiTietPhieuNhap.add(row);
                 }
                 // Hiển thị thông tin phiếu nhập
-                JFrame frame = new JFrame();
-                frame.pack();
-                frame.setVisible(true);
                 PhieuNhapDialogAdd dialog = new PhieuNhapDialogAdd(
                     parentFrame,
                     maPhieuNhap, 
@@ -905,10 +908,19 @@ public class AddPanel extends JPanel{
                 dialog.setVisible(true);
 
         // Sau khi hiển thị thông tin, reset dữ liệu
+        dialog.dispose();
+        // Cập nhật hiển thị số lượng được nhập thêm cho sách trong bảng jTable4
+        for (ChiTietPhieuNhapDTO ctpn : list_ctpn) {
+            String maSach = ctpn.getMasach();
+            int soLuongNhap = ctpn.getSoluong();
+            sachBUS.updateSoLuongTon(maSach, soLuongNhap); // Cập nhật số lượng tồn trong cơ sở dữ liệu
+        }
+        
+
         model.setRowCount(0);
         txfMaPhieuNhap.setText(String.valueOf(Integer.parseInt(maPhieuNhap) + 1)); // Tăng mã phiếu nhập
         lbThanhTien.setText("0đ");
-        refreshJTable4();
+        
                 } else {
                     JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi nhập hàng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
@@ -1017,8 +1029,42 @@ public class AddPanel extends JPanel{
     jTable4.repaint();
     }
 
-    private String giaTienString(int n){
-        return String.format("%,d", n).replace(",", " ");
+    // Hàm tạo Button với hiệu ứng và màu sắc tùy chỉnh
+    private JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Xác định màu nền dựa trên trạng thái của button
+                Color actualBgColor = bgColor;
+                if (getModel().isPressed()) {
+                    actualBgColor = bgColor.darker();
+                } else if (getModel().isRollover()) {
+                    actualBgColor = bgColor.brighter();
+                }
+
+                g2.setColor(actualBgColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+                // Không vẽ border mặc định
+            }
+        };
+
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.BOLD, 12));
+
+        return button;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
