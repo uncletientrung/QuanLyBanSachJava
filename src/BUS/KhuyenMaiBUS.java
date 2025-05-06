@@ -111,8 +111,7 @@ public class KhuyenMaiBUS {
     
     public ArrayList<KhuyenMaiDTO> getActiveKhuyenMai(Date currentDate) {
         ArrayList<KhuyenMaiDTO> allKM = kmDAO.selectAll();
-        ArrayList<KhuyenMaiDTO> activeKM = new ArrayList<>();
-        
+        ArrayList<KhuyenMaiDTO> activeKM = new ArrayList<>();   
         Calendar cal = Calendar.getInstance(); // KHi tạo ra Km mãi nó lưu cả thời gian nữa nên ta nên set thời gian ngày chọn là 0 để nó đỡ bị
                                                                 // gặp trường hợp giờ khuyến mãi trước giờ phiếu xuất 
         cal.setTime(currentDate);
@@ -137,6 +136,28 @@ public class KhuyenMaiBUS {
         double phanTram=0;
         for(KhuyenMaiDTO km: listkm){
             if(km.getPhanTramGiam()>phanTram && km.getDieuKienToiThieu()<TongBill){
+                phanTram=km.getPhanTramGiam();
+                result=km;
+            }
+        }
+        return result;    
+    }
+    
+    public KhuyenMaiDTO getKmCTPX(int TongBill,Date dateCreateBill){
+        ArrayList<KhuyenMaiDTO> allKM = kmDAO.selectAll();
+        KhuyenMaiDTO result=null;
+        double phanTram=0;
+        Calendar cal = Calendar.getInstance(); // KHi tạo ra Km mãi nó lưu cả thời gian nữa nên ta nên set thời gian ngày chọn là 0 để nó đỡ bị
+                                                                // gặp trường hợp giờ khuyến mãi trước giờ phiếu xuất 
+        cal.setTime(dateCreateBill);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+        Date dateCreate= cal.getTime();
+        for(KhuyenMaiDTO km: allKM){
+            if(km.getPhanTramGiam()>phanTram && km.getDieuKienToiThieu()<TongBill &&
+              km.getNgayBatDau().compareTo(dateCreate)<=0 && km.getNgayKetThuc().compareTo(dateCreate)>=0 ){
                 phanTram=km.getPhanTramGiam();
                 result=km;
             }

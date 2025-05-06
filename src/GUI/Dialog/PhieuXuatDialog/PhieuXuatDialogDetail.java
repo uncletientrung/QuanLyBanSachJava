@@ -4,38 +4,42 @@
  */
 package GUI.Dialog.PhieuXuatDialog;
 import BUS.KhachHangBUS;
+import BUS.KhuyenMaiBUS;
 import BUS.NhanVienBUS;
 import BUS.PhieuXuatBUS;
 import BUS.SachBUS;
 import DTO.ChiTietPhieuXuatDTO;
+import DTO.KhuyenMaiDTO;
 import DTO.PhieuXuatDTO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import GUI.Format.*;
-
+import java.util.Date;
 
 /**
  *
  * @author DELL
  */
-public class PhieuXuatDialogDetail extends JDialog{
-    private JTextField  txfMaPhieu,txfNV,txfKhachHang,txfTime,txfTongHD,txfGiamgia;
+public class PhieuXuatDialogDetail extends JDialog {
+    private JTextField txfMaPhieu, txfNV, txfKhachHang, txfTime, txfTongHD, txfTenKm, txfPhanTram;
     private DefaultTableModel dataCTPX;
-    private PhieuXuatBUS pxBUS=new PhieuXuatBUS();
+    private PhieuXuatBUS pxBUS = new PhieuXuatBUS();
     private ArrayList<ChiTietPhieuXuatDTO> list_ctpx;
-    private SachBUS sBUS=new SachBUS();
-    private NhanVienBUS nvBUS=new NhanVienBUS();
-    private KhachHangBUS khBUS=new KhachHangBUS();
+    private SachBUS sBUS = new SachBUS();
+    private NhanVienBUS nvBUS = new NhanVienBUS();
+    private KhachHangBUS khBUS = new KhachHangBUS();
     private JTable tableCTPX;
-    public PhieuXuatDialogDetail(JFrame parent, PhieuXuatDTO pxDTO) {
-        super(parent, "Danh mục  xem chi tiết", true);
+    private KhuyenMaiBUS kmBUS;
+    private PhieuXuatDTO pxDTO;
 
+    public PhieuXuatDialogDetail(JFrame parent, PhieuXuatDTO pxDTO) {
+        super(parent, "Danh mục xem chi tiết", true);
+        this.pxDTO=pxDTO;
         // ========== Panel chính ==========
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 15, 10, 15));
@@ -44,56 +48,62 @@ public class PhieuXuatDialogDetail extends JDialog{
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(new Color(72, 118, 255)); // Màu xanh dương
         titlePanel.setBorder(new EmptyBorder(15, 0, 15, 0));
-        
+
         JLabel titleLabel = new JLabel("THÔNG TIN PHIẾU XUẤT");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
         titlePanel.add(titleLabel);
 
         // ========== PHẦN THÔNG TIN ==========
-        JPanel infoPanel = new JPanel(new GridLayout(2, 5, 10, 10)); // 2 hàng, 5 cột
+        JPanel infoPanel = new JPanel(new GridLayout(2, 7, 10, 10)); // 2 hàng, 7 cột
         infoPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        
+
         // Dòng 1: Label
         infoPanel.add(createLabel("Mã phiếu"));
         infoPanel.add(createLabel("Nhân viên thực hiện"));
         infoPanel.add(createLabel("Khách hàng"));
         infoPanel.add(createLabel("Thời gian tạo"));
         infoPanel.add(createLabel("Tổng hóa đơn"));
+        JLabel lbTenKm = createLabel("Tên khuyến mãi");
+        JLabel lbPhanTram = createLabel("Phần trăm");
+        infoPanel.add(lbTenKm);
+        infoPanel.add(lbPhanTram);
 
-        // Dòng 2: TextField  
-        txfMaPhieu=createTextField(pxDTO.getMaphieu()+"");
-        txfNV=createTextField(nvBUS.getHoTenNVById(pxDTO.getManv()));
-        txfKhachHang=createTextField(khBUS.getFullNameKHById(pxDTO.getMakh()));
-        txfTime=createTextField(DateFormat.fomat(pxDTO.getThoigiantao()+""));
-        txfTongHD=createTextField(NumberFormatter.format(pxDTO.getTongTien()));
+        // Dòng 2: TextField
+        txfMaPhieu = createTextField(pxDTO.getMaphieu() + "");
+        txfNV = createTextField(nvBUS.getHoTenNVById(pxDTO.getManv()));
+        txfKhachHang = createTextField(khBUS.getFullNameKHById(pxDTO.getMakh()));
+        txfTime = createTextField(DateFormat.fomat(pxDTO.getThoigiantao() + ""));
+        txfTongHD = createTextField(NumberFormatter.format(pxDTO.getTongTien()));
+        txfTenKm = createTextField("");
+        txfPhanTram = createTextField("");
         infoPanel.add(txfMaPhieu);
         infoPanel.add(txfNV);
         infoPanel.add(txfKhachHang);
         infoPanel.add(txfTime);
         infoPanel.add(txfTongHD);
+        infoPanel.add(txfTenKm);
+        infoPanel.add(txfPhanTram);
 
         // ========== BẢNG CHI TIẾT ==========
-        list_ctpx=pxBUS.getListCTPXById(pxDTO.getMaphieu());
-        String[] columnNames = {"STT", "Mã sách", "Tên sách", "Đơn giá", "Số lượng","Thành tiền"};
-        dataCTPX =new DefaultTableModel(columnNames,0){
+        list_ctpx = pxBUS.getListCTPXById(pxDTO.getMaphieu());
+        String[] columnNames = {"STT", "Mã sách", "Tên sách", "Đơn giá", "Số lượng", "Thành tiền"};
+        dataCTPX = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Chặn chỉnh sửa tất cả các ô
             }
         };
-        
+
         tableCTPX = new JTable(dataCTPX);
-        for (int i=0;i<list_ctpx.size();i++){
-            String STT=String.valueOf(i+1);
-            String maSach=String.valueOf(list_ctpx.get(i).getMasach());
-            String tenSach=sBUS.getSachById(list_ctpx.get(i).getMasach()).getTensach();
-            String donGia=NumberFormatter.format(list_ctpx.get(i).getDongia());
-            String soLuong=String.valueOf(list_ctpx.get(i).getSoluong());
-            
-            
-            String thanhTien=NumberFormatter.format(list_ctpx.get(i).getSoluong()*list_ctpx.get(i).getDongia());
-            dataCTPX.addRow(new Object[]{STT,maSach,tenSach,donGia,soLuong,thanhTien});
+        for (int i = 0; i < list_ctpx.size(); i++) {
+            String STT = String.valueOf(i + 1);
+            String maSach = String.valueOf(list_ctpx.get(i).getMasach());
+            String tenSach = sBUS.getSachById(list_ctpx.get(i).getMasach()).getTensach();
+            String donGia = NumberFormatter.format(list_ctpx.get(i).getDongia());
+            String soLuong = String.valueOf(list_ctpx.get(i).getSoluong());
+            String thanhTien = NumberFormatter.format(list_ctpx.get(i).getSoluong() * list_ctpx.get(i).getDongia());
+            dataCTPX.addRow(new Object[]{STT, maSach, tenSach, donGia, soLuong, thanhTien});
         }
         tableCTPX.setRowHeight(30);
         tableCTPX.getColumnModel().getColumn(0).setPreferredWidth(20);
@@ -104,22 +114,23 @@ public class PhieuXuatDialogDetail extends JDialog{
         tableCTPX.getColumnModel().getColumn(5).setPreferredWidth(80);
         DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
         centerRenderer1.setHorizontalAlignment(JLabel.CENTER);
-        int[] columnsToCenter1 = {0 , 1,2,3,4,5}; // Căn giữa tất cả trừ tên sách và tên nbx
+        int[] columnsToCenter1 = {0, 1, 2, 3, 4, 5}; // Căn giữa tất cả trừ tên sách và tên nbx
         for (int col : columnsToCenter1) {
             tableCTPX.getColumnModel().getColumn(col).setCellRenderer(centerRenderer1);
         }
         tableCTPX.getTableHeader().setReorderingAllowed(false); // Ngăn di chuyển giữa các cột
         tableCTPX.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tableCTPX.getTableHeader().setForeground(Color.BLACK); // Màu chữ đen
-  
+
         JScrollPane tableScrollPane = new JScrollPane(tableCTPX);
         tableScrollPane.setViewportView(tableCTPX);
-
+        // Set txf khuyến mãi
+        setTxfKM();
         // ========== NÚT BẤM ==========
         JPanel buttonPanel = new JPanel();
         JButton exportButton = createButton("Xuất file Excel", new Color(76, 175, 80));  // Màu xanh lá
         JButton cancelButton = createButton("Đóng", new Color(244, 67, 54));   // Màu đỏ
-        JButton exportPDFButton=createButton("Xuất file PDF",new Color(220,20,60));
+        JButton exportPDFButton = createButton("Xuất file PDF", new Color(220, 20, 60));
 
         buttonPanel.add(exportPDFButton);
         buttonPanel.add(exportButton);
@@ -138,15 +149,15 @@ public class PhieuXuatDialogDetail extends JDialog{
         // ========== Thêm vào mainPanel ==========
         mainPanel.add(titlePanel, BorderLayout.NORTH);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
-        
+
         // ========== Thêm Action ==========
-        ActionListener action=new PhieuXuatDialogDetail_Controller(this);
+        ActionListener action = new PhieuXuatDialogDetail_Controller(this);
         cancelButton.addActionListener(action);
         exportButton.addActionListener(action);
         exportPDFButton.addActionListener(action);
-
+        
         add(mainPanel);
-        setSize(900, 500);
+        setSize(1100, 500);
         setLocationRelativeTo(parent);
         setResizable(false);
         setVisible(true);
@@ -207,6 +218,27 @@ public class PhieuXuatDialogDetail extends JDialog{
 
         return button;
     }
+    public void setTxfKM(){
+        kmBUS=new KhuyenMaiBUS();
+        Date dateCreateBill= new Date(pxDTO.getThoigiantao().getTime());
+        int tongTien = 0;
+        int columnTong = 3;
+        for(int i=0;i<tableCTPX.getRowCount();i++){
+             String value = tableCTPX.getValueAt(i, columnTong).toString().trim();
+             tongTien+=Integer.parseInt(NumberFormatter.formatReverse(value));
+        }
+        KhuyenMaiDTO bestKM= kmBUS.getKmCTPX(tongTien, dateCreateBill);  
+        double giamGia=(bestKM!=null) ? bestKM.getPhanTramGiam() : 0.0;
+        double thanhtoan= tongTien - tongTien*giamGia/100;
+        
+        if(bestKM !=null){
+             txfTenKm.setText(bestKM.getTenChuongTrinh());
+             txfPhanTram.setText(bestKM.getPhanTramGiam()+"%");
+        }else{
+             txfTenKm.setText("Không có");
+             txfPhanTram.setText("0.0%");
+        }
+    }
 
     public DefaultTableModel getDataCTPX() {
         return dataCTPX;
@@ -232,12 +264,15 @@ public class PhieuXuatDialogDetail extends JDialog{
         return txfTime;
     }
 
+    public JTextField getTxfTenKm() {
+        return txfTenKm;
+    }
+
+    public JTextField getTxfPhanTram() {
+        return txfPhanTram;
+    }
+
     public JTable getTableCTPX() {
         return tableCTPX;
     }
-    
-    
-
-    
-    
 }
