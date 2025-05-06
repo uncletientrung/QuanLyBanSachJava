@@ -26,6 +26,9 @@ public class WorkFrame extends JFrame {
     private JButton btnTaiKhoan, btnPhanQuyen, btnThongKe, btnNhanVien,btnPhieuXuat,btnPhieuNhap,btnKhachHang;
     private JButton btnKhuyenMai,btnSach,btnTrangChu,btnThongTinChung;
    private JButton nutDangHoatDong; // Để theo dõi nút đang được chọn
+   private ThongKe thongKe;
+   private PhieuNhapPanel PNP;
+   private PhieuXuatPanel PXP;
 
     public WorkFrame(TaiKhoanDTO taiKhoan) {
         this.taiKhoan = taiKhoan;
@@ -164,19 +167,22 @@ public class WorkFrame extends JFrame {
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         sidebar.add(new JPanel(), gbc);
-
+        
         // Thêm các Panel hay các Card vào PanelCard 
+        thongKe=new ThongKe();
+        PNP=new PhieuNhapPanel();
+        PXP=new PhieuXuatPanel();
         PanelCard.add(new HomePanel(), "Trang chủ");
         PanelCard.add(new BookPanel(), "Sách");
         PanelCard.add(new NhanVienPanel(), "Nhân viên");
         PanelCard.add(new PhanQuyenPanel(), "Phân quyền");
         PanelCard.add(new ThongTinChungPanel(this,ChiTietQuyenDAO.getInstance().getDanhSachChucNang(taiKhoan.getManhomquyen())), "Thông tin chung");
-        PanelCard.add(new PhieuXuatPanel(), "Phiếu xuất");  // Truyền tai khaorn vào để hiện tên người dùng
-        PanelCard.add(new PhieuNhapPanel(), "Phiếu nhập");
+        PanelCard.add(PXP, "Phiếu xuất");                                           // Truyền tai khaorn vào để hiện tên người dùng
+        PanelCard.add(PNP, "Phiếu nhập");
         PanelCard.add(new TaiKhoanPanel(), "Tài khoản");
         PanelCard.add(new KhachhangPanel(), "Khách hàng");
         PanelCard.add(new KhuyenMaiPanel(), "Khuyến mãi");
-        PanelCard.add(new ThongKe(), "Thống kê");
+        PanelCard.add(thongKe, "Thống kê");
 
         // Adding sidebar và centerPanel vào main panel
         mainPanel.add(sidebar, BorderLayout.WEST);
@@ -212,6 +218,7 @@ public class WorkFrame extends JFrame {
         btnPhieuXuat.setVisible(false);
         btnPhieuNhap.setVisible(false);
         btnKhachHang.setVisible(false);
+        btnThongKe.setVisible(false);
 
 
         for (Integer cn : chucNangDuocCap) {
@@ -236,7 +243,7 @@ public class WorkFrame extends JFrame {
                     break;
                 case ChucNangConst.KHACH_HANG:
                     btnKhachHang.setVisible(true);
-                    break;          
+                    break;      
             }
         }
 }
@@ -336,5 +343,18 @@ public class WorkFrame extends JFrame {
         return btnThongTinChung;
     }
 
+    public ThongKe getThongKe() {
+        return thongKe;
+    }
+
+    public PhieuXuatPanel getPXP() {
+        return PXP;
+    }
+
+    public PhieuNhapPanel getPNP() {
+        return PNP;
+    }
+    
+    
 }
 

@@ -70,7 +70,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
         int result=0;
          try{
             Connection con=(Connection) JDBCUtil.getConnection();
-            String sql="Update phieunhap Set trangthai = 0  Where maphieunhap = ?   ";
+            String sql=" Delete From phieunhap Where maphieunhap= ? ";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(t));
             result=pst.executeUpdate();
@@ -85,7 +85,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO>{
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "Update phieunhap Set trangthai = 0 Where maphieunhap = ? ";
+            String sql=" Delete From phieunhap Where maphieunhap= ? ";
             PreparedStatement pst=(PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(t));
             result = pst.executeUpdate();

@@ -479,4 +479,8 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
     
         return button;
     }
+    public void refreshTable(){
+        list =new ThongKeBUS().getThongKeKhachHang(LocalDate.of(2000,1,1),  LocalDate.now());
+        loadDataTable(list);
+    }
 }

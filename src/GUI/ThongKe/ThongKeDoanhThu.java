@@ -42,5 +42,28 @@ public class ThongKeDoanhThu extends JPanel {
         tabbedPane.addTab("Thống kê từ ngày đến ngày", thongkedoanhthutungaydenngay);
 
         this.add(tabbedPane);
+        tabbedPane.addChangeListener(e -> {      // Thêm action ChangeListener
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            String title = tabbedPane.getTitleAt(selectedIndex);
+            if(title.equals("Thống kê theo năm")){
+                thongketungnam.refreshTable();
+            }else if(title.equals("Thống kê từng tháng trong năm")){
+                thongkedoanhthutungthang.refreshTable();
+            }else if(title.equals("Thống kê từng ngày trong tháng")){
+                thongketrongthang.refreshTable();
+            }else if(title.equals("Thống kê từ ngày đến ngày")){
+                thongkedoanhthutungaydenngay.refreshTable();
+            }
+        
+        });
+        
     }
+    public void getRefreshTKTheoNam(){
+            thongketungnam.refreshTable();
+        }
+
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+    
 }

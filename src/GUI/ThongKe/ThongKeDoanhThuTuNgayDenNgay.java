@@ -65,7 +65,6 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
         
         listSp = new ThongKeBUS().getTonKho();
         initComponent();
-
         loadThongKeTungNgayTrongThang(currentDate, currentDate);
 
     }
@@ -247,5 +246,8 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
             button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
             return button;
+    }
+    public void refreshTable(){
+        loadThongKeTungNgayTrongThang(currentDate, currentDate);
     }
 }

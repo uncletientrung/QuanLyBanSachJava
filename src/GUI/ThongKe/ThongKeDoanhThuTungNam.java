@@ -237,4 +237,9 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
 
             return button;
     }
+    public void refreshTable(){
+        this.current_year = LocalDate.now().getYear();
+        this.dataset = new ThongKeBUS().getThongKeTheoNam(current_year - 6, current_year);
+        loadDataTalbe(dataset);
+    }
 }

@@ -305,4 +305,8 @@ public class ThongKeNhaCungCap extends JPanel implements ActionListener, KeyList
             java.util.logging.Logger.getLogger(ThongKeNhaCungCap.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }
+    public void refreshTable(){
+        list = new ThongKeBUS().getThongKeNhaCungCap(LocalDate.of(2000,1,1),  LocalDate.now());
+        loadDataTable(list);
+    }
 }

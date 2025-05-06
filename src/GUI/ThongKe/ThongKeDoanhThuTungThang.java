@@ -186,4 +186,7 @@ public final class ThongKeDoanhThuTungThang extends JPanel implements ActionList
 
             return button;
     }
+    public void  refreshTable(){
+        loadThongKeThang(yearchooser.getYear());
+    }
 }

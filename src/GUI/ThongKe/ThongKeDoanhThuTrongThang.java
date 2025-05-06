@@ -39,7 +39,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Tran Nhat Sinh
+ * @ Tham khảo nguồn 1 anh khóa trên
  */
 public final class ThongKeDoanhThuTrongThang extends JPanel{
 
@@ -222,5 +222,10 @@ public final class ThongKeDoanhThuTrongThang extends JPanel{
             button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
             return button;
+    }
+    public void refreshTable(){
+        int thang = monthchooser.getMonth() + 1;
+        int nam = yearchooser.getYear();
+        loadThongKeTungNgayTrongThang(thang, nam);
     }
 }

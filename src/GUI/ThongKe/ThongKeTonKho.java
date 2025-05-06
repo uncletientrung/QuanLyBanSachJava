@@ -354,37 +354,45 @@ public class BookDialogDetail extends JDialog{
     }
 
         public JButton createButton(String text, Color bgColor) {
-        JButton button = new JButton(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    
-                // Xác định màu nền dựa trên trạng thái của button
-                Color actualBgColor = bgColor;
-                if (getModel().isPressed()) {
-                    actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
-                } else if (getModel().isRollover()) {
-                    actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
-                }
-                // Vẽ hình tròn làm nền
-                g2.setColor(actualBgColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
-    
-                super.paintComponent(g2);
-                g2.dispose();
-            }
-        };
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setPreferredSize(new Dimension(140, 40));
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-    
-        return button;
-    }
+            JButton button = new JButton(text) {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+                    // Xác định màu nền dựa trên trạng thái của button
+                    Color actualBgColor = bgColor;
+                    if (getModel().isPressed()) {
+                        actualBgColor = bgColor.darker(); // Màu tối hơn khi nhấn
+                    } else if (getModel().isRollover()) {
+                        actualBgColor = bgColor.brighter(); // Màu sáng hơn khi hover
+                    }
+                    // Vẽ hình tròn làm nền
+                    g2.setColor(actualBgColor);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bo tròn góc 15px
+
+                    super.paintComponent(g2);
+                    g2.dispose();
+                }
+            };
+            button.setFont(new Font("Arial", Font.BOLD, 14));
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setBorderPainted(false);
+            button.setContentAreaFilled(false);
+            button.setOpaque(false);
+            button.setPreferredSize(new Dimension(140, 40));
+            button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+            return button;
+    }
+        public void refreshTable(){
+            tblModel.setRowCount(0);
+            ThongKeBUS tkBUS=new ThongKeBUS();
+            listSp=tkBUS.getTonKho();
+            for(ThongKeTonKhoDTO s: listSp){
+                tblModel.addRow(new Object[]{s.getStt(),s.getMasach(),s.getTensach(),s.getSoluongton()});
+            }
+        }
+        
 }

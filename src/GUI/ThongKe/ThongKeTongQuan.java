@@ -45,6 +45,19 @@ public class ThongKeTongQuan extends JPanel {
         loadDataTalbe(this.dataset);
     }
 
+    public itemTaskbar[] getListitem() {
+        return listitem;
+    }
+    
+    public JPanel getJp_top() {
+        return jp_top;
+    }
+
+    public DefaultTableModel getTblModel() {
+        return tblModel;
+    }
+    
+    
     public void loadDataChart() {
         for (ThongKeTungNgayTrongThangDTO i : dataset) {
             chart.addData(new ModelChart2(i.getNgay() + "", new double[]{i.getChiphi(), i.getDoanhthu(), i.getLoinhuan()}));
@@ -127,4 +140,11 @@ public class ThongKeTongQuan extends JPanel {
         this.add(jp_center, BorderLayout.CENTER);
         this.add(scrollTableThongKe, BorderLayout.SOUTH);
     }
+    public void refreshData() {
+        this.dataset = new ThongKeBUS().getThongKe7NgayGanNhat(); // Lấy dữ liệu mới nhất
+        loadDataTalbe(this.dataset); // Cập nhật bảng với dữ liệu mới
+        tableThongKe.revalidate(); // Làm mới giao diện
+        tableThongKe.repaint(); // Vẽ lại bảng
+        System.err.println("aaa");
+        }
 }

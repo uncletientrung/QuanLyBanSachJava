@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import GUI.WorkFrame;
 import GUI.View.BookPanel;
 import GUI.View.PhieuXuatPanel;
+import GUI.ThongKe.ThongKe;
 import java.awt.Color;
 import javax.swing.JButton;
 
@@ -45,13 +46,15 @@ public class WorkFrameController implements ActionListener {
             wk.cardLayout.show(wk.PanelCard, "Thông tin chung");
         } else if (suKien.equals("Phiếu xuất")) {
             wk.cardLayout.show(wk.PanelCard, "Phiếu xuất");
-            ((PhieuXuatPanel) wk.PanelCard.getComponent(5)).refreshTablePx();
+            wk.getPXP().refreshTablePx();
+            wk.getPXP().getBtnHome().doClick();
         } else if (suKien.equals("Tài khoản")) {
             wk.cardLayout.show(wk.PanelCard, "Tài khoản");
         } else if (suKien.equals("Khách hàng")) {
             wk.cardLayout.show(wk.PanelCard, "Khách hàng");
         } else if (suKien.equals("Phiếu nhập")) {
             wk.cardLayout.show(wk.PanelCard, "Phiếu nhập");
+            wk.getPNP().getBtnHome().doClick();
         } else if (suKien.equals("Khuyến mãi")) {
             wk.cardLayout.show(wk.PanelCard, "Khuyến mãi");
         } else if (suKien.equals("Đăng xuất")) {
@@ -61,6 +64,8 @@ public class WorkFrameController implements ActionListener {
             wk.setNutDangHoatDong(null);
         }
         else if (suKien.equals("Thống kê")) {
+           wk.getThongKe().getRefreshTKTongQuan();
+           wk.getThongKe().getTabbedPane().setSelectedIndex(0); // Mặc định chọn tab tổng quan
             wk.cardLayout.show(wk.PanelCard, "Thống kê");
         }
 
