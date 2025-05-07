@@ -96,13 +96,13 @@ public class TaiKhoanDialogUpdate extends JDialog {
 
         JLabel lb_trangthai = new JLabel("Trạng thái:");
         lb_trangthai.setFont(new Font("Arial", Font.BOLD, 14));
-        String[] trangThaiOptions = {"Còn xài được", "Hết đát"};
+        String[] trangThaiOptions = {"Đang hoạt động", "Khóa"};
         comboBoxTrangThai = new JComboBox<>(trangThaiOptions);
         comboBoxTrangThai.setPreferredSize(new Dimension(200, 30));
         if (taiKhoan.getTrangthai() == 1) {
-            comboBoxTrangThai.setSelectedItem("Còn xài được");
+            comboBoxTrangThai.setSelectedItem("Đang hoạt động");
         } else {
-            comboBoxTrangThai.setSelectedItem("Hết đát");
+            comboBoxTrangThai.setSelectedItem("Khóa");
         }
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.3;

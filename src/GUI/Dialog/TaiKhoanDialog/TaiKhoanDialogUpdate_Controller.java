@@ -60,7 +60,7 @@ public class TaiKhoanDialogUpdate_Controller implements ActionListener{
         
         String trangthaimoiString=TKDU.getTrangThai();
         int trangthai;
-        if(trangthaimoiString.equals("Còn xài được")){
+        if(trangthaimoiString.equals("Đang hoạt động")){
             trangthai=1;
         }else{
             trangthai=0;

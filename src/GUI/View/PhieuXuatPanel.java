@@ -721,12 +721,27 @@ public class PhieuXuatPanel extends JPanel {
         }
 
         // Xử lý ngày bắt đầu
-        Date dateS = dateStart.getDate();
-        Timestamp dateStartTimestamp =new Timestamp(dateS.getTime());
+       // Xử lý ngày bắt đầu
+Date dateS = dateStart.getDate();
+Timestamp dateStartTimestamp = null;
+if (dateS != null) {
+    dateStartTimestamp = new Timestamp(dateS.getTime());
+} else {
+    // Tùy chọn: bỏ lọc ngày bắt đầu hoặc gán mặc định
+    // Ví dụ gán mốc thời gian rất cũ
+    dateStartTimestamp = Timestamp.valueOf("1970-01-01 00:00:00");
+}
 
-        // Xử lý ngày kết thúc
+// Xử lý ngày kết thúc
         Date dateE = dateEnd.getDate();
-        Timestamp dateEndTimestamp =new Timestamp(dateE.getTime());
+        Timestamp dateEndTimestamp = null;
+        if (dateE != null) {
+            dateEndTimestamp = new Timestamp(dateE.getTime());
+        } else {
+            // Gán ngày kết thúc là ngày hiện tại hoặc mốc rất lớn
+            dateEndTimestamp = new Timestamp(System.currentTimeMillis());
+        }
+
             
         // Lấy khoảng giá
         String minPrice = txfPriceStart.getText().trim();
