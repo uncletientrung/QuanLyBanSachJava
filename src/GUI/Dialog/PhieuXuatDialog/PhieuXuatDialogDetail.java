@@ -218,6 +218,17 @@ public class PhieuXuatDialogDetail extends JDialog {
 
         return button;
     }
+    
+    public double tinhtongtien(){
+        int tongTien = 0;
+        int columnTong = 3;
+        for(int i=0;i<tableCTPX.getRowCount();i++){
+             String value = tableCTPX.getValueAt(i, columnTong).toString().trim();
+             int soluong=Integer.parseInt(tableCTPX.getValueAt(i, 4).toString());
+             tongTien+=Integer.parseInt(NumberFormatter.formatReverse(value))*soluong;
+        }
+        return tongTien;
+    }
     public void setTxfKM(){
         kmBUS=new KhuyenMaiBUS();
         Date dateCreateBill= new Date(pxDTO.getThoigiantao().getTime());

@@ -42,6 +42,8 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.DocumentException;
 import java.awt.Desktop;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 public class PhieuXuatDialogDetail_Controller implements ActionListener {
     private PhieuXuatBUS pxBUS;
@@ -251,6 +253,24 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         XSSFCell footerCell8 = footerRow4.createCell(1);
         footerCell8.setCellValue(thoiGian);
         footerCell8.setCellStyle(dataStyle);
+        
+//        XSSFRow footerRow5 = sheet.createRow(rowNum++);
+//        XSSFCell footerCell9 = footerRow5.createCell(0);
+//        footerCell9.setCellValue("Tổng tiền hàng");
+//        footerCell9.setCellStyle(headerStyle);
+//
+//        XSSFCell footerCell10 = footerRow5.createCell(1);
+//        footerCell10.setCellValue(PXDD.tinhtongtien());
+//        footerCell10.setCellStyle(dataStyle);
+//        
+//        XSSFRow footerRow6 = sheet.createRow(rowNum++);
+//        XSSFCell footerCell11 = footerRow5.createCell(0);
+//        footerCell9.setCellValue("Giảm giá");
+//        footerCell9.setCellStyle(headerStyle);
+//
+//        XSSFCell footerCell12 = footerRow5.createCell(1);
+//        footerCell10.setCellValue(tongTien);
+//        footerCell10.setCellStyle(dataStyle);
 
         XSSFRow footerRow5 = sheet.createRow(rowNum++);
         XSSFCell footerCell9 = footerRow5.createCell(0);
@@ -335,6 +355,7 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
     String khachHang = PXDD.getTxfKhachHang().getText();
     String thoiGian = PXDD.getTxfTime().getText();
     String tongTien = PXDD.getTxfTongHD().getText();
+    String phanTram = PXDD.getTxfPhanTram().getText();
     JTable tableCTPX = PXDD.getTableCTPX();
 
     // Tạo JFileChooser để chọn nơi lưu file
@@ -382,6 +403,7 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         // Tạo font hỗ trợ tiếng Việt
         BaseFont bf = BaseFont.createFont("c:/windows/fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Font titleFont = new Font(bf, 16, Font.BOLD);
+        Font billFont = new Font(bf, 12, Font.NORMAL);
         Font infoFont = new Font(bf, 12, Font.NORMAL);
         Font headerFont = new Font(bf, 12, Font.BOLD);
         Font cellFont = new Font(bf, 12, Font.NORMAL);
@@ -425,9 +447,27 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         document.add(table);
 
         // Tổng tiền (góc phải)
-        Paragraph total = new Paragraph("Tổng hóa đơn: " + tongTien, headerFont);
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+        formatter.setDecimalFormatSymbols(symbols);
+
+        Paragraph phanTramgiamgia = new Paragraph("Giảm giá: " + phanTram, billFont);
+        phanTram = phanTram.replace("%", "").trim();
+        double phantramgiamgia = Double.parseDouble(phanTram) / 100;
+        double tienduocGiam=PXDD.tinhtongtien()*phantramgiamgia;
+        Paragraph tienduocgiam = new Paragraph("Tiền được giảm: " + formatter.format(tienduocGiam), billFont);
+        Paragraph total = new Paragraph("Tổng tiền hàng: " + formatter.format(PXDD.tinhtongtien()), billFont);       
+        Paragraph tongHoaDon = new Paragraph("Tổng hóa đơn: " + tongTien, headerFont);
+        
         total.setAlignment(Element.ALIGN_RIGHT);
+        phanTramgiamgia.setAlignment(Element.ALIGN_RIGHT);
+        tongHoaDon.setAlignment(Element.ALIGN_RIGHT);
+        tienduocgiam.setAlignment(Element.ALIGN_RIGHT);
         document.add(total);
+        document.add(phanTramgiamgia);
+        document.add(tienduocgiam);
+        document.add(tongHoaDon);
 
         document.close();
         fos.close();
