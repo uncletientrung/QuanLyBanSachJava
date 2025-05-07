@@ -8,6 +8,8 @@ import DAO.KhuyenMaiDAO;
 import DTO.KhuyenMaiDTO;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -147,17 +149,13 @@ public class KhuyenMaiBUS {
         ArrayList<KhuyenMaiDTO> allKM = kmDAO.selectAll();
         KhuyenMaiDTO result=null;
         double phanTram=0;
-        Calendar cal = Calendar.getInstance(); // KHi tạo ra Km mãi nó lưu cả thời gian nữa nên ta nên set thời gian ngày chọn là 0 để nó đỡ bị
-                                                                // gặp trường hợp giờ khuyến mãi trước giờ phiếu xuất 
-        cal.setTime(dateCreateBill);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.MILLISECOND, 999);
-        Date dateCreate= cal.getTime();
+
+        LocalDate dateCreate= dateCreateBill.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().toLocalDate();
         for(KhuyenMaiDTO km: allKM){
+            LocalDate dateS=((java.sql.Date) km.getNgayBatDau()).toLocalDate();
+            LocalDate dateE=((java.sql.Date) km.getNgayKetThuc()).toLocalDate();
             if(km.getPhanTramGiam()>phanTram && km.getDieuKienToiThieu()<TongBill &&
-              km.getNgayBatDau().compareTo(dateCreate)<=0 && km.getNgayKetThuc().compareTo(dateCreate)>=0 ){
+              dateS.compareTo(dateCreate)<=0 && dateE.compareTo(dateCreate)>=0 ){
                 phanTram=km.getPhanTramGiam();
                 result=km;
             }

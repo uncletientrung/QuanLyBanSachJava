@@ -225,7 +225,8 @@ public class PhieuXuatDialogDetail extends JDialog {
         int columnTong = 3;
         for(int i=0;i<tableCTPX.getRowCount();i++){
              String value = tableCTPX.getValueAt(i, columnTong).toString().trim();
-             tongTien+=Integer.parseInt(NumberFormatter.formatReverse(value));
+             int soluong=Integer.parseInt(tableCTPX.getValueAt(i, 4).toString());
+             tongTien+=Integer.parseInt(NumberFormatter.formatReverse(value))*soluong;
         }
         KhuyenMaiDTO bestKM= kmBUS.getKmCTPX(tongTien, dateCreateBill);  
         double giamGia=(bestKM!=null) ? bestKM.getPhanTramGiam() : 0.0;
