@@ -142,9 +142,9 @@ public class TaiKhoanPanel extends JPanel{
         for(TaiKhoanDTO tk: listTaiKhoan){
             String trangthai="";
             if(tk.getTrangthai()==0){
-                trangthai="Hết đát";
+                trangthai="Khóa";
             }else{
-                trangthai="Còn xài được";
+                trangthai="Đang hoạt động";
             }   
             
             String tenquyen;
@@ -234,9 +234,9 @@ public class TaiKhoanPanel extends JPanel{
         for(TaiKhoanDTO tk: listTaiKhoan){
             String trangthai="";
             if(tk.getTrangthai()==0){
-                trangthai="Hết đát";
+                trangthai="Khóa";
             }else{
-                trangthai="Còn xài được";
+                trangthai="Đang hoạt động";
             }   
             
             String tenquyen;
@@ -275,7 +275,7 @@ public class TaiKhoanPanel extends JPanel{
         String tenQuyen = (String) table.getValueAt(selectedRow, 3);
         int manhomquyen = pqBUS.getIdquyenbyTen(tenQuyen);
         String trangthaistring= (String) table.getValueAt(selectedRow, 4);
-        if(trangthaistring.equals("Còn xài được")){
+        if(trangthaistring.equals("Đang hoạt động")){
             int trangthai=1;
             return new TaiKhoanDTO(maNV, username,mk,manhomquyen,trangthai); // Tạo đối tượng NhomQuyenDTO
         }else{

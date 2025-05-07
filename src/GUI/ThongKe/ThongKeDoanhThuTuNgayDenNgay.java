@@ -177,33 +177,38 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
     }
 
     public boolean validateSelectDate() throws ParseException {     
-        Date time_start = dateFrom.getDate();
-        Date time_end = dateTo.getDate();
-        Date current_date = new Date();
+    Date time_start = dateFrom.getDate();
+    Date time_end = dateTo.getDate();
+    Date current_date = new Date();
+
+    if (time_start == null || time_end == null) {
         
-        // Bug ngày  DateE luôn bé hơn DateS
-        LocalDate dateS=time_start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate dateE=time_end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        
-        if (time_start != null && time_start.after(current_date)) {
-            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            dateFrom.setDate(current_date);
-            return false;
-        }
-        if (time_end != null && time_end.after(current_date)) {
-            JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            dateTo.setDate(current_date);
-            return false;
-        }
-        if (time_start != null && time_end != null && dateS.isAfter(dateE)) {
-            System.err.println(time_start);
-            System.err.println(time_end);
-            JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            dateTo.setDate(current_date);
-            return false;
-        }
-        return true;
+        return false;
     }
+
+    LocalDate dateS = time_start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    LocalDate dateE = time_end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+    if (time_start.after(current_date)) {
+        JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        dateFrom.setDate(current_date);
+        return false;
+    }
+    if (time_end.after(current_date)) {
+        JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        dateTo.setDate(current_date);
+        return false;
+    }
+    if (dateS.isAfter(dateE)) {
+        System.err.println(time_start);
+        System.err.println(time_end);
+        JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        dateTo.setDate(current_date);
+        return false;
+    }
+    return true;
+}
+
 
     public void loadThongKeTungNgayTrongThang(Date start, Date end) {
         ArrayList<ThongKeTungNgayTrongThangDTO> list = new ThongKeBUS().getThongKeTuNgayDenNgay(start, end);

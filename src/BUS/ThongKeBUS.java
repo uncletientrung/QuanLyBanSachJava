@@ -114,7 +114,10 @@ public class ThongKeBUS {
             }
             result.add(new ThongKeNhaCungCapDTO(ncc.getMancc(),ncc.getTenncc(),soluong, tien));
         }
+        
+        //ThongkehoadontheoNam(2025);
         return result;
+        
     }
     
     public static ArrayList<ThongKeKhachHangDTO> getThongKeKhachHang(LocalDate a,LocalDate b){
@@ -294,6 +297,18 @@ public class ThongKeBUS {
 //        }
 //        return result;
 //    }
-    
+    public static double ThongkehoadontheoNam(int nam){
+        double doanhthu=0;
+        ArrayList<PhieuXuatDTO> list_px = new PhieuXuatDAO().selectAll();
+        
+        for( PhieuXuatDTO px : list_px){
+            LocalDate ngaytaopx= px.getThoigiantao().toLocalDateTime().toLocalDate();
+            if(ngaytaopx.getYear()==nam){
+                doanhthu+=px.getTongTien();
+            }
+        }
+        System.out.printf("tong tien :%.0f",doanhthu);
+        return doanhthu;
+    }
     
 }
