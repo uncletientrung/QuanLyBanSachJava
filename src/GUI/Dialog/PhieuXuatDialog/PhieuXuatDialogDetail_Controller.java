@@ -288,7 +288,7 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
             wb.write(fileOut);
             JOptionPane.showMessageDialog(PXDD,
-                    "Xuất file Excel thành công!\nĐường dẫn: ",
+                    "Xuất file Excel thành công!",
                     "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
                     if (Desktop.isDesktopSupported()) {
@@ -471,7 +471,7 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         fos.close();
 
         JOptionPane.showMessageDialog(PXDD,
-                "Xuất file PDF thành công!\nĐường dẫn:",
+                "Xuất file PDF thành công!",
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE);
         if (Desktop.isDesktopSupported()) {

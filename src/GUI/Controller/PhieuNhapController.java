@@ -13,6 +13,7 @@ import GUI.Dialog.PhieuNhapDialog.PhieuNhapDialogDetail;
 import GUI.View.PhieuNhapPanel;
 import GUI.WorkFrame;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,23 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
 /**
  *
  * @author Minnie
@@ -149,6 +167,14 @@ public class PhieuNhapController implements ActionListener, ChangeListener,Docum
             default:
                 break;
         }
+        if (evt.equals("Xuất Excel")) {
+            try {
+                WriteExcel();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.err.println("Lỗi đọc file Excel: " + ex.getMessage());
+            }
+        }
         if(evtCbb.equals("Hóa đơn thấp đến cao ⬆")){
             pnBUS=new PhieuNhapBUS();
             ArrayList<PhieuNhapDTO> list_Sort=pnBUS.LowToHighofBill(pnp.getListpn());
@@ -192,5 +218,149 @@ public class PhieuNhapController implements ActionListener, ChangeListener,Docum
         pnp.FindTableData(pnp.getTxfFind().getText());   
     }
     
-    
+    public void WriteExcel() throws IOException {
+        // Tạo JFileChooser để chọn nơi lưu file
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/Documents"));
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".xlsx");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Excel Files (*.xlsx)";
+            }
+        });
+
+        // Thiết lập tên file mặc định
+        String defaultFileName = "DanhSachPhieuNhap.xlsx";
+        fileChooser.setSelectedFile(new File(defaultFileName));
+
+        // Hiển thị hộp thoại lưu file
+        int userSelection = fileChooser.showSaveDialog(null);
+
+        if (userSelection != JFileChooser.APPROVE_OPTION) { // Kiểm tra nếu người dùng hủy lưu
+            return;
+        }
+
+        // Lấy đường dẫn file đã chọn
+        File fileToSave = fileChooser.getSelectedFile();
+        String filePath = fileToSave.getAbsolutePath();
+
+        if (!filePath.toLowerCase().endsWith(".xlsx")) {
+            filePath += ".xlsx"; // Thêm đuôi .xlsx nếu chưa có
+        }
+
+        // Tạo workbook và sheet mới
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("Danh sách phiếu nhập");
+
+        // Tạo font cho tiêu đề
+        XSSFFont titleFont = wb.createFont();
+        titleFont.setBold(true);
+        titleFont.setFontHeightInPoints((short) 14);
+
+        // Tạo style cho tiêu đề
+        XSSFCellStyle titleStyle = wb.createCellStyle();
+        titleStyle.setFont(titleFont);
+        titleStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        // Tạo style cho header bảng
+        XSSFCellStyle headerStyle = wb.createCellStyle();
+        headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        // Tạo style cho dữ liệu
+        XSSFCellStyle dataStyle = wb.createCellStyle();
+        dataStyle.setBorderBottom(BorderStyle.THIN);
+        dataStyle.setBorderTop(BorderStyle.THIN);
+        dataStyle.setBorderLeft(BorderStyle.THIN);
+        dataStyle.setBorderRight(BorderStyle.THIN);
+
+        // Tạo tiêu đề
+        XSSFRow titleRow = sheet.createRow(0);
+        XSSFCell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("DANH SÁCH TẤT CẢ PHIẾU NHẬP");
+        titleCell.setCellStyle(titleStyle);
+
+        // Gộp ô cho tiêu đề (5 cột)
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
+
+        // Tạo header cho bảng
+        XSSFRow headerRow = sheet.createRow(2);
+        String[] headers = {"Mã phiếu nhập", "Nhân viên", "Nhà cung cấp", "Thời gian", "Tổng tiền"};
+
+        for (int i = 0; i < headers.length; i++) {
+            XSSFCell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Lấy JTable từ PhieuNhapPanel
+        JTable tablePN = pnp.getTablePhieuNhap();
+
+        // Đổ dữ liệu vào bảng
+        int rowNum = 3;
+
+        for (int i = 0; i < tablePN.getRowCount(); i++) {
+            XSSFRow row = sheet.createRow(rowNum++);
+
+            // Mã phiếu nhập
+            XSSFCell cell0 = row.createCell(0);
+            cell0.setCellValue(tablePN.getValueAt(i, 0).toString());
+            cell0.setCellStyle(dataStyle);
+
+            // Nhân viên
+            XSSFCell cell1 = row.createCell(1);
+            cell1.setCellValue(tablePN.getValueAt(i, 1).toString());
+            cell1.setCellStyle(dataStyle);
+
+            // Nhà cung cấp
+            XSSFCell cell2 = row.createCell(2);
+            cell2.setCellValue(tablePN.getValueAt(i, 2).toString());
+            cell2.setCellStyle(dataStyle);
+
+            // Thời gian
+            XSSFCell cell3 = row.createCell(3);
+            cell3.setCellValue(tablePN.getValueAt(i, 3).toString());
+            cell3.setCellStyle(dataStyle);
+
+            // Tổng tiền
+            XSSFCell cell4 = row.createCell(4);
+            cell4.setCellValue(tablePN.getValueAt(i, 4).toString());
+            cell4.setCellStyle(dataStyle);
+        }
+
+        // Tự động điều chỉnh độ rộng cột
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Xuất file
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            wb.write(fileOut);
+            JOptionPane.showMessageDialog(null,
+                    "Xuất file Excel thành công!",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(new File(filePath)); // Mở file sau khi lưu
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Lỗi khi xuất file Excel: " + e.getMessage(),
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
+        } finally {
+            wb.close(); // Đóng workbook
+        }
+    }
 }
