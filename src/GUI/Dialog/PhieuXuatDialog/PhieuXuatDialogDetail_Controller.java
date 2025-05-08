@@ -91,6 +91,7 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         String thoiGian = PXDD.getTxfTime().getText();
         String tongTien = PXDD.getTxfTongHD().getText();
         JTable tableCTPX = PXDD.getTableCTPX();
+        String giamGia = PXDD.getTxfPhanTram().getText();
 
         // Tạo JFileChooser để chọn nơi lưu file
         JFileChooser fileChooser = new JFileChooser();
@@ -215,71 +216,68 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         }
 
         // Tạo dòng phân cách
+        // Dòng phân cách
         rowNum++;
 
-        // Thêm thông tin footer
-        XSSFRow footerRow1 = sheet.createRow(rowNum++);
-        XSSFCell footerCell1 = footerRow1.createCell(0);
-        footerCell1.setCellValue("Mã phiếu");
-        footerCell1.setCellStyle(headerStyle);
+        // Định dạng số tiền
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+        DecimalFormat formatVND = new DecimalFormat("#,###", symbols);
 
-        XSSFCell footerCell2 = footerRow1.createCell(1);
-        footerCell2.setCellValue(maPhieu);
-        footerCell2.setCellStyle(dataStyle);
 
-        XSSFRow footerRow2 = sheet.createRow(rowNum++);
-        XSSFCell footerCell3 = footerRow2.createCell(0);
-        footerCell3.setCellValue("Nhân viên thực hiện");
-        footerCell3.setCellStyle(headerStyle);
+        // Tính tiền được giảm
+        giamGia = giamGia.replace("%", "").trim();
+        double phantramGiamGia = Double.parseDouble(giamGia) / 100;
+        double tienDuocGiam = PXDD.tinhtongtien() * phantramGiamGia;
 
-        XSSFCell footerCell4 = footerRow2.createCell(1);
-        footerCell4.setCellValue(nhanVien);
-        footerCell4.setCellStyle(dataStyle);
-
-        XSSFRow footerRow3 = sheet.createRow(rowNum++);
-        XSSFCell footerCell5 = footerRow3.createCell(0);
-        footerCell5.setCellValue("Khách hàng");
-        footerCell5.setCellStyle(headerStyle);
-
-        XSSFCell footerCell6 = footerRow3.createCell(1);
-        footerCell6.setCellValue(khachHang);
-        footerCell6.setCellStyle(dataStyle);
-
-        XSSFRow footerRow4 = sheet.createRow(rowNum++);
-        XSSFCell footerCell7 = footerRow4.createCell(0);
-        footerCell7.setCellValue("Thời gian tạo");
-        footerCell7.setCellStyle(headerStyle);
-
-        XSSFCell footerCell8 = footerRow4.createCell(1);
-        footerCell8.setCellValue(thoiGian);
-        footerCell8.setCellStyle(dataStyle);
         
-//        XSSFRow footerRow5 = sheet.createRow(rowNum++);
-//        XSSFCell footerCell9 = footerRow5.createCell(0);
-//        footerCell9.setCellValue("Tổng tiền hàng");
-//        footerCell9.setCellStyle(headerStyle);
-//
-//        XSSFCell footerCell10 = footerRow5.createCell(1);
-//        footerCell10.setCellValue(PXDD.tinhtongtien());
-//        footerCell10.setCellStyle(dataStyle);
-//        
-//        XSSFRow footerRow6 = sheet.createRow(rowNum++);
-//        XSSFCell footerCell11 = footerRow5.createCell(0);
-//        footerCell9.setCellValue("Giảm giá");
-//        footerCell9.setCellStyle(headerStyle);
-//
-//        XSSFCell footerCell12 = footerRow5.createCell(1);
-//        footerCell10.setCellValue(tongTien);
-//        footerCell10.setCellStyle(dataStyle);
+        XSSFRow row1 = sheet.createRow(rowNum++);
+        row1.createCell(0).setCellValue("Mã phiếu");
+        row1.getCell(0).setCellStyle(headerStyle);
+        row1.createCell(1).setCellValue(maPhieu);
+        row1.getCell(1).setCellStyle(dataStyle);
 
-        XSSFRow footerRow5 = sheet.createRow(rowNum++);
-        XSSFCell footerCell9 = footerRow5.createCell(0);
-        footerCell9.setCellValue("Tổng hóa đơn");
-        footerCell9.setCellStyle(headerStyle);
+        row1.createCell(4).setCellValue("Tổng tiền hàng");
+        row1.getCell(4).setCellStyle(headerStyle);
+        row1.createCell(5).setCellValue(formatVND.format(PXDD.tinhtongtien()));
+        row1.getCell(5).setCellStyle(dataStyle);
 
-        XSSFCell footerCell10 = footerRow5.createCell(1);
-        footerCell10.setCellValue(tongTien);
-        footerCell10.setCellStyle(dataStyle);
+        
+        XSSFRow row2 = sheet.createRow(rowNum++);
+        row2.createCell(0).setCellValue("Nhân viên thực hiện");
+        row2.getCell(0).setCellStyle(headerStyle);
+        row2.createCell(1).setCellValue(nhanVien);
+        row2.getCell(1).setCellStyle(dataStyle);
+
+        row2.createCell(4).setCellValue("Giảm giá");
+        row2.getCell(4).setCellStyle(headerStyle);
+        row2.createCell(5).setCellValue(giamGia + "%");
+        row2.getCell(5).setCellStyle(dataStyle);
+
+        
+        XSSFRow row3 = sheet.createRow(rowNum++);
+        row3.createCell(0).setCellValue("Khách hàng");
+        row3.getCell(0).setCellStyle(headerStyle);
+        row3.createCell(1).setCellValue(khachHang);
+        row3.getCell(1).setCellStyle(dataStyle);
+
+        row3.createCell(4).setCellValue("Tiền được giảm");
+        row3.getCell(4).setCellStyle(headerStyle);
+        row3.createCell(5).setCellValue(formatVND.format(tienDuocGiam));
+        row3.getCell(5).setCellStyle(dataStyle);
+
+        
+        XSSFRow row4 = sheet.createRow(rowNum++);
+        row4.createCell(0).setCellValue("Thời gian tạo");
+        row4.getCell(0).setCellStyle(headerStyle);
+        row4.createCell(1).setCellValue(thoiGian);
+        row4.getCell(1).setCellStyle(dataStyle);
+
+        row4.createCell(4).setCellValue("Tổng thanh toán");
+        row4.getCell(4).setCellStyle(headerStyle);
+        row4.createCell(5).setCellValue(tongTien);
+        row4.getCell(5).setCellStyle(dataStyle);
+
 
         // Tự động điều chỉnh độ rộng cột
         for (int i = 0; i < headers.length; i++) {
@@ -458,7 +456,7 @@ public class PhieuXuatDialogDetail_Controller implements ActionListener {
         double tienduocGiam=PXDD.tinhtongtien()*phantramgiamgia;
         Paragraph tienduocgiam = new Paragraph("Tiền được giảm: " + formatter.format(tienduocGiam), billFont);
         Paragraph total = new Paragraph("Tổng tiền hàng: " + formatter.format(PXDD.tinhtongtien()), billFont);       
-        Paragraph tongHoaDon = new Paragraph("Tổng hóa đơn: " + tongTien, headerFont);
+        Paragraph tongHoaDon = new Paragraph("Tổng thanh toán: " + tongTien, headerFont);
         
         total.setAlignment(Element.ALIGN_RIGHT);
         phanTramgiamgia.setAlignment(Element.ALIGN_RIGHT);
