@@ -217,7 +217,7 @@ public void actionPerformed(ActionEvent e){
         try(FileOutputStream fileOut=new FileOutputStream(filePath)) {
                 wb.write(fileOut);
                  JOptionPane.showMessageDialog(khf,
-                    "Xuất file Excel thành công!\nĐường dẫn: ",
+                    "Xuất file Excel thành công! ",
                     "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
                     if (Desktop.isDesktopSupported()) {

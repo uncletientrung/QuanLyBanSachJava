@@ -458,6 +458,7 @@ public class PhieuXuatPanel extends JPanel {
                         updateEmployeeTextField(); // Cập nhật Txf hiển thị danh sách nhân viên được chọn
                         Filter();
                     }
+                    
                 }
                    
                 for(boolean check: nvCheckStates){
@@ -509,7 +510,7 @@ public class PhieuXuatPanel extends JPanel {
         });
     }
     // Update txf NhanVien khi chọn checkbox và tắt checkbox 
-    private void updateEmployeeTextField() {
+    public void updateEmployeeTextField() {
         int NhanVien_Select_Count=0;
         for (int i = 1; i < listCBB_NV.size(); i++) {        // Size này trả về số phần tử chứ không phải kích thước W H
             if (nvCheckStates.get(i)) {                         // Bắt đầu từ 1 để bỏ qua cái lựa chọn tất cả
@@ -521,7 +522,7 @@ public class PhieuXuatPanel extends JPanel {
     }
 
         // Update txf Khách khi chọn checkbox và tắt checkbox 
-    private void updateCustomerTextField() {
+    public void updateCustomerTextField() {
         int Khach_Select_Count=0;
         for (int i = 1; i < listCBB_KH.size(); i++) {
             if (khCheckStates.get(i)) {
@@ -597,6 +598,15 @@ public class PhieuXuatPanel extends JPanel {
         return tableBookDetails;
     }
 
+    public ArrayList<Boolean> getNvCheckStates() {
+        return nvCheckStates;
+    }
+
+    public ArrayList<Boolean> getKhCheckStates() {
+        return khCheckStates;
+    }
+    
+
     public DefaultTableModel getDataBookDetails() {
         return dataBookDetails;
     }
@@ -661,6 +671,16 @@ public class PhieuXuatPanel extends JPanel {
         return btnHome;
     }
 
+    public ArrayList<String> getListCBB_KH() {
+        return listCBB_KH;
+    }
+
+    public ArrayList<String> getListCBB_NV() {
+        return listCBB_NV;
+    }
+    
+
+    
     public JButton getBtndetail() {
         return btndetail;
     }
