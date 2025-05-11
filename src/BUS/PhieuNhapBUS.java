@@ -73,7 +73,7 @@ public class PhieuNhapBUS {
 
     public void delete(PhieuNhapDTO pn, ArrayList<ChiTietPhieuNhapDTO> list_ctpn){
         for(ChiTietPhieuNhapDTO ctpn: list_ctpn){
-            int soluong = (ctpn.getSoluong());
+            int soluong = -(ctpn.getSoluong());
             sDAO.UpdateSoLuong(ctpn.getMasach(), soluong);
         }
         pnDAO.cancel(pn.getMaphieu() + "");

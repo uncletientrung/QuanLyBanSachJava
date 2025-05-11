@@ -23,7 +23,7 @@ public class KhachHangBUS {
     }
     public ArrayList<KhachHangDTO> getKhachHangAll(){
         if (listkh == null)
-            listkh = KhachHangDAO.selectAll();
+            listkh = KhachHangDAO.getInstance().selectAll();
         
         return listkh;
     }

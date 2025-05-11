@@ -825,4 +825,25 @@ if (dateS != null) {
             return this; // Trả về panel chứa checkbox và nhãn
         }
     }
+    public void resetHome(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(2025, Calendar.JANUARY, 1);
+        dateStart.setDate(cal.getTime());
+        dateEnd.setDate(new Date());
+        txfPriceEnd.setText("");
+        txfPriceStart.setText("");
+        nvCheckStates.clear();
+        khCheckStates.clear();
+        for(int i=0;i<listCBB_NV.size();i++){
+            nvCheckStates.add(i==0);
+        }
+        for(int i=0;i<listCBB_KH.size();i++){
+            khCheckStates.add(i==0);
+        }
+        jList_kh.setSelectedIndex(0);
+        jList_nv.setSelectedIndex(0);
+        updateEmployeeTextField();
+        updateCustomerTextField();
+        refreshTablePx();
+    }
 }

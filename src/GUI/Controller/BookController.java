@@ -470,7 +470,7 @@ public void actionPerformed(ActionEvent e){
         // Hiển thị thông báo
         if(successCount==0){
             JOptionPane.showMessageDialog(bf,
-                "Danh sách rỗng!!! Không có gì để thêm vào ",
+                "Danh sách rỗng hoặc Sách đã tồn tại!!!! ",
                 "Thông báo",
                 JOptionPane.INFORMATION_MESSAGE);
         }else{

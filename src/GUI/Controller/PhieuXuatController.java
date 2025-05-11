@@ -124,6 +124,7 @@ public class PhieuXuatController implements ActionListener, ChangeListener, Docu
             PxP.getPanelCenter().add(PxP.getTopPanel(),BorderLayout.NORTH);
             PxP.getPanelCenter().add(PxP.getTongTienPanel(),BorderLayout.SOUTH);
             PxP.refreshTablePx();
+            PxP.resetHome();
         }
         if (sukien.equals("Thêm")) {
             PxP.getBtndelete().setVisible(false); 

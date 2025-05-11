@@ -79,7 +79,7 @@ public class KhachHangDAO {
         return  result;
     }
     
-    public static ArrayList<KhachHangDTO> selectAll(){
+    public ArrayList<KhachHangDTO> selectAll(){
         ArrayList<KhachHangDTO> result= new ArrayList<>();
         try{
             Connection con=(Connection) JDBCUtil.getConnection();
