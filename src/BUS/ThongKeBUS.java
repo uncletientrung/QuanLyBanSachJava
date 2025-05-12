@@ -19,12 +19,11 @@ import DTO.ThongKe.ThongKeNhaCungCapDTO;
 import DTO.ThongKe.ThongKeTheoThangDTO;
 import DTO.ThongKe.ThongKeTonKhoDTO;
 import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
-import GUI.ThongKe.ThongKeTonKho;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
 
 
@@ -34,7 +33,7 @@ public class ThongKeBUS {
     public static ArrayList<ThongKeTungNgayTrongThangDTO> getThongKe7NgayGanNhat(){
         ArrayList<ThongKeTungNgayTrongThangDTO> result=new ArrayList<>();
         ArrayList<PhieuNhapDTO> pn=PhieuNhapDAO.getInstance().selectAll();
-        ArrayList<PhieuXuatDTO> px=PhieuXuatDAO.getInstance().selectAll();
+        ArrayList<PhieuXuatDTO> px=PhieuXuatDAO.getInstance().selectAll();  
         LocalDate now=LocalDate.now();
         LocalDate pass = now.minusDays(7);
         for (LocalDate i = pass; i.isBefore(now) || i.isEqual(now); i = i.plusDays(1)){
@@ -80,7 +79,9 @@ public class ThongKeBUS {
             int tien=0, soluong=0;
             for(PhieuNhapDTO pn: list_pn){
                 LocalDate date=pn.getThoigiantao().toLocalDateTime().toLocalDate();
-                if(date.equals(dateS)||date.equals(dateE)||(date.isAfter(dateS)&&date.isBefore(dateE))){
+                // if(date.equals(dateS)||date.equals(dateE)||(date.isAfter(dateS)&&date.isBefore(dateE)))
+                if (date.compareTo(dateS) >= 0 && date.compareTo(dateE) <= 0) 
+                {
                     if(ncc.getMancc()==pn.getMancc()){
                         tien+=pn.getTongTien();
                         ArrayList<ChiTietPhieuNhapDTO> list_ctpx=new ChiTietPhieuNhapDAO().selectAll(String.valueOf(pn.getMaphieu()));
@@ -92,14 +93,6 @@ public class ThongKeBUS {
             }
             result.add(new ThongKeNhaCungCapDTO(ncc.getMancc(),ncc.getTenncc(),soluong, tien));
         }
-        
-        //ThongkehoadontheoNam(2025);
-//        thongkehoadontheoquy(2025);
-//        getthongketheoquy(2025);
-//tongdoanhthutheotungthangtrongnam(2025);
-//tongchiphinhaphangtrongtungquy(2025);
-//thongkeloilotheothang(2025);
-//thongkesosachbantungthang(2025);
         return result;
         
     }
@@ -214,10 +207,237 @@ public class ThongKeBUS {
                 }
             }
             Date date = Date.from(i.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            loinhuan=doanhthu-tiennhap;
             temp.add(new ThongKeTungNgayTrongThangDTO(date,tiennhap,doanhthu,loinhuan));
         }
         return temp;
     }
 
+    public static ArrayList<ThongKeDoanhThuDTO> thongKeHoaDonTheoNam(int nam) {
+        ArrayList<ThongKeDoanhThuDTO> result = new ArrayList<>();
+        long tongTienNhap = 0, tongDoanhThu = 0, tongLoiNhuan = 0;
 
+        ArrayList<ThongKeTheoThangDTO> thongKeThang = getThongKeTheoThang(nam);
+        for (ThongKeTheoThangDTO tk : thongKeThang) {
+            tongTienNhap += tk.getChiphi();
+            tongDoanhThu += tk.getDoanhthu();
+            tongLoiNhuan += tk.getLoinhuan();
+        }
+
+        result.add(new ThongKeDoanhThuDTO(nam, tongTienNhap, tongDoanhThu, tongLoiNhuan));
+        return result;
+    }
+
+    public static ArrayList<ThongKeDoanhThuDTO> thongKeHoaDonTheoQuy(int nam) {
+        ArrayList<ThongKeDoanhThuDTO> result = new ArrayList<>();
+        for (int quy = 1; quy <= 4; quy++) {
+            long tongTienNhap = 0, tongDoanhThu = 0, tongLoiNhuan = 0;
+
+            LocalDate start = LocalDate.of(nam, (quy - 1) * 3 + 1, 1);
+            LocalDate end = start.plusMonths(3).minusDays(1);
+
+            for (PhieuNhapDTO pn : PhieuNhapDAO.getInstance().selectAll()) {
+                LocalDate date = pn.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    tongTienNhap += pn.getTongTien();
+                }
+            }
+
+            for (PhieuXuatDTO px : PhieuXuatDAO.getInstance().selectAll()) {
+                LocalDate date = px.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    tongDoanhThu += px.getTongTien();
+                }
+            }
+
+            tongLoiNhuan = tongDoanhThu - tongTienNhap;
+            result.add(new ThongKeDoanhThuDTO(quy, tongTienNhap, tongDoanhThu, tongLoiNhuan));
+        }
+        return result;
+    }
+
+    public static ArrayList<Long> tongDoanhThuTheoTungThangTrongNam(int nam) {
+        ArrayList<Long> doanhThuTheoThang = new ArrayList<>();
+        for (int thang = 1; thang <= 12; thang++) {
+            long doanhThu = 0;
+            LocalDate start = LocalDate.of(nam, thang, 1);
+            LocalDate end = start.plusMonths(1).minusDays(1);
+
+            for (PhieuXuatDTO px : PhieuXuatDAO.getInstance().selectAll()) {
+                LocalDate date = px.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    doanhThu += px.getTongTien();
+                }
+            }
+
+            doanhThuTheoThang.add(doanhThu);
+        }
+        return doanhThuTheoThang;
+    }
+
+    public static ArrayList<Long> tongChiPhiNhapHangTrongTungQuy(int nam) {
+        ArrayList<Long> chiPhiTheoQuy = new ArrayList<>();
+        for (int quy = 1; quy <= 4; quy++) {
+            long tongChiPhi = 0;
+
+            LocalDate start = LocalDate.of(nam, (quy - 1) * 3 + 1, 1);
+            LocalDate end = start.plusMonths(3).minusDays(1);
+
+            for (PhieuNhapDTO pn : PhieuNhapDAO.getInstance().selectAll()) {
+                LocalDate date = pn.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    tongChiPhi += pn.getTongTien();
+                }
+            }
+
+            chiPhiTheoQuy.add(tongChiPhi);
+        }
+        return chiPhiTheoQuy;
+    }
+    
+    public static ArrayList<Long> thongKeLoiNhuanTheoQuy (int nam) {
+        ArrayList<Long> thongKeLoiNhuanTheoQuy = new ArrayList<>();
+        for(int quy = 1 ; quy <= 4; quy++){
+            long loinhuan = 0, chiPhi = 0, doanhThu = 0;
+            
+            LocalDate dayS = LocalDate.of(nam, (quy - 1) * 3 + 1, 1);
+            LocalDate dayE = dayS.plusMonths(3).minusDays(1);
+            
+            for(PhieuXuatDTO px : PhieuXuatDAO.getInstance().selectAll()){
+                LocalDate date = px.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(!date.isBefore(dayS) && !date.isAfter(dayE)){
+                    doanhThu += px.getTongTien();
+                }
+            }
+            
+            for(PhieuNhapDTO pn : PhieuNhapDAO.getInstance().selectAll()){
+                LocalDate date = pn.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(!date.isBefore(dayS) && !date.isAfter(dayE)){
+                    chiPhi += pn.getTongTien();
+                }
+            }
+            
+            loinhuan = doanhThu - chiPhi;
+            thongKeLoiNhuanTheoQuy.add(loinhuan);
+        }
+        return thongKeLoiNhuanTheoQuy;
+    }
+    
+    public static ArrayList<Long> thongKeLoiNhuanTheoThang(int nam) {
+        ArrayList<Long> loinhuan = new ArrayList<>();
+        for(int thang = 1; thang <=12; thang++){
+            long doanhThu = 0, chiPhi = 0, loiNhuan = 0;
+            LocalDate dayS = LocalDate.of(nam, thang, 1);
+            LocalDate dayE = dayS.plusMonths(1).minusDays(1);
+            
+            for (PhieuXuatDTO px : PhieuXuatDAO.getInstance().selectAll()){
+                LocalDate date = px.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(!date.isBefore(dayS) && !date.isAfter(dayE)){
+                    doanhThu += px.getTongTien();
+                }
+            }
+            
+            for (PhieuNhapDTO pn : PhieuNhapDAO.getInstance().selectAll()){
+                LocalDate date = pn.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(!date.isBefore(dayS) && !date.isAfter(dayE)){
+                    chiPhi += pn.getTongTien();
+                }
+            }
+            
+            loiNhuan = doanhThu - chiPhi;
+            loinhuan.add(loiNhuan);
+            
+        }
+        return loinhuan;
+    }
+    
+    
+    
+    
+
+    public static ArrayList<Long> thongKeLoiLoTheoThang(int nam) {
+        ArrayList<Long> loiLoTheoThang = new ArrayList<>();
+        for (int thang = 1; thang <= 12; thang++) {
+            long doanhThu = 0, chiPhi = 0, loiLo = 0;
+            LocalDate start = LocalDate.of(nam, thang, 1);
+            LocalDate end = start.plusMonths(1).minusDays(1);
+
+            for (PhieuXuatDTO px : PhieuXuatDAO.getInstance().selectAll()) {
+                LocalDate date = px.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    doanhThu += px.getTongTien();
+                }
+            }
+
+            for (PhieuNhapDTO pn : PhieuNhapDAO.getInstance().selectAll()) {
+                LocalDate date = pn.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    chiPhi += pn.getTongTien();
+                }
+            }
+
+            loiLo = doanhThu - chiPhi;
+            loiLoTheoThang.add(loiLo);
+        }
+        return loiLoTheoThang;
+    }
+
+    public static ArrayList<Long> thongKeSoSachBanTungThang(int nam) {
+        ArrayList<Long> soSachBanTheoThang = new ArrayList<>();
+        for (int thang = 1; thang <= 12; thang++) {
+            long soLuongBan = 0;
+            LocalDate start = LocalDate.of(nam, thang, 1);
+            LocalDate end = start.plusMonths(1).minusDays(1);
+
+            for (PhieuXuatDTO px : PhieuXuatDAO.getInstance().selectAll()) {
+                LocalDate date = px.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    for (ChiTietPhieuXuatDTO ctpx : ChiTietPhieuXuatDAO.getInstance().selectAll(String.valueOf(px.getMaphieu()))) {
+                        soLuongBan += ctpx.getSoluong();
+                    }
+                }
+            }
+
+            soSachBanTheoThang.add(soLuongBan);
+        }
+        return soSachBanTheoThang;
+    }
+
+    public static ArrayList<SachDTO> thongKeSachBanChayNhatNam(int nam) {
+        ArrayList<SachDTO> sachBanChay = new ArrayList<>();
+        HashMap<Integer, Integer> soLuongBanTheoSach = new HashMap<>();
+
+        LocalDate start = LocalDate.of(nam, 1, 1);
+        LocalDate end = LocalDate.of(nam, 12, 31);
+
+        for (PhieuXuatDTO px : PhieuXuatDAO.getInstance().selectAll()) {
+            LocalDate date = px.getThoigiantao().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (!date.isBefore(start) && !date.isAfter(end)) {
+                for (ChiTietPhieuXuatDTO ctpx : ChiTietPhieuXuatDAO.getInstance().selectAll(String.valueOf(px.getMaphieu()))) {
+                    soLuongBanTheoSach.put(Integer.parseInt(ctpx.getMasach()),
+                            soLuongBanTheoSach.getOrDefault(Integer.parseInt(ctpx.getMasach()), 0) + ctpx.getSoluong());
+                }
+            }
+        }
+
+        int maxSoLuong = soLuongBanTheoSach.values().stream().max(Integer::compare).orElse(0);
+
+        for (Integer masach : soLuongBanTheoSach.keySet()) {
+            if (soLuongBanTheoSach.get(masach) == maxSoLuong) {
+                SachDTO sach = new SachDAO().selectById(String.valueOf(masach));
+                if (sach != null) {
+                    sachBanChay.add(sach);
+                }
+            }
+        }
+
+        return sachBanChay;
+    }
+            //ThongkehoadontheoNam(2025);
+//        thongkehoadontheoquy(2025);
+//        getthongketheoquy(2025);
+//tongdoanhthutheotungthangtrongnam(2025);
+//tongchiphinhaphangtrongtungquy(2025);
+//thongkeloilotheothang(2025);
+//thongkesosachbantungthang(2025);
 }

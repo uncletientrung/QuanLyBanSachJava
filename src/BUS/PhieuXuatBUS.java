@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 /**
  *
  * @author DELL
@@ -96,6 +97,63 @@ public class PhieuXuatBUS {
 //        }
 //        return result;
 //    } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
 }
     
 
