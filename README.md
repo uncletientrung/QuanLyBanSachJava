@@ -1,7 +1,6 @@
 <!-- author: uncletientrung -->
 # Đồ án môn Lập trình Java  <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExemNxZHhrYzJrcGx6NmdicDQ2anNkdnU2azRyaW50ZjV2NWZmemVhaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26xBKuuVuNxp8seTS/giphy.gif" width="50">
 Đề tài: Hệ thống quản lý cửa hàng bán sách
-![alt text](https://media.giphy.com/media/26xBKuuVuNxp8seTS/giphy.gif)
 ### Thành viên nhóm:
     Nguyễn Tiến Trung - 3123410396 
     Nguyễn Minh Thuận - 3123410365
