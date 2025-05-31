@@ -2,9 +2,9 @@
 # Đồ án môn Lập trình Java  <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExemNxZHhrYzJrcGx6NmdicDQ2anNkdnU2azRyaW50ZjV2NWZmemVhaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26xBKuuVuNxp8seTS/giphy.gif" width="50">
 # Đề tài: Hệ thống quản lý cửa hàng bán sách
 ### Thành viên nhóm
-Nguyễn Tiến Trung - 3123410396 <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30">
-Nguyễn Minh Thuận - 3123410365 <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30">
-Bùi Huy Khải - 3123410145      <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30">
+Nguyễn Tiến Trung - 3123410396 <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> <br>
+Nguyễn Minh Thuận - 3123410365 <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> <br>
+Bùi Huy Khải - 3123410145      <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> <br>
 Nguyễn Hải Đăng - 3123410076   <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30">
  ### 
  File báo cáo vào slide PowerPoint nằm trong thư mục BaoCaoPTTKHTTT
