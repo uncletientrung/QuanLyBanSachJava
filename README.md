@@ -1,13 +1,14 @@
 <!-- author: uncletientrung -->
 # Đồ án môn Lập trình Java  <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExemNxZHhrYzJrcGx6NmdicDQ2anNkdnU2azRyaW50ZjV2NWZmemVhaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26xBKuuVuNxp8seTS/giphy.gif" width="50">
-# Đề tài: Hệ thống quản lý cửa hàng bán sách
+## Đề tài: Hệ thống quản lý cửa hàng bán sách
 ### Thành viên nhóm
-<img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> Nguyễn Tiến Trung - 3123410396  <br>
+<img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> Nguyễn Tiến Trung (L) - 3123410396  <br>
 <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> Nguyễn Minh Thuận - 3123410365  <br>
 <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> Bùi Huy Khải - 3123410145       <br>
 <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> Nguyễn Hải Đăng - 3123410076   
- ### 
- File báo cáo vào slide PowerPoint nằm trong thư mục BaoCaoPTTKHTTT
+
+## File báo cáo vào slide PowerPoint nằm trong thư mục PTTKHTTT
+
 
 ## Getting Started
 1. Tải source code về:
